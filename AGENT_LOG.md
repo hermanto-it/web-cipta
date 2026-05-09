@@ -1,0 +1,209 @@
+# AGENT LOG
+
+Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
+
+## [2026-05-10 09:40:00 WIB] Verifikasi Global Git Config
+- Tanggal/Waktu WIB: 2026-05-10 09:40:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Configuration, Documentation
+- Perintah User: "git config --global --list"
+- Tujuan Task: Menampilkan dan memverifikasi seluruh konfigurasi git global yang aktif.
+- File Dibaca: Tidak ada perubahan file dibaca.
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git config --global --list`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Tidak ada.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration: Verifikasi nilai `user.name` dan `user.email` pada git global.
+- Ringkasan Perubahan: Output menunjukkan konfigurasi global berisi `user.name=hermanto-it` dan `user.email=hermantoaeky@gmail.com`.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error atau warning.
+- Status Hasil: Sukses
+- Next Step:
+  - Lanjutkan workflow git (staging/commit) jika diperlukan.
+
+## [2026-05-10 09:35:00 WIB] Set Global Git Identity
+- Tanggal/Waktu WIB: 2026-05-10 09:35:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Configuration, Infrastructure/Deployment, Documentation
+- Perintah User: "git config --global user.name \"hermanto-it\"\ngit config --global user.email \"hermantoaeky@gmail.com\""
+- Tujuan Task: Mengatur identitas git global (username dan email) untuk commit selanjutnya.
+- File Dibaca: Tidak ada perubahan file dibaca.
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git config --global user.name "hermanto-it" && git config --global user.email "hermantoaeky@gmail.com" && git config --global --get user.name && git config --global --get user.email`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Tidak ada.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Tidak ada perubahan deployment; hanya konfigurasi git global pada environment lokal.
+- Perubahan Security/Configuration: Menetapkan `user.name` dan `user.email` global git.
+- Ringkasan Perubahan: Konfigurasi git global berhasil diset dan diverifikasi dengan output nilai terbaru.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error atau warning.
+  - Keputusan teknis: verifikasi langsung dilakukan menggunakan `git config --global --get`.
+- Status Hasil: Sukses
+- Next Step:
+  - Lanjut ke staging dan commit awal bila diperlukan.
+
+## [2026-05-10 09:30:00 WIB] Inisialisasi Git Repository
+- Tanggal/Waktu WIB: 2026-05-10 09:30:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git init\ngit status"
+- Tujuan Task: Menginisialisasi repository git lokal dan menampilkan status working tree.
+- File Dibaca: Tidak ada perubahan file dibaca.
+- File Dibuat: Tidak ada perubahan file dibuat oleh edit manual.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git init && git status`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Tidak ada.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Inisialisasi repository git lokal (`.git/`) dengan branch default `master`.
+- Perubahan Security/Configuration: Tidak ada.
+- Ringkasan Perubahan: Repo berhasil diinisialisasi, lalu status menampilkan seluruh file project sebagai untracked dan belum ada commit.
+- Error/Warning/Keputusan Teknis:
+  - Warning Git: nama branch default menggunakan `master` dan ada saran konfigurasi `init.defaultBranch`.
+  - Keputusan teknis: tidak mengubah konfigurasi global/local git karena tidak diminta user.
+- Status Hasil: Sukses
+- Next Step:
+  - Jika diinginkan, lanjut `git add .` lalu commit awal.
+
+## [2026-05-10 09:20:00 WIB] Review Dokumen dan Struktur Project
+- Tanggal/Waktu WIB: 2026-05-10 09:20:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Documentation
+- Perintah User: "Baca AGENTS.md, AGENT_LOG.md, README.md, package.json, dan struktur folder project. Pahami status terakhir dari AGENT_LOG.md. Lanjutkan pekerjaan dari log terakhir. Catat semua aktivitas baru ke AGENT_LOG.md sesuai aturan di AGENTS.md."
+- Tujuan Task: Meninjau status terkini project dan melanjutkan proses logging konsisten berdasarkan next step log terakhir.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `README.md`
+  - `package.json`
+  - Struktur folder root project (`/home/asbh/projects/web-cipta`)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan: Tidak ada command terminal.
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Tidak ada.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration: Tidak ada.
+- Ringkasan Perubahan: Membaca dokumen inti, memverifikasi struktur project, memahami log terakhir, lalu menambahkan entri log baru sebagai kelanjutan proses logging wajib.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error atau warning.
+  - Keputusan teknis: melanjutkan next step sebelumnya dengan memastikan semua aktivitas saat ini dicatat menggunakan template standar.
+- Status Hasil: Sukses
+- Next Step:
+  - Menunggu instruksi berikutnya dan tetap mencatat semua aktivitas ke `AGENT_LOG.md`.
+
+## [2026-05-10 09:00:00 WIB] Penguatan Aturan Logging Agent
+- Tanggal/Waktu WIB: 2026-05-10 09:00:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Documentation
+- Perintah User: "Perkuat aturan agent logging di AGENTS.md ... Fokus hanya memperkuat AGENTS.md dan AGENT_LOG.md."
+- Tujuan Task: Menambahkan aturan mandatory logging, infrastructure rules, architecture awareness rules, dan template log standar.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `AGENTS.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan: Tidak ada command terminal.
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Tidak ada.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration: Penegasan aturan timezone WIB dan konsistensi format log.
+- Ringkasan Perubahan: Menambahkan tiga section aturan baru di `AGENTS.md` dan memperbarui template log standar di `AGENT_LOG.md` agar lebih lengkap dan kategorikal.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error atau warning.
+  - Keputusan teknis: mempertahankan section lama dan menambahkan section baru sesuai instruksi eksplisit user.
+- Status Hasil: Sukses
+- Next Step:
+  - Gunakan template log standar ini untuk setiap task berikutnya secara konsisten.
+
+## [2026-05-10 00:00:00 WIB] Agent Logging Setup
+- Tanggal/Waktu (Asia/Jakarta): 2026-05-10 00:00:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Perintah User: "Saya ingin menambahkan kemampuan agent logging untuk project ini ... Fokus hanya membuat sistem dokumentasi logging agent."
+- File Dibaca:
+  - `AGENTS.md`
+- File Dibuat:
+  - `AGENT_LOG.md`
+- File Diubah:
+  - `AGENTS.md`
+- File Dihapus: Tidak ada
+- Command Terminal yang Dijalankan: Tidak ada
+- Ringkasan Perubahan: Menambahkan dokumen log agent dan aturan wajib logging di `AGENTS.md`.
+- Status Hasil: Sukses
+- Error/Warning/Keputusan Teknis:
+  - Menggunakan format waktu WIB (Asia/Jakarta) sesuai permintaan.
+  - Menetapkan struktur field tetap agar konsisten antar log.
+- Next Step:
+  - Mulai gunakan template ini untuk setiap instruksi user berikutnya.
+
+---
+
+## Template Log (Gunakan untuk entri baru)
+
+## [YYYY-MM-DD HH:mm:ss WIB] <Judul Aktivitas>
+- Tanggal/Waktu WIB: YYYY-MM-DD HH:mm:ss WIB
+- Agent/Model: <nama agent/model>
+- Kategori Perubahan: Frontend / Backend / API / Database / Security / Configuration / Dependency/Tooling / Infrastructure/Deployment / Documentation / UI/UX / Testing/QA / Other
+- Perintah User: "<instruksi user>"
+- Tujuan Task: <tujuan task>
+- File Dibaca:
+  - `<path/file>`
+- File Dibuat:
+  - `<path/file>`
+- File Diubah:
+  - `<path/file>`
+- File Dihapus:
+  - `<path/file>`
+- Command Terminal yang Dijalankan:
+  - `<command>`
+- Dependency yang Ditambah/Dihapus:
+  - <dependency>
+- Perubahan Frontend:
+  - <perubahan frontend>
+- Perubahan Backend:
+  - <perubahan backend>
+- Perubahan API:
+  - <perubahan API>
+- Perubahan Database:
+  - <perubahan database>
+- Perubahan Infrastructure/Deployment:
+  - <perubahan infra/deployment>
+- Perubahan Security/Configuration:
+  - <perubahan security/config>
+- Ringkasan Perubahan: <ringkasan singkat>
+- Error/Warning/Keputusan Teknis:
+  - <catatan>
+- Status Hasil: <Sukses/Gagal/Parsial>
+- Next Step:
+  - <langkah berikutnya>
