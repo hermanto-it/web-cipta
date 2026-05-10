@@ -2,6 +2,93 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 14:34:15 WIB] CRUD Basic Homepage Banners Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 14:34:15 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, UI/UX, Testing/QA, Security, Documentation
+- Perintah User: "Buat CRUD full stack untuk Homepage Banners di Admin Dashboard ... Catat semua aktivitas, file yang dibaca/dibuat/diubah, command, error/warning, keputusan teknis, dan status hasil ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Menyediakan fondasi CRUD banner pada route `/admin/homepage-banners` dengan list, create, edit, delete, toggle status, serta fallback saat Supabase/error.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/lib/supabase/server.ts`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/admin/page.tsx`
+- File Dibuat:
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Membuat UI admin `/admin/homepage-banners` yang responsive (sidebar, header, create form, data table).
+  - Menambahkan create/edit form field sesuai skema `homepage_banners`.
+  - Menambahkan loading/error state di komponen client.
+  - Menambahkan aksi delete dan toggle active/inactive di tabel.
+- Perubahan Backend:
+  - Menambahkan server actions di `actions.ts`:
+    - `createBannerAction`
+    - `updateBannerAction`
+    - `deleteBannerAction`
+    - `toggleBannerActiveAction`
+  - Menambahkan validasi minimal `title` dan `placement`.
+  - Menambahkan revalidate path untuk refresh list setelah mutasi.
+  - Menambahkan fetch server-side untuk list banner di route page.
+- Perubahan API: Tidak ada route API baru (menggunakan Server Actions).
+- Perubahan Database: Tidak ada perubahan schema/table.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada penggunaan service role key; tetap menggunakan client/server Supabase dengan env publik.
+  - Catatan: bila RLS saat ini hanya read-public, mutasi create/update/delete dapat gagal sampai policy admin/auth diterapkan.
+- Ringkasan Perubahan: Fondasi CRUD banner di Admin Dashboard selesai untuk tahap basic, siap dikembangkan dengan autentikasi dan policy admin.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: menggunakan server actions untuk mutasi agar alur App Router tetap sederhana dan aman.
+  - Keputusan teknis: tidak mengubah homepage maupun schema sesuai batasan scope task.
+- Status Hasil: Sukses
+- Next Step:
+  - Tambahkan autentikasi admin + RLS policy write khusus role admin agar mutasi banner berfungsi di production.
+
+## [2026-05-10 14:30:52 WIB] Git Add Commit Push Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 14:30:52 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(admin): add basic dashboard layout\"\ngit push"
+- Tujuan Task: Melakukan staging semua perubahan, membuat commit dengan pesan yang diberikan user, lalu push ke remote.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git status --short --branch`
+  - `git diff --staged; git diff`
+  - `git log -5 --oneline`
+  - `git add . && git commit -m "feat(admin): add basic dashboard layout" && git push && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Termasuk dalam commit user, terutama penambahan route admin dan update koneksi data homepage Supabase.
+- Perubahan Backend: Termasuk dalam commit user, berupa query layer Supabase tambahan.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada perubahan baru pada langkah git ini.
+- Perubahan Infrastructure/Deployment: Commit berhasil dibuat dan branch `main` berhasil dipush ke `origin/main`.
+- Perubahan Security/Configuration: Tidak ada.
+- Ringkasan Perubahan: Commit `94ea602` berhasil dibuat dengan pesan sesuai user dan sudah dipush ke remote.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error atau warning dari proses git.
+  - Status akhir menunjukkan branch sinkron dengan remote.
+- Status Hasil: Sukses
+- Next Step:
+  - Jika diperlukan, buat commit lanjutan khusus update log terbaru agar histori AGENT_LOG tetap ter-publish.
+
 ## [2026-05-10 14:29:40 WIB] Fondasi Basic Admin Dashboard
 - Tanggal/Waktu WIB: 2026-05-10 14:29:40 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
