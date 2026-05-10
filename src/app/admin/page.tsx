@@ -46,7 +46,7 @@ export default async function AdminPage() {
   ];
 
   return (
-    <AdminDashboardShell currentPath="/admin" title="Dashboard Overview" subtitle="Monitor data ecommerce dan operasional admin secara real-time.">
+    <AdminDashboardShell currentPath="/admin" title="Dashboard Overview" subtitle="Monitor data ecommerce dan persiapan modul CRUD.">
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         {summaries.map((item) => (
           <article key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
