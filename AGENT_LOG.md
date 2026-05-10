@@ -2,6 +2,94 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 14:50:24 WIB] CRUD Basic Products Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 14:50:24 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, UI/UX, Testing/QA, Security, Documentation
+- Perintah User: "Buat CRUD full stack untuk Products di Admin Dashboard ... Catat semua aktivitas, file yang dibaca/dibuat/diubah, command, error/warning, keputusan teknis, dan status hasil ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Menyediakan route `/admin/products` dengan list/create/edit/delete/toggle flags produk, relasi dropdown (brand/category/taxonomy), validasi input, serta search/filter dasar.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/categories/actions.ts`
+  - `src/app/admin/brands/actions.ts`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/lib/utils/slugify.ts`
+- File Dibuat:
+  - `src/app/admin/products/page.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `npm run lint && git status --short --branch` (rerun setelah perbaikan warning)
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan halaman admin products responsif dengan sidebar, header, create form, dan table list.
+  - Form produk mendukung semua field utama sesuai request termasuk dropdown `brand_id`, `category_id`, dan `taxonomy_id` optional.
+  - Menambahkan loading/error state.
+  - Menambahkan search/filter dasar di tabel: pencarian name/SKU, filter brand, filter category, filter active/inactive.
+  - Menambahkan edit inline dan delete action.
+- Perubahan Backend:
+  - Menambahkan server actions product:
+    - `createProductAction`
+    - `updateProductAction`
+    - `deleteProductAction`
+    - `toggleProductFlagAction` (`is_active`, `is_featured`, `is_best_seller`, `is_promo`)
+  - Menambahkan validasi: `name`, `slug`, `brand_id`, `category_id`, numerik price/compare_at_price, integer stock_quantity.
+  - Menambahkan auto-generate slug saat create jika kosong.
+  - Currency default `IDR`.
+  - Revalidate path setelah mutasi untuk refresh data.
+- Perubahan API: Tidak ada route API baru (menggunakan Server Actions).
+- Perubahan Database: Tidak ada perubahan schema/table.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada penggunaan service role key.
+  - Catatan RLS: jika policy write produk belum tersedia, action mutasi akan gagal dan error Supabase ditampilkan ke UI.
+- Ringkasan Perubahan: Fondasi CRUD product full stack selesai untuk tahap basic dan siap dikembangkan ke modul upload image serta relasi taxonomy lanjutan.
+- Error/Warning/Keputusan Teknis:
+  - Warning lint awal: variabel `_validate` tidak terpakai di `actions.ts`.
+  - Perbaikan: menghapus field `validate` dari payload via `delete payload.validate`.
+  - Hasil akhir lint bersih tanpa warning/error.
+- Status Hasil: Sukses
+- Next Step:
+  - Lanjutkan CRUD Product Images agar manajemen galeri produk terintegrasi.
+
+## [2026-05-10 14:45:11 WIB] Git Add Commit Push Categories CRUD
+- Tanggal/Waktu WIB: 2026-05-10 14:45:11 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(admin): add categories CRUD\"\ngit push"
+- Tujuan Task: Staging seluruh perubahan, membuat commit sesuai pesan user, lalu push ke remote.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git add . && git commit -m "feat(admin): add categories CRUD" && git push && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Commit mencakup penambahan halaman dan komponen CRUD admin brands/categories.
+- Perubahan Backend: Commit mencakup server actions brands/categories dan util slug.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Commit `a06ab08` berhasil dipush ke `origin/main`.
+- Perubahan Security/Configuration: Tidak ada.
+- Ringkasan Perubahan: Proses `add`, `commit`, dan `push` sukses; branch lokal sinkron dengan remote.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning proses git.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: commit tambahan untuk menyertakan pembaruan AGENT_LOG terbaru.
+
 ## [2026-05-10 14:44:05 WIB] CRUD Basic Categories Admin Dashboard
 - Tanggal/Waktu WIB: 2026-05-10 14:44:05 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
