@@ -2,6 +2,96 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 22:39:25 WIB] Selesai Products Improvement + Route Sidebar Product Images/Company Settings
+- Tanggal/Waktu WIB: 2026-05-10 22:39:25 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki Admin Dashboard bagian Products dan sidebar navigation ... tambah route /admin/product-images & /admin/company-settings ... toolbar editor sederhana untuk Short Description/Description ... lint + git status ... jangan commit/push."
+- Tujuan Task: Menjadikan menu sidebar valid, menambah halaman admin yang belum ada, dan meningkatkan UX form products dengan editor toolbar tanpa dependency tambahan.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `supabase/schema.sql`
+- File Dibuat:
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/company-settings/page.tsx`
+- File Diubah:
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/UI:
+  - **Sidebar navigation:**
+    - `Product Images` diarahkan ke `/admin/product-images`.
+    - `Company Settings` diarahkan ke `/admin/company-settings`.
+  - **Halaman baru Product Images:**
+    - Header/subtitle sesuai requirement.
+    - Placeholder panel upload/list siap dikembangkan.
+    - List sederhana dari `product_images` + relasi nama produk jika data ada.
+    - Empty state enterprise jika data kosong.
+  - **Halaman baru Company Settings:**
+    - Header/subtitle sesuai requirement.
+    - Read-only form untuk Company Name, Tagline, Email, Phone, Address, Footer Copyright.
+    - Parsing aman dari `company_settings.value` JSON.
+    - Aman saat data kosong + TODO untuk update action.
+  - **Products Form Upgrade:**
+    - Grouping section:
+      - Basic Information
+      - Pricing & Inventory
+      - Description
+      - Media & SEO
+      - Status
+    - Styling input/select/textarea diseragamkan dengan focus ring merah brand.
+    - Primary submit button merah brand.
+    - Spacing card/form lebih nyaman.
+  - **Toolbar editor sederhana (tanpa dependency):**
+    - Komponen reusable `AdminMarkdownEditor`.
+    - Tombol: Heading, Bold, Italic, Link, Bullet, Numbered, Quote, Table, Image, Undo, Redo.
+    - Insert template markdown ke textarea.
+    - Dipakai untuk `short_description` dan `description`.
+    - Submit form products tetap jalan dan mapping field tetap ke `short_description`/`description`.
+  - **SEO fields UI di Products:**
+    - Menambahkan area UI: SEO Title, SEO Description, SEO Keywords, Canonical URL, OG Title, OG Description, OG Image URL.
+    - Ditandai sebagai persiapan UI (kolom DB belum dipaksa); tidak mengubah action schema.
+- Perubahan Backend/API/Database/Security:
+  - Tidak ada perubahan logic auth, middleware, query mutasi products, schema SQL, RLS, atau `.env.local`.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan file yang berubah sesuai scope implementasi.
+  - Test manual URL admin belum dieksekusi otomatis dari CLI (perlu cek browser lokal).
+- Ringkasan Perubahan: Navigasi sidebar kini valid untuk Product Images & Company Settings, halaman baru dapat dibuka tanpa error, dan UX Products form naik signifikan lewat section grouping + editor toolbar markdown ringan.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: SEO fields ditambahkan pada layer UI sebagai persiapan, tanpa memaksa perubahan schema agar tidak memunculkan query error.
+  - Keputusan teknis: Company Settings disediakan read-only terlebih dahulu untuk menjaga keamanan dan kompatibilitas policy saat ini.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual:
+    - `/admin/products`
+    - `/admin/product-images`
+    - `/admin/company-settings`
+  - Jika policy write settings sudah siap, lanjutkan implementasi update action untuk `company_settings`.
+
+## [2026-05-10 22:34:46 WIB] Perbaikan Products + Sidebar Routes Product Images/Company Settings
+- Tanggal/Waktu WIB: 2026-05-10 22:34:46 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki Admin Dashboard bagian Products dan sidebar navigation ... tambahkan route Product Images & Company Settings ... tambahkan toolbar editor sederhana untuk Short Description/Description ... lint + git status ... jangan commit/push."
+- Tujuan Task: Menyelesaikan navigasi sidebar ke route valid, menambah halaman admin pendukung, dan meningkatkan UX form Products dengan editor toolbar sederhana tanpa dependency baru.
+- Status Hasil: In Progress
+- Next Step:
+  - Audit komponen products/sidebar lalu implement route baru dan komponen editor reusable.
+
 ## [2026-05-10 22:18:52 WIB] Modernisasi Header + Sidebar Admin Dashboard
 - Tanggal/Waktu WIB: 2026-05-10 22:18:52 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

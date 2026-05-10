@@ -4,6 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 
 import { createProductAction, updateProductAction } from "@/app/admin/products/actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
+import { AdminMarkdownEditor } from "@/components/admin/AdminMarkdownEditor";
 import { slugify } from "@/lib/utils/slugify";
 
 export type ProductOption = { id: string; name: string };
@@ -57,7 +58,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
 
   return (
     <form
-      className="grid gap-3"
+      className="grid gap-4"
       onSubmit={(event) => {
         event.preventDefault();
         setError(null);
@@ -82,14 +83,16 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
     >
       {mode === "edit" ? <input type="hidden" name="id" defaultValue={initialData?.id} /> : null}
 
-      <div className="grid gap-3 sm:grid-cols-2">
+      <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600">Basic Information</h4>
+        <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm">
           <span className="mb-1 block font-medium">Name *</span>
           <input
             name="name"
             required
             defaultValue={initialData?.name ?? ""}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]"
             onChange={(event) => {
               if (mode === "create") {
                 setSlugValue(slugify(event.currentTarget.value));
@@ -104,13 +107,13 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
             value={slugValue}
             required={mode === "edit"}
             onChange={(event) => setSlugValue(slugify(event.currentTarget.value))}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]"
             placeholder={mode === "create" ? "auto-generated from name" : "product-slug"}
           />
         </label>
-      </div>
+        </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
         <label className="text-sm">
           <span className="mb-1 block font-medium">Brand *</span>
           <select
@@ -118,7 +121,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
             required
             defaultValue={initialData?.brand_id ?? ""}
             onChange={(event) => setBrandId(event.currentTarget.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]"
           >
             <option value="">Select brand</option>
             {brands.map((item) => (
@@ -136,7 +139,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
             required
             defaultValue={initialData?.category_id ?? ""}
             onChange={(event) => setCategoryId(event.currentTarget.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2"
+            className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]"
           >
             <option value="">Select category</option>
             {categories.map((item) => (
@@ -149,7 +152,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
 
         <label className="text-sm">
           <span className="mb-1 block font-medium">Taxonomy (Optional)</span>
-          <select name="taxonomy_id" defaultValue={initialData?.taxonomy_id ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2">
+          <select name="taxonomy_id" defaultValue={initialData?.taxonomy_id ?? ""} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]">
             <option value="">No taxonomy</option>
             {taxonomyOptions.map((item) => (
               <option key={item.id} value={item.id}>
@@ -158,55 +161,104 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
             ))}
           </select>
         </label>
-      </div>
+        </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="mt-3 grid gap-3 sm:grid-cols-3">
         <label className="text-sm">
           <span className="mb-1 block font-medium">SKU</span>
-          <input name="sku" defaultValue={initialData?.sku ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="sku" defaultValue={initialData?.sku ?? ""} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
         <label className="text-sm">
           <span className="mb-1 block font-medium">Currency</span>
-          <input name="currency" defaultValue={initialData?.currency ?? "IDR"} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="currency" defaultValue={initialData?.currency ?? "IDR"} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
         <label className="text-sm">
           <span className="mb-1 block font-medium">Badge</span>
-          <input name="badge" defaultValue={initialData?.badge ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="badge" defaultValue={initialData?.badge ?? ""} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
-      </div>
+        </div>
+      </section>
 
-      <div className="grid gap-3 sm:grid-cols-3">
+      <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600">Pricing &amp; Inventory</h4>
+        <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-sm">
           <span className="mb-1 block font-medium">Price</span>
-          <input name="price" type="number" step="0.01" defaultValue={initialData?.price ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="price" type="number" step="0.01" defaultValue={initialData?.price ?? ""} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
         <label className="text-sm">
           <span className="mb-1 block font-medium">Compare At Price</span>
-          <input name="compare_at_price" type="number" step="0.01" defaultValue={initialData?.compare_at_price ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="compare_at_price" type="number" step="0.01" defaultValue={initialData?.compare_at_price ?? ""} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
         <label className="text-sm">
           <span className="mb-1 block font-medium">Stock Quantity</span>
-          <input name="stock_quantity" type="number" defaultValue={initialData?.stock_quantity ?? 0} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="stock_quantity" type="number" defaultValue={initialData?.stock_quantity ?? 0} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
-      </div>
+        </div>
+      </section>
 
-      <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-sm">
-          <span className="mb-1 block font-medium">Short Description</span>
-          <textarea name="short_description" rows={2} defaultValue={initialData?.short_description ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-        </label>
-        <label className="text-sm">
-          <span className="mb-1 block font-medium">Description</span>
-          <textarea name="description" rows={2} defaultValue={initialData?.description ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-        </label>
-      </div>
+      <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600">Description</h4>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <AdminMarkdownEditor
+            label="Short Description"
+            name="short_description"
+            defaultValue={initialData?.short_description ?? ""}
+            placeholder="Ringkasan singkat produk"
+            rows={5}
+          />
+          <AdminMarkdownEditor
+            label="Description"
+            name="description"
+            defaultValue={initialData?.description ?? ""}
+            placeholder="Deskripsi lengkap produk"
+            rows={5}
+          />
+        </div>
+      </section>
 
-      <ImageUploadField label="Primary Product Image" name="image_url" defaultValue={initialData?.primary_image_url ?? ""} folder="products" maxSizeMB={5} />
+      <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600">Media &amp; SEO</h4>
+        <ImageUploadField label="Primary Product Image" name="image_url" defaultValue={initialData?.primary_image_url ?? ""} folder="products" maxSizeMB={5} />
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <label className="text-sm">
+            <span className="mb-1 block font-medium">SEO Title</span>
+            <input name="seo_title" className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" placeholder="Title untuk mesin pencari" />
+          </label>
+          <label className="text-sm">
+            <span className="mb-1 block font-medium">Canonical URL (Optional)</span>
+            <input name="canonical_url" className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" placeholder="https://domain.com/products/slug" />
+          </label>
+          <label className="text-sm sm:col-span-2">
+            <span className="mb-1 block font-medium">SEO Description</span>
+            <textarea name="seo_description" rows={2} className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
+          </label>
+          <label className="text-sm sm:col-span-2">
+            <span className="mb-1 block font-medium">SEO Keywords</span>
+            <input name="seo_keywords" className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" placeholder="server, workstation, storage" />
+          </label>
+          <label className="text-sm">
+            <span className="mb-1 block font-medium">OG Title (Optional)</span>
+            <input name="og_title" className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
+          </label>
+          <label className="text-sm">
+            <span className="mb-1 block font-medium">OG Image URL (Optional)</span>
+            <input name="og_image_url" className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
+          </label>
+          <label className="text-sm sm:col-span-2">
+            <span className="mb-1 block font-medium">OG Description (Optional)</span>
+            <textarea name="og_description" rows={2} className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
+          </label>
+        </div>
+        <p className="mt-2 text-xs text-slate-500">Catatan: field SEO disiapkan di UI. Pastikan kolom database tersedia sebelum disimpan permanen.</p>
+      </section>
 
-      <div className="grid gap-3 sm:grid-cols-5">
+      <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
+        <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600">Status</h4>
+        <div className="grid gap-3 sm:grid-cols-5">
         <label className="text-sm">
           <span className="mb-1 block font-medium">Sort Order</span>
-          <input name="sort_order" type="number" defaultValue={initialData?.sort_order ?? 0} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+          <input name="sort_order" type="number" defaultValue={initialData?.sort_order ?? 0} className="h-10 w-full rounded-lg border border-slate-300 px-3 py-2 outline-none transition focus:border-[#DB1A1A] focus:ring-1 focus:ring-[#DB1A1A]" />
         </label>
         <label className="mt-7 inline-flex items-center gap-2 text-sm font-medium">
           <input name="is_active" type="checkbox" defaultChecked={initialData?.is_active ?? true} className="h-4 w-4" /> Active
@@ -220,13 +272,17 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
         <label className="mt-7 inline-flex items-center gap-2 text-sm font-medium">
           <input name="is_promo" type="checkbox" defaultChecked={initialData?.is_promo ?? false} className="h-4 w-4" /> Promo
         </label>
-      </div>
+        </div>
+      </section>
 
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
-      <button type="submit" disabled={pending} className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60">
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="submit" disabled={pending} className="rounded-lg bg-[#DB1A1A] px-4 py-2 text-sm font-semibold text-white hover:bg-[#b91515] disabled:opacity-60">
         {pending ? "Saving..." : mode === "create" ? "Create Product" : "Update Product"}
-      </button>
+        </button>
+        {mode === "edit" ? <span className="text-xs text-slate-500">Gunakan tombol close pada panel edit untuk membatalkan perubahan.</span> : null}
+      </div>
     </form>
   );
 }

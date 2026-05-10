@@ -8,8 +8,8 @@ const navItems = [
   { label: "Brands", href: "/admin/brands" },
   { label: "Categories", href: "/admin/categories" },
   { label: "Products", href: "/admin/products" },
-  { label: "Product Images", href: "#" },
-  { label: "Company Settings", href: "#" },
+  { label: "Product Images", href: "/admin/product-images" },
+  { label: "Company Settings", href: "/admin/company-settings" },
   { label: "Inquiries", href: "/admin/inquiries" },
 ];
 
