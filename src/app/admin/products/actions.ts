@@ -105,7 +105,9 @@ export async function createProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const { validate: _validate, image_url: imageUrl, ...payload } = mapped;
+    const { image_url: imageUrl, ...payloadWithValidate } = mapped;
+    const payload = { ...payloadWithValidate };
+    delete (payload as { validate?: unknown }).validate;
 
     const { data, error } = await supabase.from("products").insert(payload).select("id").single();
 
@@ -144,7 +146,9 @@ export async function updateProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const { validate: _validate, image_url: imageUrl, ...payload } = mapped;
+    const { image_url: imageUrl, ...payloadWithValidate } = mapped;
+    const payload = { ...payloadWithValidate };
+    delete (payload as { validate?: unknown }).validate;
     const { error } = await supabase.from("products").update(payload).eq("id", id);
 
     if (error) {

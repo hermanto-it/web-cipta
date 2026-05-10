@@ -457,7 +457,7 @@ export default function Home() {
                   onClick={() => toggleItem(path)}
                   className={`flex min-h-8 w-full items-center justify-between gap-2 rounded ${getIndentClass(level)} pr-2 ${getRowPaddingClass(
                     hasChildren,
-                  )} text-left hover:bg-slate-50 ${getLevelClass(level, hasChildren, node.name)} ${
+                  )} text-left hover:bg-[#EAECED] ${getLevelClass(level, hasChildren, node.name)} ${
                     isOpen ? "bg-red-50/30" : ""
                   }`}
                   aria-expanded={isOpen}
@@ -513,33 +513,33 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900">
+    <div className="min-h-screen bg-white text-slate-900">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
-      <div className="border-b border-slate-200 bg-white text-xs text-slate-600 sm:text-sm">
+      <div className="border-b border-slate-200 bg-[#33414e] text-xs sm:text-sm">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 py-2">
-          <p>Call us for free: {companyProfile.phone}</p>
-          <a href="/inquiry" className="font-medium text-blue-800 hover:text-blue-700">
+          <p className="text-[#7cbfdb]">Call us for free: {companyProfile.phone}</p>
+          <a href="/inquiry" className="font-medium text-white hover:text-slate-200">
             Free Consultation for Business IT
           </a>
           <div className="flex items-center gap-4">
-            <a href="/inquiry" className="hover:text-blue-700">
+            <a href="/inquiry" className="text-[#7cbfdb] hover:text-[#a6d8eb]">
               Language
             </a>
-            <a href="/inquiry" className="hover:text-blue-700">
+            <a href="/inquiry" className="font-medium text-[#e7000b] hover:text-[#ff3b45]">
               My account
             </a>
           </div>
         </div>
       </div>
 
-      <header className="border-b border-slate-200 bg-white">
+      <header className="border-b border-slate-300 bg-[#EAECED]">
         <div className="mx-auto w-full max-w-[1440px] px-4 py-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
             <h1 className="text-2xl font-bold tracking-tight text-slate-900">{companyProfile.name}</h1>
 
-            <div className="flex w-full rounded-xl border border-slate-300 bg-white xl:max-w-3xl">
-              <select className="w-36 border-r border-slate-300 px-3 text-sm text-slate-600 outline-none">
+            <div className="flex w-full rounded-xl border border-slate-300 bg-[#EAECED] transition-colors hover:border-[#e7000b] focus-within:border-[#e7000b] focus-within:ring-1 focus-within:ring-[#e7000b] xl:max-w-3xl">
+              <select className="w-36 border-r border-slate-300 bg-[#EAECED] px-3 text-sm text-slate-600 outline-none transition-colors hover:border-r-[#e7000b] focus:border-r-[#e7000b]">
                 <option>All categories</option>
                 {categories.map((category) => (
                   <option key={category}>{category}</option>
@@ -548,22 +548,22 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Search for enterprise IT products"
-                className="min-w-0 flex-1 px-4 py-3 text-sm outline-none"
+                className="min-w-0 flex-1 border-l border-transparent bg-[#EAECED] px-4 py-3 text-sm outline-none transition-colors hover:border-l-[#e7000b] focus:border-l-[#e7000b]"
               />
-              <button className="rounded-r-xl bg-red-600 px-5 text-sm font-semibold text-white hover:bg-red-700">Search</button>
+              <button className="rounded-r-xl bg-[#e7000b] px-5 text-sm font-semibold text-white hover:bg-[#c9000a]">Search</button>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 text-sm text-slate-700 sm:grid-cols-4 xl:flex xl:items-center xl:gap-10">
-              <div className="flex flex-col items-center text-center">
+            <div className="grid grid-cols-2 gap-3 text-sm text-slate-700 sm:grid-cols-4 xl:flex xl:items-start xl:gap-10">
+              <div className="flex min-h-[64px] flex-col items-center gap-1 text-center">
                 <p className="text-xs text-slate-500">Sales</p>
                 <p className="whitespace-nowrap font-semibold">{companyProfile.phone}</p>
               </div>
-              <div className="flex flex-col items-center text-center">
+              <div className="flex min-h-[64px] flex-col items-center gap-1 text-center">
                 <p className="text-xs text-slate-500">Email</p>
                 <a
                   href={safeMailto}
                   aria-label="Email sales"
-                  className="inline-flex h-10 w-10 items-center justify-center text-slate-700"
+                  className="inline-flex items-center justify-center text-slate-700"
                 >
                   <svg viewBox="0 0 48 48" className="h-8 w-8" fill="none" aria-hidden="true">
                     <rect x="7" y="12" width="34" height="24" rx="4" stroke="#dc2626" strokeWidth="2.8" />
@@ -575,20 +575,24 @@ export default function Home() {
                   </svg>
                 </a>
               </div>
-              <div className="flex flex-col items-center text-center">
+              <div className="flex min-h-[64px] flex-col items-center gap-1 text-center">
                 <p className="text-xs text-slate-500">Account</p>
                 <p className="whitespace-nowrap font-semibold">Sign In</p>
               </div>
-              <div className="flex flex-col items-center text-center">
+              <div className="flex min-h-[64px] flex-col items-center gap-1 text-center">
                 <p className="text-xs text-slate-500">Cart</p>
                 <p className="whitespace-nowrap font-semibold">2 Items</p>
               </div>
             </div>
           </div>
 
-          <nav className="mt-5 flex flex-wrap gap-6 border-t border-slate-200 pt-4 text-sm font-semibold text-slate-700">
+          <nav className="mt-5 flex flex-wrap gap-6 border-t border-slate-300 bg-[#EAECED] pt-4 text-sm font-semibold text-slate-900">
             {["Home", "Shop", "Products", "Solutions", "Services", "Blog", "Contact"].map((item) => (
-              <a key={item} href={item === "Contact" ? "/inquiry" : "#"} className="hover:text-blue-700">
+              <a
+                key={item}
+                href={item === "Contact" ? "/inquiry" : "#"}
+                className={item === "Home" ? "text-[#e7000b] hover:text-[#e7000b]" : "text-slate-900 hover:text-[#e7000b]"}
+              >
                 {item}
               </a>
             ))}
@@ -598,7 +602,7 @@ export default function Home() {
 
       <main className="mx-auto w-full max-w-[1440px] space-y-6 px-4 py-6">
         <section className="grid gap-4 xl:grid-cols-[260px_1fr_300px]">
-          <aside className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+          <aside className="overflow-hidden rounded-xl bg-white shadow-none">
             <div className="bg-red-600 px-4 py-3 text-sm font-semibold text-white">All Brands</div>
             <div className="max-h-[580px] overflow-y-auto">
               <ul className="divide-y divide-slate-100">
@@ -609,7 +613,7 @@ export default function Home() {
                   return (
                     <li key={brand.name} className={isActive ? "bg-red-50/30" : ""}>
                       <button
-                        className="flex min-h-10 w-full items-center justify-between gap-2 px-4 py-2.5 text-left hover:bg-slate-50"
+                        className="flex min-h-10 w-full items-center justify-between gap-2 px-4 py-2.5 text-left hover:bg-[#EAECED]"
                         type="button"
                         aria-expanded={isActive}
                         onClick={() => {
@@ -655,7 +659,7 @@ export default function Home() {
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
             {sidePromos.map((item) => (
-              <article key={item} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+              <article key={item} className="rounded-xl bg-white p-4 shadow-none">
                 <div className="mb-3 inline-block rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">SALE</div>
                 <h3 className="font-bold text-slate-900">{item}</h3>
                 <div className="mt-3 h-24 rounded-lg bg-gradient-to-br from-slate-200 to-slate-300 p-3 text-center text-xs text-slate-600">

@@ -2,6 +2,336 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-11 02:46:57 WIB] Hilangkan Border Luar Kartu Promo Kanan Homepage
+- Tanggal/Waktu WIB: 2026-05-11 02:46:57 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki tampilan kartu promo kanan homepage ... hilangkan border/outline/ring/shadow luar card Server Deals & Networking Deals, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Membuat kartu promo kanan menyatu dengan background putih utama seperti Sidebar Brands.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan yang Dilakukan:
+  - Pada card promo kanan (`Server Deals` dan `Networking Deals`), menghapus class border luar `border border-slate-200`.
+  - Menghapus shadow luar dengan mengganti `shadow-sm` menjadi `shadow-none`.
+  - Mempertahankan `rounded-xl`, `bg-white`, `p-4`, badge SALE, area Promo Image, dan struktur layout yang sama.
+- Keputusan Teknis:
+  - Perubahan dibatasi pada card promo kanan (`sidePromos.map`) agar area lain (hero, cards lain, header, sidebar) tidak terdampak.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung di `http://localhost:3000` untuk konfirmasi visual final.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual bahwa dua promo card kanan sudah tanpa garis luar dan posisi layout tetap sama.
+
+## [2026-05-11 02:34:56 WIB] Hapus Total Garis Luar Sidebar Brands Homepage
+- Tanggal/Waktu WIB: 2026-05-11 02:34:56 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki Sidebar Brands homepage agar benar-benar menyatu ... hilangkan border/outline/ring/shadow luar total, hover tetap `#EAECED`, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Menghapus sisa garis luar tipis pada Sidebar Brands agar menyatu dengan background putih utama.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan yang Dilakukan:
+  - Menghapus efek bayangan luar sidebar dengan mengganti class container `aside` dari `shadow-sm` menjadi `shadow-none`.
+  - Mempertahankan `rounded-xl`, `bg-white`, hover item `#EAECED`, header merah `All Brands`, serta logic expand/collapse.
+- Keputusan Teknis:
+  - Sisa garis tipis paling mungkin berasal dari shadow halus (`shadow-sm`), sehingga shadow dinonaktifkan total untuk memenuhi target "menyatu".
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu konfirmasi visual langsung di `http://localhost:3000` bahwa garis luar sidebar benar-benar hilang.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual: border luar hilang total, hover tetap `#EAECED`, expand/collapse tetap berfungsi.
+
+## [2026-05-11 02:30:45 WIB] Rapikan Sidebar Brands Homepage (Border dan Hover)
+- Tanggal/Waktu WIB: 2026-05-11 02:30:45 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki tampilan Sidebar Brands di homepage ... hilangkan border luar sidebar, hover item jadi `#EAECED`, jangan ubah area lain, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Menyesuaikan visual Sidebar Brands tanpa mengubah logic expand/collapse atau layout utama.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dicari (audit komponen):
+  - `src/components/**/*{home,Home,homepage,Homepage,layout,Layout}*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan yang Dilakukan:
+  - Menghapus border luar sidebar pada container `aside` dengan menghilangkan class `border border-slate-200`.
+  - Mempertahankan `rounded-xl`, `shadow-sm`, dan `bg-white` agar bentuk card tetap rapi.
+  - Mengubah hover item list brand utama dari `hover:bg-slate-50` ke `hover:bg-[#EAECED]`.
+  - Mengubah hover item katalog expand/collapse (sub list) dari `hover:bg-slate-50` ke `hover:bg-[#EAECED]`.
+  - Tidak mengubah header merah `All Brands`, icon `▶/▼`, divider antar item, maupun logic expand/collapse.
+- Keputusan Teknis:
+  - Divider internal (`divide-y` list dan `border-t` detail panel) dipertahankan karena bukan border kotak luar dan masih membantu keterbacaan.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung di `http://localhost:3000` untuk memastikan border luar hilang dan hover sidebar sesuai warna target.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual hover seluruh item sidebar brand/katalog dan fungsi expand/collapse di browser.
+
+## [2026-05-11 02:26:10 WIB] Ubah Background Area Utama Homepage Menjadi Putih
+- Tanggal/Waktu WIB: 2026-05-11 02:26:10 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Ubah background area utama Homepage/Main Content Section menjadi putih `#ffffff` ... jangan ubah top bar/header/nav/hero/sidebar/card, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Mengganti latar area luar konten homepage dari abu muda ke putih tanpa mengubah komponen isi.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+- File Dicari (audit komponen):
+  - `src/components/**/*{home,Home,homepage,Homepage,layout,Layout}*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan yang Dilakukan:
+  - Mengubah wrapper utama homepage dari `bg-slate-100` menjadi `bg-white` pada root container halaman.
+  - Tidak mengubah top bar `#33414e`, main header `#EAECED`, navigation `#EAECED`, serta tidak mengubah background card/sidebar/hero/promo.
+- Keputusan Teknis:
+  - Perubahan dipusatkan pada container luar (`min-h-screen`) agar area belakang main content berubah putih secara menyeluruh tanpa memodifikasi tiap section/card.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung di `http://localhost:3000` untuk konfirmasi visual final.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual bahwa area belakang sidebar/hero/cards sudah putih dan seluruh header palette tetap sesuai.
+
+## [2026-05-11 02:21:04 WIB] Hapus Efek Biru di Navigation Homepage
+- Tanggal/Waktu WIB: 2026-05-11 02:21:04 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki warna navigation homepage yang masih biru ... default dark, hover merah, active Home merah, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Menghilangkan seluruh state biru pada menu navigation homepage dan menggantinya dengan palet dark/red.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+- File Dicari (audit komponen):
+  - `src/components/**/*{Header,header,Navbar,navbar,Navigation,navigation}*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Penyebab Masalah:
+  - Navigation link masih memakai class `hover:text-blue-700`, sehingga menu menjadi biru saat hover.
+  - Tidak ada class active eksplisit untuk `Home`, sehingga state tidak mengikuti warna merah yang diinginkan.
+- Perbaikan yang Dilakukan:
+  - Mengganti warna default nav container ke dark navy (`text-slate-900`).
+  - Menghapus `hover:text-blue-700` dan mengganti hover semua menu menjadi merah `#e7000b`.
+  - Menetapkan menu `Home` sebagai active/current dengan warna merah `#e7000b` (termasuk hover).
+  - Tidak mengubah layout, spacing, ukuran font, top bar, main header, search bar, sidebar, hero, maupun area admin.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung di `http://localhost:3000` untuk memastikan tidak ada efek biru di navigation.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual hover setiap menu (`Shop`, `Products`, `Solutions`, `Services`, `Blog`, `Contact`) agar semua merah konsisten.
+
+## [2026-05-11 02:13:37 WIB] Samakan Background Search Bar Dengan Main Header Homepage
+- Tanggal/Waktu WIB: 2026-05-11 02:13:37 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki background kolom search di header homepage ... All Categories dan Search `#EAECED`, hover/focus merah tetap, top bar jangan diubah, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Menyamakan latar area search dengan main header tanpa mengubah struktur layout.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+- File Dicari (audit komponen):
+  - `src/components/**/*{header,Header,search,Search}*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perbaikan yang Dilakukan:
+  - Mengubah background wrapper search bar ke `#EAECED`.
+  - Mengubah background `select` All Categories ke `#EAECED`.
+  - Mengubah background input Search ke `#EAECED`.
+  - Mempertahankan border default abu-abu lembut (`border-slate-300`).
+  - Mempertahankan state hover/focus border merah `#e7000b` serta tombol Search merah.
+  - Tidak mengubah top bar, warna main header/nav, maupun layout section lain.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu verifikasi langsung di `http://localhost:3000` untuk memastikan warna final sesuai target.
+- Status Hasil: Sukses
+- Next Step:
+  - Cek manual hover/focus search dan kontras visual pada desktop/mobile.
+
+## [2026-05-11 02:09:02 WIB] Restore Dark Top Bar Pada Header Homepage Publik
+- Tanggal/Waktu WIB: 2026-05-11 02:09:02 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki warna header public homepage ... top bar harus tetap gelap `#33414e`, main header + nav `#EAECED`, pertahankan alignment Email dan hover/focus search merah, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Mengembalikan warna top bar ke palet gelap tanpa mengubah layout/header behavior lainnya.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dicari (audit komponen):
+  - `src/components/**/*{header,Header}*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perbaikan yang Dilakukan:
+  - Mengubah background top bar paling atas dari `#EAECED` kembali ke `#33414e`.
+  - Mempertahankan warna teks top bar sesuai target: `Call us`/`Language` `#7cbfdb`, `Free Consultation` putih, `My account` merah `#e7000b`.
+  - Tidak mengubah `main header` dan `nav` yang tetap `#EAECED`.
+  - Tidak mengubah alignment Email maupun interaksi hover/focus search yang sudah merah `#e7000b`.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu verifikasi visual langsung di `http://localhost:3000` sesuai checklist user.
+- Status Hasil: Sukses
+- Next Step:
+  - Cek manual di browser untuk memastikan top bar gelap sudah tampil konsisten di desktop dan mobile.
+
+## [2026-05-11 02:03:02 WIB] Finalisasi Header Homepage + Bersih Warning Lint Products Actions
+- Tanggal/Waktu WIB: 2026-05-11 02:03:02 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, API, Testing/QA, Documentation
+- Perintah User: "Perbaiki 3 hal ... hilangkan warning `_validate`, ubah background header public ke `#EAECED`, rapikan alignment Email, pertahankan hover/focus search merah, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Menyelesaikan perbaikan kecil UI homepage dan warning lint tanpa mengubah logic yang sudah berjalan.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+- File Dicari (audit komponen):
+  - `src/components/**/*{header,Header,search,Search}*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/products/actions.ts`
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Keputusan Teknis:
+  - Warning `_validate` dibersihkan tanpa eslint-disable dan tanpa mengubah alur validasi create/update; field `validate` tetap dipakai untuk validasi, tetapi dihapus dari payload insert/update sebelum query Supabase.
+  - Area header publik dipindah ke background `#EAECED` hanya pada topbar, main header, dan nav; section konten utama tidak disentuh.
+  - Search interaction dipertahankan merah pada hover/focus untuk wrapper, area select, dan input agar respons area search terasa konsisten tanpa menggeser layout.
+  - Alignment item Email dirapikan dengan struktur tinggi minimum konsisten antar Sales/Email/Account/Cart; icon email tetap di bawah label dan tetap style envelope merah + aksen biru.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa warning/error.
+  - `git status --short --branch`: `## main...origin/main` dengan file berubah `AGENT_LOG.md`, `src/app/admin/products/actions.ts`, `src/app/page.tsx`.
+- Validasi Manual Browser:
+  - Belum dapat dieksekusi dari CLI; perlu verifikasi langsung di browser untuk hover/focus search, background header `#EAECED`, alignment Email, dan memastikan rich text editor admin tetap normal.
+- Status Hasil: Sukses (lint bersih + perubahan kode selesai)
+- Next Step:
+  - Jalankan checklist manual di `http://localhost:3000` dan `http://localhost:3000/admin/products` untuk konfirmasi visual/interaksi final.
+
+## [2026-05-11 01:44:36 WIB] Styling Header Publik Homepage Sesuai Palet Warna Baru
+- Tanggal/Waktu WIB: 2026-05-11 01:44:36 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki styling header halaman publik http://localhost:3000 ... update warna topbar, all categories/search hover-focus, tombol search, lint + git status, catat AGENT_LOG, tanpa commit/push."
+- Tujuan Task: Menyesuaikan palet warna topbar dan state hover/focus area pencarian di halaman publik tanpa mengubah logic/data.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+- File Dicari (audit komponen):
+  - `src/components/**/*header*.tsx` (tidak ditemukan)
+  - `src/components/**/*Header*.tsx` (tidak ditemukan)
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+  - `npm run lint` (re-run setelah update log)
+  - `git status --short --branch` (re-check final)
+- Perubahan Styling yang Diterapkan:
+  - Topbar public diubah ke background `#33414e`.
+  - Teks `Call us for free` dan `Language` diubah ke `#7cbfdb`.
+  - Teks `Free Consultation for Business IT` diubah ke `#ffffff`.
+  - Teks `My account` diubah ke `#e7000b`.
+  - Wrapper search bar (`All categories + input`) ditambah state `hover` dan `focus-within` border merah `#e7000b`.
+  - Area `All categories` dan input search ditambah efek hover/focus inset merah `#e7000b` tanpa mengubah dimensi layout.
+  - Tombol `Search` diubah ke `#e7000b` dengan hover `#c9000a` dan teks putih.
+- Keputusan Teknis Styling:
+  - Perubahan difokuskan di `src/app/page.tsx` agar scope terbatas ke homepage publik dan tidak mengganggu dashboard admin.
+  - Menggunakan `transition` + `inset shadow` untuk highlight hover/focus agar tidak memicu layout shift.
+- Hasil Validasi:
+  - `npm run lint`: sukses dengan 2 warning existing (tidak terkait task) di `src/app/admin/products/actions.ts` baris 108 dan 147 (`_validate` unused).
+  - `git status --short --branch` (awal): `## main...origin/main` dengan perubahan di `src/app/page.tsx`.
+  - `git status --short --branch` (final): `## main...origin/main` dengan perubahan di `AGENT_LOG.md` dan `src/app/page.tsx`.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error lint; hanya warning existing yang tidak disentuh sesuai scope.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi visual manual di desktop/mobile pada `http://localhost:3000` untuk memastikan alignment search bar tetap rapi.
+
 ## [2026-05-11 01:25:30 WIB] Fix Fokus dan Stabilitas Toolbar Rich Text Editor Admin Products
 - Tanggal/Waktu WIB: 2026-05-11 01:25:30 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
