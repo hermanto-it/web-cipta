@@ -2,6 +2,147 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 14:44:05 WIB] CRUD Basic Categories Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 14:44:05 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, UI/UX, Testing/QA, Security, Documentation
+- Perintah User: "Buat CRUD full stack untuk Categories di Admin Dashboard ... Catat semua aktivitas, file yang dibaca/dibuat/diubah, command, error/warning, keputusan teknis, dan status hasil ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Menyediakan route `/admin/categories` untuk list/create/edit/delete/toggle active pada tabel `categories`, plus validasi dan slug auto-generate.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/brands/actions.ts`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+- File Dibuat:
+  - `src/lib/utils/slugify.ts`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/categories/actions.ts`
+  - `src/components/admin/categories/CategoryForm.tsx`
+  - `src/components/admin/categories/CategoryTable.tsx`
+- File Diubah:
+  - `src/app/admin/brands/actions.ts`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan halaman admin categories responsif dengan sidebar, header, create form, dan table list.
+  - Menambahkan UI edit inline, delete, dan toggle `is_active`.
+  - Menambahkan loading/error state pada form dan tabel.
+- Perubahan Backend:
+  - Menambahkan server actions categories:
+    - `createCategoryAction`
+    - `updateCategoryAction`
+    - `deleteCategoryAction`
+    - `toggleCategoryActiveAction`
+  - Validasi `name` wajib, `slug` wajib (edit), slug auto-generate saat create jika kosong, format slug lowercase-kebab-case.
+  - Revalidate path setelah mutasi untuk refresh data list.
+- Perubahan API: Tidak ada route API baru (menggunakan Server Actions).
+- Perubahan Database: Tidak ada perubahan schema.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada service role key.
+  - Catatan RLS: jika policy write belum tersedia, mutasi categories akan gagal dan error Supabase ditampilkan ke UI.
+- Ringkasan Perubahan: CRUD basic categories selesai, siap dipakai dan konsisten untuk integrasi form Products ke depan.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: membuat util reusable `slugify` + `isValidSlug` agar logika slug konsisten lintas modul (`brands`, `categories`).
+- Status Hasil: Sukses
+- Next Step:
+  - Lanjutkan CRUD Products dengan pemakaian categories dan brands sebagai relational select options.
+
+## [2026-05-10 14:39:14 WIB] CRUD Basic Brands Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 14:39:14 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, UI/UX, Testing/QA, Security, Documentation
+- Perintah User: "Buat CRUD full stack untuk Brands di Admin Dashboard ... Catat semua aktivitas, file yang dibaca/dibuat/diubah, command, error/warning, keputusan teknis, dan status hasil ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Menyediakan route `/admin/brands` dengan list/create/edit/delete/toggle active untuk tabel `brands` menggunakan Supabase, termasuk validasi slug dan fallback state.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+- File Dibuat:
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/brands/actions.ts`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/components/admin/brands/BrandTable.tsx`
+- File Diubah:
+  - `AGENT_LOG.md`
+  - `src/components/admin/brands/BrandTable.tsx`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan halaman admin brands responsif dengan sidebar + header + create form + table list.
+  - Menambahkan UI edit inline, delete action, dan toggle `is_active`.
+  - Menambahkan loading/error state pada form dan tabel.
+  - Menyediakan fallback visual `Data unavailable` bila env/query tidak tersedia.
+- Perubahan Backend:
+  - Menambahkan server actions untuk brands:
+    - `createBrandAction`
+    - `updateBrandAction`
+    - `deleteBrandAction`
+    - `toggleBrandActiveAction`
+  - Menambahkan validasi `name` wajib, `slug` wajib (edit), slug auto-generate saat create jika kosong, serta validasi format slug lowercase-kebab-case.
+  - Menambahkan `revalidatePath` agar data refresh setelah mutasi.
+- Perubahan API: Tidak ada route API baru (menggunakan Server Actions).
+- Perubahan Database: Tidak ada perubahan schema.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada penggunaan service role key.
+  - Catatan RLS: jika policy write belum tersedia, action mutasi akan menampilkan error Supabase ke UI dan log warning server.
+- Ringkasan Perubahan: CRUD basic untuk brands selesai dan siap dipakai sebagai fondasi modul admin berikutnya.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: meniru pola dari CRUD homepage banners agar konsisten dan mudah dirawat.
+- Status Hasil: Sukses
+- Next Step:
+  - Tambah halaman CRUD Categories dan Products dengan pola komponen/action serupa.
+
+## [2026-05-10 14:36:01 WIB] Git Add Commit Push Homepage Banners CRUD
+- Tanggal/Waktu WIB: 2026-05-10 14:36:01 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(admin): add homepage banners CRUD\"\ngit push"
+- Tujuan Task: Melakukan staging perubahan, commit sesuai pesan user, dan push ke remote.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git add . && git commit -m "feat(admin): add homepage banners CRUD" && git push && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Commit mencakup route dan komponen CRUD homepage banners.
+- Perubahan Backend: Commit mencakup server actions mutasi banner.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Commit `2ecc9f0` berhasil dipush ke `origin/main`.
+- Perubahan Security/Configuration: Tidak ada.
+- Ringkasan Perubahan: Semua perubahan berhasil di-stage, di-commit, dan di-push; status branch sinkron dengan remote.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning dari proses git.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: commit tambahan untuk menyertakan pembaruan AGENT_LOG terbaru.
+
 ## [2026-05-10 14:34:15 WIB] CRUD Basic Homepage Banners Admin Dashboard
 - Tanggal/Waktu WIB: 2026-05-10 14:34:15 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
