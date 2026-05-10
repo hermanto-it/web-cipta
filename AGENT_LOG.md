@@ -2,6 +2,181 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 16:42:21 WIB] Selesai Perapihan Hierarchy Accordion Sidebar Brands
+- Tanggal/Waktu WIB: 2026-05-10 16:42:21 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki Sidebar All Brands / Dell Technologies ... hierarchy + accordion behavior ... jangan recolor ... lint + git status ... jangan commit/push."
+- Tujuan Task: Membuat struktur nested Dell persis hierarchy yang diminta, memperbaiki indikator accordion, dan memastikan expand/collapse konsisten semua level.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (dua kali)
+  - `npm run lint`
+  - `git status --short --branch`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan fallback tree `comingSoonCatalog` untuk brand non-Dell agar semua brand tampil collapsed dengan triangle `▶` dan bisa expand menampilkan placeholder `Product lines coming soon`.
+  - Menjaga Dell hierarchy tetap nested dan memperbaiki satu label agar sesuai permintaan: `PowerEdge R550(Intel)`.
+  - Memperbaiki recursive accordion tree:
+    - node ber-children memakai tombol + triangle (`▶/▼`),
+    - node leaf tanpa triangle,
+    - menambahkan `aria-expanded` untuk aksesibilitas.
+  - Menambahkan helper indentasi per level (`getIndentClass`) untuk hierarki visual yang lebih jelas pada level bertingkat.
+  - Menghapus bullet dot pada leaf agar tampilan tree murni text+indent sesuai requirement.
+  - Integrasi Supabase homepage tetap dipertahankan; brand non-Dell hasil mapping Supabase diberi placeholder catalog jika taxonomy belum ada.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan auth, inquiry, admin, Supabase config, maupun `.env.local`.
+- Perubahan UI/UX:
+  - Sidebar tetap scrollable, text-only, tanpa logo/image, dan layout homepage utama tidak diubah.
+- Perubahan Testing/QA:
+  - `npm run lint` berhasil tanpa error/warning.
+  - `git status --short --branch` menampilkan perubahan sesuai scope file.
+- Ringkasan Perubahan: Struktur dan behavior accordion sidebar telah selaras dengan hierarchy Dell dan requirement expand/collapse lintas level, tanpa menyentuh area non-sidebar.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning saat lint.
+  - Keputusan teknis: menggunakan fallback taxonomy frontend untuk menjaga UX brand non-Dell tetap interaktif meskipun data Supabase belum lengkap.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi visual interaksi expand/collapse di browser pada semua level node Dell dan placeholder brand non-Dell.
+
+## [2026-05-10 16:40:10 WIB] Refactor Struktur Sidebar All Brands Dell Hierarchy
+- Tanggal/Waktu WIB: 2026-05-10 16:40:10 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki Sidebar All Brands / Dell Technologies agar struktur nested category sesuai hierarchy ... fokus taxonomy + accordion behavior ... lint + git status + saran commit message ... jangan commit/push."
+- Tujuan Task: Menyelaraskan struktur hierarchy Dell di sidebar homepage dan memastikan perilaku accordion konsisten di semua level.
+- Status Hasil: In Progress
+- Next Step:
+  - Refactor data fallback/sidebar tree dan perilaku expand/collapse di `src/app/page.tsx` tanpa menyentuh palette/layout global.
+
+## [2026-05-10 16:21:00 WIB] Penyempurnaan Kontras Homepage Setelah Recolor
+- Tanggal/Waktu WIB: 2026-05-10 16:21:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki hasil recolor homepage yang terlalu pucat/putih dan text tidak terbaca ... tetap gunakan palette ... lint + git status + saran commit message ... jangan commit/push."
+- Tujuan Task: Memulihkan readability dan hierarki visual homepage sambil mempertahankan palette brand serta layout existing.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (dua kali)
+  - `npm run lint`
+  - `git status --short --branch`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Topbar diubah ke background terang (`--color-soft-bg`) dengan teks gelap (`--color-deep-teal`) agar terbaca jelas.
+  - Header utama diubah ke background putih; logo/nav/metadata memakai teks gelap, hover nav merah brand.
+  - Search area dipertahankan kontras tinggi: input putih + border mint + tombol merah.
+  - Sidebar `All Brands` dipulihkan: header merah solid, body putih, item text gelap, arrow deep teal, hover sangat ringan.
+  - Hero banner dikontraskan ulang dengan gradient `from #2C687B via #2C687B to #8CC7C4` dan teks putih solid.
+  - Right promo cards + benefit cards dikembalikan ke kartu putih dengan border mint ringan agar tidak washed out.
+  - Middle CTA dark section dipastikan dominan `#2C687B` (solid), bukan nuansa pucat.
+  - Section headings penting diarahkan ke warna gelap solid (`slate-900`) untuk readability.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`, auth, Supabase, inquiry flow, atau admin flow.
+- Perubahan Testing/QA:
+  - `npm run lint` sukses tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan hanya pada file scope styling/log.
+- Ringkasan Perubahan: Homepage kini kembali readable dengan kontras visual yang tegas dan tetap konsisten dengan palette brand yang ditetapkan.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: menghindari opacity rendah pada teks penting dan mengembalikan dominasi warna solid untuk area navigasi/hero.
+- Status Hasil: Sukses
+- Next Step:
+  - Review cepat di browser untuk memastikan kontras akhir sesuai preferensi visual stakeholder.
+
+## [2026-05-10 16:19:42 WIB] Perbaikan Readability Recolor Homepage
+- Tanggal/Waktu WIB: 2026-05-10 16:19:42 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki hasil recolor homepage yang membuat tampilan terlalu pucat/putih dan text tidak terbaca ... tetap gunakan palette ... lint + git status + saran commit message ... jangan commit/push ... catat semua aktivitas ke AGENT_LOG.md."
+- Tujuan Task: Memulihkan kontras/readability homepage public sambil mempertahankan palette brand dan struktur layout.
+- Status Hasil: In Progress
+- Next Step:
+  - Refactor kelas warna di `src/app/page.tsx` untuk topbar/header/nav/sidebar/hero/cards/CTA/footer agar kontras solid dan terbaca.
+
+## [2026-05-10 16:15:28 WIB] Refactor Warna Homepage Sesuai Palette Brand
+- Tanggal/Waktu WIB: 2026-05-10 16:15:28 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Ubah color styling homepage public sesuai palette #DB1A1A, #FFF6F6, #8CC7C4, #2C687B ... validasi lint + git status, sarankan commit message, jangan commit/push, dan catat semua aktivitas ke AGENT_LOG.md."
+- Tujuan Task: Menyelaraskan visual warna homepage public agar konsisten dengan palette brand enterprise tanpa mengubah struktur layout utama.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/globals.css`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/globals.css`
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (dua kali untuk timestamp)
+  - `npm run lint`
+  - `git status --short --branch`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan token warna terpusat di `src/app/globals.css`:
+    - `--color-primary-red: #DB1A1A`
+    - `--color-soft-bg: #FFF6F6`
+    - `--color-mint: #8CC7C4`
+    - `--color-deep-teal: #2C687B`
+    - plus hover shades untuk konsistensi interaksi.
+  - Refactor warna utama di `src/app/page.tsx` untuk area: topbar, header, search area, sidebar All Brands, hero, promo cards, benefit cards, Deal of the Day, middle CTA banner, tabs, Best Seller, final CTA, dan footer.
+  - Menjaga struktur, spacing, data flow, dan responsivitas section homepage tetap sama; perubahan fokus pada warna/styling.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada perubahan auth/Supabase/inquiry/admin flow.
+- Perubahan Documentation:
+  - Menambahkan catatan aktivitas implementasi dan validasi ke `AGENT_LOG.md`.
+- Perubahan Testing/QA:
+  - `npm run lint` sukses tanpa error/warning.
+  - `git status --short --branch` menunjukkan file yang berubah sesuai scope styling.
+- Ringkasan Perubahan: Homepage public kini menggunakan palette brand yang diminta dengan pendekatan tokenized colors dan refactor class warna konsisten, tanpa mengubah layout/arsitektur.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: memakai CSS variables di `globals.css` agar maintainable dan mudah dipakai ulang lintas section.
+  - Keputusan teknis: menggunakan perubahan kelas Tailwind berbasis `var(--token)` agar kompatibel dengan setup Tailwind v4 tanpa dependency tambahan.
+- Status Hasil: Sukses
+- Next Step:
+  - Review visual cepat di `http://localhost:3000` untuk fine-tuning kontras minor jika diperlukan.
+  - Commit manual jika user menyetujui hasil palette.
+
+## [2026-05-10 16:13:41 WIB] Penyesuaian Palette Warna Homepage Public
+- Tanggal/Waktu WIB: 2026-05-10 16:13:41 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Ubah color styling halaman homepage public http://localhost:3000/ agar sesuai palette ... Validasi: lint + git status + saran commit message + jangan commit/push ... Catat semua aktivitas ke AGENT_LOG.md."
+- Tujuan Task: Menyesuaikan warna homepage public sesuai palette baru tanpa mengubah struktur layout, flow backend, auth, inquiry, dan admin.
+- Status Hasil: In Progress
+- Next Step:
+  - Tambahkan token warna terpusat di `src/app/globals.css` lalu refactor kelas warna di `src/app/page.tsx`.
+
 ## [2026-05-10 16:04:50 WIB] Git Add Commit Push Inquiry Feature
 - Tanggal/Waktu WIB: 2026-05-10 16:04:50 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
