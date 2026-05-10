@@ -473,12 +473,14 @@ export default function Home() {
       <div className="border-b border-slate-200 bg-white text-xs text-slate-600 sm:text-sm">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 py-2">
           <p>Call us for free: {companyProfile.phone}</p>
-          <p className="font-medium text-blue-800">Free Consultation for Business IT</p>
+          <a href="/inquiry" className="font-medium text-blue-800 hover:text-blue-700">
+            Free Consultation for Business IT
+          </a>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-blue-700">
+            <a href="/inquiry" className="hover:text-blue-700">
               Language
             </a>
-            <a href="#" className="hover:text-blue-700">
+            <a href="/inquiry" className="hover:text-blue-700">
               My account
             </a>
           </div>
@@ -540,7 +542,7 @@ export default function Home() {
 
           <nav className="mt-5 flex flex-wrap gap-6 border-t border-slate-200 pt-4 text-sm font-semibold text-slate-700">
             {["Home", "Shop", "Products", "Solutions", "Services", "Blog", "Contact"].map((item) => (
-              <a key={item} href="#" className="hover:text-blue-700">
+              <a key={item} href={item === "Contact" ? "/inquiry" : "#"} className="hover:text-blue-700">
                 {item}
               </a>
             ))}
@@ -594,7 +596,9 @@ export default function Home() {
             <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">{heroBanner.subtitle}</h2>
             <p className="mt-2 max-w-xl text-sm text-slate-200">{heroBanner.description}</p>
             <p className="mt-3 text-sm text-slate-200">{heroBanner.priceText}</p>
-            <button className="mt-5 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">{heroBanner.ctaLabel}</button>
+            <a href="/inquiry" className="mt-5 inline-block rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">
+              {heroBanner.ctaLabel}
+            </a>
             <div className="mt-6 h-40 rounded-lg border border-white/20 bg-white/10 p-4 text-center text-sm text-blue-100 sm:absolute sm:bottom-6 sm:right-6 sm:mt-0 sm:w-72">
               Main Banner Image
             </div>
@@ -665,7 +669,9 @@ export default function Home() {
 
         <section className="rounded-xl bg-gradient-to-r from-blue-900 via-blue-700 to-slate-800 p-6 text-white shadow-md">
           <h3 className="text-2xl font-bold">{middlePromo.title}</h3>
-          <button className="mt-4 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">{middlePromo.ctaLabel}</button>
+          <a href="/inquiry" className="mt-4 inline-block rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">
+            {middlePromo.ctaLabel}
+          </a>
           <div className="mt-4 h-24 rounded-lg bg-white/15 p-3 text-center text-sm text-blue-100">{middlePromo.description || "Banner Image"}</div>
         </section>
 
@@ -734,9 +740,9 @@ export default function Home() {
             Konsultasikan kebutuhan server, storage, networking, endpoint, dan security untuk perusahaan Anda.
           </p>
           <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-            <button className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800">
+            <a href="/inquiry" className="rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-800">
               Konsultasi Sekarang
-            </button>
+            </a>
             <button className="rounded-lg border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100">
               Lihat Katalog
             </button>

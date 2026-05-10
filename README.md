@@ -133,3 +133,38 @@ Catatan keamanan:
 
 - Jangan gunakan service role key di frontend.
 - Jangan buat public write policy untuk `admin_users`.
+
+## Public Inquiry + Admin Inquiries Setup
+
+Fitur inquiry terdiri dari:
+
+- Halaman publik: `/inquiry`
+- Dashboard admin: `/admin/inquiries`
+
+### 1) Pastikan tabel inquiries sudah ada
+
+Jika belum, jalankan schema utama:
+
+```bash
+supabase/schema.sql
+```
+
+### 2) Terapkan policy RLS inquiries
+
+Jalankan SQL policy berikut secara manual di Supabase SQL Editor:
+
+```bash
+supabase/inquiries-policies.sql
+```
+
+Policy ini mengatur:
+
+- Public (`anon`/`authenticated`) boleh `insert` inquiry.
+- Public tidak punya policy `select` ke `inquiries`.
+- Admin aktif (`public.admin_users`) boleh `select` dan `update` inquiry.
+
+### 3) Alur penggunaan
+
+- User isi form inquiry di `/inquiry`.
+- Data masuk ke `public.inquiries` dengan status default `new`.
+- Admin melihat dan update status (`new`, `contacted`, `closed`) di `/admin/inquiries`.

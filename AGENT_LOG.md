@@ -2,6 +2,106 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 16:04:50 WIB] Git Add Commit Push Inquiry Feature
+- Tanggal/Waktu WIB: 2026-05-10 16:04:50 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(inquiry): add customer inquiry form and admin inbox\"\ngit push"
+- Tujuan Task: Melakukan staging semua perubahan, membuat commit sesuai pesan user, lalu push ke remote.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git status --short --branch`
+  - `git diff --stat && git diff --cached --stat`
+  - `git log --oneline -5`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Commit akan mencakup halaman inquiry publik dan admin inbox inquiries.
+- Perubahan Backend: Commit akan mencakup server actions inquiry submit dan update status.
+- Perubahan API: Tidak ada route API baru (Server Actions).
+- Perubahan Database: Commit mencakup file policy SQL manual inquiries.
+- Perubahan Infrastructure/Deployment: Proses git add/commit/push dijalankan sesuai instruksi user.
+- Perubahan Security/Configuration: Tidak ada perubahan secret/env lokal.
+- Ringkasan Perubahan: Persiapan commit dan push fitur inquiry sesuai permintaan user.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error pada tahap persiapan commit.
+  - Keputusan teknis: mengikuti pesan commit yang diberikan user apa adanya.
+- Status Hasil: In Progress
+- Next Step:
+  - Jalankan `git add .`, `git commit`, dan `git push`, lalu verifikasi status branch.
+
+## [2026-05-10 15:58:39 WIB] Implementasi Public Inquiry + Admin Inquiries
+- Tanggal/Waktu WIB: 2026-05-10 15:58:39 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, API, Security, Documentation, UI/UX, Testing/QA
+- Perintah User: "Continue if you have next steps, or stop and ask for clarification if you are unsure how to proceed."
+- Tujuan Task: Melanjutkan implementasi fitur inquiry end-to-end (halaman publik, halaman admin, server actions, wiring CTA homepage, policy SQL manual, dan dokumentasi setup).
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/auth.ts`
+  - `src/lib/supabase/client.ts`
+  - `src/lib/supabase/server.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/brands/actions.ts`
+  - `supabase/schema.sql`
+  - `README.md`
+- File Dibuat:
+  - `src/app/inquiry/page.tsx`
+  - `src/app/inquiry/actions.ts`
+  - `src/app/admin/inquiries/page.tsx`
+  - `src/app/admin/inquiries/actions.ts`
+  - `supabase/inquiries-policies.sql`
+- File Diubah:
+  - `src/app/page.tsx`
+  - `README.md`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+  - `npm run lint`
+  - `git status --short --branch`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan halaman publik `/inquiry` berisi form konsultasi bisnis IT dengan validasi input, state loading, feedback error/sukses.
+  - Menambahkan halaman admin `/admin/inquiries` untuk list inquiry, filter status (`all/new/contacted/closed`), detail kontak, dan pesan.
+- Perubahan Backend:
+  - Menambahkan server action `submitInquiryAction` untuk menyimpan inquiry ke tabel `public.inquiries`.
+  - Menambahkan server action `updateInquiryStatusAction` untuk transisi status inquiry (`new`, `contacted`, `closed`).
+  - Menambahkan revalidate path untuk sinkronisasi dashboard admin setelah insert/update inquiry.
+- Perubahan API:
+  - Tidak menambah route handler API baru; fitur dijalankan melalui Server Actions pada App Router.
+- Perubahan Database:
+  - Menambahkan artefak SQL manual `supabase/inquiries-policies.sql` untuk policy RLS inquiry (public insert, admin select/update).
+- Perubahan Security/Configuration:
+  - Menjaga prinsip tanpa service role key pada frontend/server action.
+  - Policy inquiry membatasi read/update hanya untuk user `authenticated` yang terdaftar aktif di `public.admin_users`.
+- Perubahan UI/UX:
+  - Wiring CTA/kontak homepage ke `/inquiry` pada area konsultasi, CTA hero/middle promo, dan menu Contact.
+  - Menjaga struktur desain homepage tetap konsisten, hanya mengganti target aksi/link.
+- Perubahan Documentation:
+  - Menambahkan section setup "Public Inquiry + Admin Inquiries" pada `README.md` beserta langkah policy SQL dan alur penggunaan.
+- Perubahan Testing/QA:
+  - Menjalankan `npm run lint` dan hasilnya bersih tanpa error/warning.
+  - Verifikasi perubahan via `git status --short --branch`.
+- Ringkasan Perubahan: Fitur inquiry publik dan admin selesai secara fungsional di level aplikasi, termasuk form submit, list admin, update status, rewiring CTA homepage, dan panduan setup policy RLS manual.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning saat lint.
+  - Keputusan teknis: policy inquiry dipisahkan ke file SQL terdedikasi agar eksekusi manual lebih jelas dan tidak mengganggu artefak schema utama.
+  - Keputusan teknis: mempertahankan perubahan homepage seminimal mungkin untuk menghindari regresi UI.
+- Status Hasil: Sukses
+- Next Step:
+  - Jalankan SQL `supabase/inquiries-policies.sql` di Supabase SQL Editor untuk mengaktifkan akses admin inquiries sesuai RLS.
+  - Opsional: tambahkan link `/admin/inquiries` ke menu admin halaman lain agar navigasi antar modul konsisten.
+
 ## [2026-05-10 15:23:19 WIB] Implementasi Login Admin + Forgot/Reset Password Supabase Auth
 - Tanggal/Waktu WIB: 2026-05-10 15:23:19 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
