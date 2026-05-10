@@ -4,7 +4,7 @@ import { useMemo, useState, useTransition } from "react";
 
 import { createProductAction, updateProductAction } from "@/app/admin/products/actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
-import { AdminMarkdownEditor } from "@/components/admin/AdminMarkdownEditor";
+import { AdminRichTextEditor } from "@/components/admin/AdminRichTextEditor";
 import { slugify } from "@/lib/utils/slugify";
 
 export type ProductOption = { id: string; name: string };
@@ -48,6 +48,8 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
   const [slugValue, setSlugValue] = useState(initialData?.slug ?? "");
   const [brandId, setBrandId] = useState(initialData?.brand_id ?? "");
   const [categoryId, setCategoryId] = useState(initialData?.category_id ?? "");
+  const [shortDescription, setShortDescription] = useState(initialData?.short_description ?? "");
+  const [description, setDescription] = useState(initialData?.description ?? "");
 
   const taxonomyOptions = useMemo(() => {
     return taxonomies.filter((item) => {
@@ -77,6 +79,8 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
 
           event.currentTarget.reset();
           setSlugValue("");
+          setShortDescription("");
+          setDescription("");
           onDone?.();
         });
       }}
@@ -199,20 +203,22 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
 
       <section className="rounded-xl border border-slate-200 bg-slate-50/60 p-4">
         <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-600">Description</h4>
+        <input type="hidden" name="short_description" value={shortDescription} />
+        <input type="hidden" name="description" value={description} />
         <div className="grid gap-3 sm:grid-cols-2">
-          <AdminMarkdownEditor
+          <AdminRichTextEditor
             label="Short Description"
-            name="short_description"
-            defaultValue={initialData?.short_description ?? ""}
+            value={shortDescription}
+            onChange={setShortDescription}
             placeholder="Ringkasan singkat produk"
-            minHeight="140px"
+            minHeightClassName="min-h-[140px]"
           />
-          <AdminMarkdownEditor
+          <AdminRichTextEditor
             label="Description"
-            name="description"
-            defaultValue={initialData?.description ?? ""}
+            value={description}
+            onChange={setDescription}
             placeholder="Deskripsi lengkap produk"
-            minHeight="160px"
+            minHeightClassName="min-h-[160px]"
           />
         </div>
       </section>

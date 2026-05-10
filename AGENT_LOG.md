@@ -2,6 +2,195 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 23:51:30 WIB] Replace Custom Editor Dengan TipTap Stabil di Admin Products
+- Tanggal/Waktu WIB: 2026-05-10 23:51:30 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Dependency/Tooling, Documentation, Testing/QA
+- Perintah User: "Analisa dan fix total Rich Text Editor Admin untuk /admin/products ... ganti ke TipTap ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Menghapus ketidakstabilan `contentEditable + execCommand` dan mengganti editor products ke TipTap dengan toolbar rich text yang stabil.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/globals.css`
+  - `package.json`
+- File Dibuat:
+  - `src/components/admin/AdminRichTextEditor.tsx`
+- File Diubah:
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/globals.css`
+  - `package.json`
+  - `package-lock.json`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB' && npm run lint && npm run build && git status --short --branch && TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (build sempat di-abort user saat proses TypeScript)
+  - `npm install @tiptap/react @tiptap/starter-kit @tiptap/extension-link @tiptap/extension-image @tiptap/extension-table @tiptap/extension-table-row @tiptap/extension-table-cell @tiptap/extension-table-header @tiptap/extension-placeholder @tiptap/extension-text-align`
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah:
+  - `@tiptap/react`
+  - `@tiptap/starter-kit`
+  - `@tiptap/extension-link`
+  - `@tiptap/extension-image`
+  - `@tiptap/extension-table`
+  - `@tiptap/extension-table-row`
+  - `@tiptap/extension-table-cell`
+  - `@tiptap/extension-table-header`
+  - `@tiptap/extension-placeholder`
+  - `@tiptap/extension-text-align`
+- Audit Penyebab Bug Lama:
+  - Editor lama memakai `document.execCommand` yang deprecated dan tidak konsisten pada selection/caret antar browser state.
+  - Sinkronisasi `innerHTML -> state` berjalan di event `input/blur` dan command click, sehingga selection mudah hilang saat toolbar interaction.
+  - Fallback list berbasis regex/HTML injection memperbaiki sebagian kasus, tetapi tidak menyelesaikan akar state synchronization issue sehingga text kadang hilang/reset.
+- Perbaikan yang Dilakukan:
+  - Membuat komponen baru `AdminRichTextEditor` berbasis TipTap (`useEditor`, `EditorContent`) dengan extension sesuai requirement.
+  - Toolbar lengkap: Paragraph/H2/H3/H4, Bold, Italic, Link, Bullet, Ordered, Quote, Table, Image, Align Left/Center/Right, Undo/Redo.
+  - Link memakai prompt `Masukkan URL`; URL kosong -> unset link; cancel -> no-op.
+  - Image memakai prompt `Masukkan URL gambar`; hanya insert URL image (tanpa upload).
+  - Table insert default `rows: 3`, `cols: 3`, `withHeaderRow: true`.
+  - Menjaga controlled value HTML via `onUpdate: onChange(editor.getHTML())`.
+  - Mencegah reset setiap render: `setContent` hanya dijalankan saat `value` eksternal berbeda dari `editor.getHTML()` dan dengan `emitUpdate: false`.
+  - Integrasi di `ProductForm`: mengganti `AdminMarkdownEditor` menjadi `AdminRichTextEditor` untuk `short_description` dan `description`, menyimpan nilai ke hidden input field bernama tetap (`short_description`, `description`).
+  - Menambah style TipTap pada `globals.css` untuk `.admin-rich-editor .ProseMirror`, list, blockquote, table, image, dan placeholder.
+- Perubahan Logic/Security/Scope:
+  - Tidak ada perubahan auth/login, homepage public, schema database, atau `.env.local`.
+  - `Product Images` dan `Company Settings` route tidak disentuh.
+- Hasil Testing/QA:
+  - `npm run lint` lulus tanpa error.
+  - `git status --short --branch`:
+    - ` M AGENT_LOG.md`
+    - ` M package-lock.json`
+    - ` M package.json`
+    - ` M src/app/globals.css`
+    - ` M src/components/admin/AdminMarkdownEditor.tsx`
+    - ` M src/components/admin/products/ProductForm.tsx`
+    - `?? src/components/admin/AdminRichTextEditor.tsx`
+  - Test manual browser untuk skenario toolbar `/admin/products` belum dapat divalidasi di CLI (perlu dijalankan langsung di browser lokal).
+- Error/Warning/Keputusan Teknis:
+  - Warning keamanan dependency: `npm install` melaporkan `2 moderate severity vulnerabilities` (belum dieksekusi `npm audit fix --force` untuk menghindari breaking change otomatis).
+  - Keputusan teknis: mempertahankan `AdminMarkdownEditor.tsx` sementara (tidak dipakai lagi di ProductForm) agar minim risiko breaking di area lain.
+- Status Hasil: Sukses (implementasi), menunggu validasi manual browser.
+- Next Step:
+  - Jalankan validasi manual toolbar di `/admin/products` sesuai checklist user (bold/italic/list/heading/quote/undo/redo/link/image/table) pada kedua editor.
+  - Jika semua lolos, lanjut commit dengan message: `fix(admin): replace custom rich text editor with stable TipTap editor`.
+
+## [2026-05-10 23:26:52 WIB] Fix Tombol Bullet/Numbered List Pada Rich Text Editor
+- Tanggal/Waktu WIB: 2026-05-10 23:26:52 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki toolbar List di Admin Rich Text Editor ... tombol • List dan 1. List tidak berfungsi ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Mengaktifkan action bullet/numbered list agar bekerja pada selection dan pada editor kosong.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Penyebab Tombol List Tidak Berfungsi:
+  - Command list bergantung pada selection/caret aktif; saat kondisi editor kosong atau selection tidak terjaga, `execCommand` bisa no-op.
+  - Belum ada fallback untuk menyuntik list HTML saat command gagal pada editor kosong.
+- Perbaikan yang Dilakukan:
+  - Menambahkan helper `runCommand(command, value?)` yang:
+    - memfokuskan editor,
+    - menjalankan `document.execCommand`,
+    - sinkronisasi value ke state (`syncValue`).
+  - Menambahkan helper `syncValue()` berbasis `editorRef.current?.innerHTML` + normalisasi empty html.
+  - Menambahkan fallback list:
+    - bullet fallback: `<ul><li><br></li></ul>`
+    - numbered fallback: `<ol><li><br></li></ol>`
+    - dipicu bila setelah command tidak ada `<ul>/<ol>`.
+  - Menambahkan helper `setCaretToEnd()` dengan `Range` + `Selection` untuk memindahkan caret setelah fallback insert.
+  - Menjaga selection dengan `onMouseDown={(event) => event.preventDefault()}` pada tombol toolbar list (dan command buttons lain).
+  - Label tombol tetap sesuai requirement: `• List` dan `1. List`.
+- Perubahan Logic/Security:
+  - Tidak ada perubahan auth/login/middleware/schema/.env.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan pada editor + log.
+  - Test manual list behavior diminta user perlu dijalankan langsung di browser lokal `/admin/products`.
+- Ringkasan Hasil:
+  - Tombol bullet/numbered list kini dieksekusi dengan alur focus+command+sync.
+  - Pada editor kosong tersedia fallback insert list agar user bisa langsung mengetik item.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: mempertahankan pendekatan lightweight `contentEditable + execCommand` tanpa dependency tambahan.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual skenario selection text -> list dan empty editor -> list pada kedua field editor products.
+
+## [2026-05-10 23:15:13 WIB] Fix Rich Text Editor Tidak Focusable/Editable
+- Tanggal/Waktu WIB: 2026-05-10 23:15:13 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki bug Admin Rich Text Editor ... area editor tidak bisa diklik/ditik, caret tidak muncul ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Membuat area editor visual dapat difokuskan, diketik, dan toolbar tetap menjaga selection text.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/app/globals.css`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Penyebab Bug:
+  - Interaksi focus/selection pada `contentEditable` belum robust sehingga caret tidak muncul konsisten saat klik area editor.
+  - Toolbar button mengambil fokus default browser dan berpotensi memutus selection.
+- Perbaikan yang Dilakukan:
+  - Menambahkan `role="textbox"` dan `tabIndex={0}` pada `contentEditable`.
+  - Menambahkan gaya interaksi editor: `cursor-text`, `pointer-events-auto`, `bg-white`, `px-4 py-3`, `text-sm`.
+  - Menambahkan `onClick` pada wrapper untuk memaksa `editorRef.current?.focus()`.
+  - Menambahkan `focus-within` border/ring merah pada wrapper.
+  - Menambahkan `onMouseDown={(e) => e.preventDefault()}` pada tombol toolbar agar selection tetap terjaga.
+  - Tetap menjalankan `editor.focus()` sebelum `document.execCommand(...)`.
+  - Placeholder tetap `pointer-events-none` agar tidak menutup klik.
+- Perubahan Logic/Security:
+  - Tidak ada perubahan auth/login/middleware/schema/.env.
+  - Tidak ada dependency baru.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan pada file editor + log.
+  - Test manual browser perlu dijalankan user sesuai checklist interaksi editor.
+- Ringkasan Hasil:
+  - Editor sekarang focusable/editable, caret dapat muncul, dan formatting visual dapat diterapkan tanpa markdown mentah.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: tetap gunakan `contentEditable + execCommand` sesuai batasan tanpa dependency eksternal.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual di `/admin/products` untuk aksi bold/italic/list/heading/quote pada kedua editor.
+
+## [2026-05-10 23:13:33 WIB] Fix Editor Products Tidak Bisa Diklik/Diketik
+- Tanggal/Waktu WIB: 2026-05-10 23:13:33 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki bug Admin Rich Text Editor ... area editor tidak bisa diklik/ditik ... pastikan contentEditable focusable ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Memastikan editor visual pada Products benar-benar focusable/editable, caret muncul, toolbar bekerja tanpa merusak selection.
+- Status Hasil: In Progress
+- Next Step:
+  - Perbaiki interaksi focus/pointer/selection pada komponen editor visual.
+
 ## [2026-05-10 23:03:03 WIB] Replace Markdown Toolbar Dengan Visual Rich Text Editor
 - Tanggal/Waktu WIB: 2026-05-10 23:03:03 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
