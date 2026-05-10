@@ -2,6 +2,82 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 23:03:03 WIB] Replace Markdown Toolbar Dengan Visual Rich Text Editor
+- Tanggal/Waktu WIB: 2026-05-10 23:03:03 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA, Security
+- Perintah User: "Perbaiki toolbar editor di Admin Products agar visual seperti MS Word (bold visual, bukan **text**) ... tanpa dependency baru ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Mengubah editor products dari markdown textarea menjadi editor visual contentEditable yang menyimpan HTML string untuk submit form.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/company-settings/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Penyebab Masalah Lama:
+  - Editor sebelumnya berbasis `textarea` + penyisipan template markdown (`**text**`, `- item`, dst), sehingga hasil tampak sebagai teks mentah dan bukan formatting visual.
+- Perubahan Frontend/UI:
+  - Refactor `AdminMarkdownEditor` menjadi visual editor berbasis `contentEditable`.
+  - Toolbar kini mengeksekusi format visual dengan `document.execCommand`:
+    - heading (Paragraph/H2/H3), bold, italic, link,
+    - bullet, numbered,
+    - align left/center/right,
+    - quote, image URL insertion, table 2x2,
+    - undo/redo.
+  - Tombol toolbar bertipe `button` agar tidak submit form.
+  - Placeholder tampil saat editor kosong.
+  - Editor menyimpan output sebagai HTML string (`innerHTML`) ke hidden input `name={field}` untuk submit.
+  - Integrasi di `ProductForm`:
+    - `Short Description` min-height `140px`
+    - `Description` min-height `160px`
+  - Layout section description tetap 2 kolom desktop, turun 1 kolom mobile.
+- Perubahan Logic/Data Handling:
+  - Submit create/update product tetap lewat field form yang sama:
+    - `short_description`
+    - `description`
+  - Nilai yang terkirim kini HTML string, bukan markdown.
+  - Tidak ada perubahan action server products.
+- Catatan Security:
+  - Menyimpan HTML dari editor admin dianggap trusted untuk admin panel.
+  - Tetap direkomendasikan sanitization sebelum render ke public production (dicatat sebagai technical note).
+- Perubahan API/Database/Configuration:
+  - Tidak ada perubahan auth/middleware/.env/schema/dependency.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan pada komponen editor dan form products.
+  - Test manual browser diminta user (bold/italic/list/heading/quote di `/admin/products`) perlu divalidasi langsung pada UI lokal.
+- Ringkasan Perubahan: Editor Products sekarang berfungsi sebagai visual rich text sederhana ala toolbar word processor, bukan markdown inserter, dengan output HTML yang tetap kompatibel dengan submit form existing.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: mempertahankan nama file komponen agar integrasi cepat dan minim perubahan lintas file, sambil mengganti engine internal ke `contentEditable`.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual interaksi toolbar pada Short Description dan Description di `/admin/products`.
+  - Jika diperlukan, rename komponen ke `AdminRichTextEditor` pada iterasi berikutnya untuk naming clarity.
+
+## [2026-05-10 23:00:11 WIB] Upgrade Editor Products ke Visual Rich Text
+- Tanggal/Waktu WIB: 2026-05-10 23:00:11 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki toolbar editor di Admin Products agar visual seperti MS Word, bukan markdown mentah ... tanpa dependency baru ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Mengganti editor markdown textarea menjadi editor visual contentEditable yang menyimpan HTML string untuk short_description dan description.
+- Status Hasil: In Progress
+- Next Step:
+  - Refactor komponen editor menjadi rich text visual dan integrasikan ke ProductForm.
+
 ## [2026-05-10 22:39:25 WIB] Selesai Products Improvement + Route Sidebar Product Images/Company Settings
 - Tanggal/Waktu WIB: 2026-05-10 22:39:25 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

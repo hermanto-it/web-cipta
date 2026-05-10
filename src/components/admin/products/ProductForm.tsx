@@ -205,14 +205,14 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
             name="short_description"
             defaultValue={initialData?.short_description ?? ""}
             placeholder="Ringkasan singkat produk"
-            rows={5}
+            minHeight="140px"
           />
           <AdminMarkdownEditor
             label="Description"
             name="description"
             defaultValue={initialData?.description ?? ""}
             placeholder="Deskripsi lengkap produk"
-            rows={5}
+            minHeight="160px"
           />
         </div>
       </section>
