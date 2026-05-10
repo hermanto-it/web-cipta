@@ -65,11 +65,19 @@ export default async function AdminProductsPage() {
     <AdminDashboardShell
       currentPath="/admin/products"
       title="Products"
-      subtitle="Kelola produk ecommerce lengkap dengan relasi brand, category, dan taxonomy."
+      subtitle="Kelola produk ecommerce lengkap dengan relasi brand, category, taxonomy, dan SEO."
       dataUnavailable={dataUnavailable}
     >
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-lg font-semibold text-slate-900">Create Product</h3>
+      <section className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200/70">
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Dashboard &gt; Products</p>
+            <h3 className="mt-1 text-xl font-bold text-[#33414e]">Products</h3>
+            <p className="mt-1 text-sm text-slate-500">Kelola produk ecommerce lengkap dengan relasi brand, category, taxonomy, dan SEO.</p>
+          </div>
+          <span className="inline-flex rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-[#e7000b] ring-1 ring-[#e7000b]/20">Live Supabase</span>
+        </div>
+        <h4 className="mb-3 text-base font-semibold text-slate-900">Create Product</h4>
         <ProductForm mode="create" brands={brands} categories={categories} taxonomies={taxonomies} />
       </section>
 

@@ -18,7 +18,7 @@ export type AdminRichTextEditorProps = {
 };
 
 const BUTTON_BASE =
-  "rounded border border-slate-200 px-2 py-1 text-xs font-medium text-slate-700 hover:border-[#DB1A1A] hover:text-[#DB1A1A]";
+  "rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-700 transition hover:border-[#e7000b]/60 hover:bg-[#EAECED] hover:text-[#e7000b]";
 
 export function AdminRichTextEditor({
   label,
@@ -107,10 +107,10 @@ export function AdminRichTextEditor({
   return (
     <div className="admin-rich-editor text-sm">
       <span className="mb-1 block font-medium text-slate-800">{label}</span>
-      <div className="overflow-hidden rounded-xl border border-slate-300 bg-white focus-within:border-[#DB1A1A] focus-within:ring-1 focus-within:ring-[#DB1A1A]">
-        <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-white px-2 py-2">
+      <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200/80 focus-within:ring-2 focus-within:ring-[#e7000b]/35">
+        <div className="flex flex-wrap items-center gap-1 border-b border-slate-100 bg-slate-50 px-2.5 py-2">
           <select
-            className="rounded border border-slate-200 px-2 py-1 text-xs font-medium text-slate-700 hover:border-[#DB1A1A]"
+            className="rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-700 transition hover:border-[#e7000b]/60 hover:bg-white"
             value={
               editor.isActive("heading", { level: 2 })
                 ? "h2"
@@ -135,23 +135,23 @@ export function AdminRichTextEditor({
             <option value="h4">Heading 4</option>
           </select>
 
-          <button type="button" className={BUTTON_BASE} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleBold().run()}>
+          <button type="button" className={`${BUTTON_BASE} ${editor.isActive("bold") ? "border-[#e7000b]/50 bg-red-50 text-[#e7000b]" : ""}`} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleBold().run()}>
             B
           </button>
-          <button type="button" className={BUTTON_BASE} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleItalic().run()}>
+          <button type="button" className={`${BUTTON_BASE} ${editor.isActive("italic") ? "border-[#e7000b]/50 bg-red-50 text-[#e7000b]" : ""}`} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleItalic().run()}>
             I
           </button>
           <button type="button" className={BUTTON_BASE} onMouseDown={(event) => event.preventDefault()} onClick={applyLink}>
             Link
           </button>
           <span className="mx-1 h-4 w-px bg-slate-200" />
-          <button type="button" className={BUTTON_BASE} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleBulletList().run()}>
+          <button type="button" className={`${BUTTON_BASE} ${editor.isActive("bulletList") ? "border-[#e7000b]/50 bg-red-50 text-[#e7000b]" : ""}`} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleBulletList().run()}>
             • List
           </button>
-          <button type="button" className={BUTTON_BASE} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
+          <button type="button" className={`${BUTTON_BASE} ${editor.isActive("orderedList") ? "border-[#e7000b]/50 bg-red-50 text-[#e7000b]" : ""}`} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleOrderedList().run()}>
             1. List
           </button>
-          <button type="button" className={BUTTON_BASE} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
+          <button type="button" className={`${BUTTON_BASE} ${editor.isActive("blockquote") ? "border-[#e7000b]/50 bg-red-50 text-[#e7000b]" : ""}`} onMouseDown={(event) => event.preventDefault()} onClick={() => editor.chain().focus().toggleBlockquote().run()}>
             Quote
           </button>
           <button

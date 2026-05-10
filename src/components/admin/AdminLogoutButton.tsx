@@ -19,7 +19,7 @@ export function AdminLogoutButton() {
         setLoading(false);
         router.replace("/admin/login");
       }}
-      className="rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:opacity-60"
+      className="h-10 rounded-xl border border-[#e7000b] bg-[#e7000b] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#c9000a] disabled:opacity-60"
     >
       {loading ? "Logging out..." : "Logout"}
     </button>

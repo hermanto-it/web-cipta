@@ -2,6 +2,146 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-11 03:34:04 WIB] Kompakkan Tinggi Top Header Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-11 03:34:04 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perkecil tinggi top header Admin Dashboard agar lebih minimalis dan compact ... lint + git status, catat AGENT_LOG."
+- Tujuan Task: Mengurangi tinggi visual header admin tanpa merusak keterbacaan dan fungsi.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/AdminLogoutButton.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/AdminLogoutButton.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan UI yang Dilakukan:
+  - Tinggi top header diperkecil: `lg:min-h-[88px]` -> `lg:min-h-[68px]`, padding vertikal dipadatkan.
+  - Search box diperkecil jadi `h-[44px]` dengan radius modern tetap nyaman.
+  - Shortcut icon button dipadatkan ke `40x40` dengan icon sekitar `18px`.
+  - Jarak antar icon dipadatkan (`gap-1.5`/`gap-2`) agar lebih compact.
+  - User profile card dibuat lebih ringkas (`h-[44px]`, padding diperkecil, avatar 32px) sambil menjaga teks tetap terbaca.
+  - Tombol setting disamakan ukuran compact (`40x40`, icon ~20px).
+  - Tombol logout dibuat compact tinggi `h-10` (40px) dengan warna brand merah tetap.
+- Batasan Scope yang Dijaga:
+  - Background header tetap `#33414e`.
+  - Tidak ada perubahan form products, sidebar, CRUD/auth/Supabase/env.
+  - Tidak ada dependency baru.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/page.tsx`, `src/components/admin/AdminDashboardShell.tsx`, `src/components/admin/AdminLogoutButton.tsx`, `src/components/admin/AdminRichTextEditor.tsx`, `src/components/admin/products/ProductForm.tsx`, `src/components/admin/products/ProductTable.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung di `http://localhost:3000/admin/products` untuk konfirmasi proporsi final desktop/mobile.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual bahwa header lebih pendek dan semua elemen (search/icon/profile/logout) tidak terpotong.
+
+## [2026-05-11 03:27:59 WIB] Rebranding Top Header Admin Dashboard Sesuai Palet Homepage
+- Tanggal/Waktu WIB: 2026-05-11 03:27:59 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki tampilan top header Admin Dashboard ... header `#33414e`, icon lebih besar, AD jadi icon user, tombol logout merah, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Menyamakan branding header admin dengan identitas visual homepage tanpa mengubah logic.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/AdminLogoutButton.tsx`
+  - `src/app/admin/layout.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/AdminLogoutButton.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan UI yang Dilakukan:
+  - Top header admin diubah ke background `#33414e` dan tetap sticky.
+  - Search box dipertahankan putih untuk kontras pada header gelap.
+  - Shortcut icon (`◐`, `🔔`, `✉`, `⛶`, `◫`) diperbesar dengan button `40-44px` (`sm: 44px`) dan ukuran icon lebih besar (`text-xl`).
+  - Style shortcut button diganti ke putih/transparan dengan hover merah lembut.
+  - Badge notifikasi tetap kecil/tegas; warna merah brand untuk chat dan orange untuk bell dipertahankan.
+  - User profile `AD` diganti ke avatar icon user berbasis inline SVG (tanpa dependency baru).
+  - Warna teks profile disesuaikan untuk header gelap: `Admin` putih, `Administrator` warna lembut `#dbe5ec`.
+  - Tombol setting `⚙` diperbesar dan diseragamkan dengan shortcut button lain.
+  - Tombol logout direbrand menjadi merah brand (`#e7000b`), text putih, hover merah lebih gelap.
+- Batasan Scope yang Dijaga:
+  - Tidak ada perubahan logic CRUD/auth/Supabase/logout flow.
+  - Tidak ada perubahan form products, rich text editor behavior, dan product table logic.
+  - Tidak ada dependency tambahan.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan perubahan pada `AGENT_LOG.md`, `src/app/admin/products/page.tsx`, `src/components/admin/AdminDashboardShell.tsx`, `src/components/admin/AdminLogoutButton.tsx`, `src/components/admin/AdminRichTextEditor.tsx`, `src/components/admin/products/ProductForm.tsx`, `src/components/admin/products/ProductTable.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung di `http://localhost:3000/admin/products` untuk memastikan visual & interaksi final sesuai checklist.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual ukuran icon, keterbacaan teks header gelap, dan fungsi logout end-to-end.
+
+## [2026-05-11 03:18:53 WIB] Modernisasi UI Admin Products Serasi Dengan Palet Homepage
+- Tanggal/Waktu WIB: 2026-05-11 03:18:53 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki dan percantik UI halaman Admin Products ... modern, rapi, serasi warna homepage, cek lint, catat AGENT_LOG, tanpa commit/push."
+- Tujuan Task: Memodernisasi tampilan dashboard products tanpa mengubah logic CRUD/auth/database.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/admin/products/page.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `src/app/admin/layout.tsx`
+  - `src/app/globals.css`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/components/admin/AdminDashboardShell.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan UI Utama:
+  - Dashboard shell admin dipindah ke background lembut `#EAECED` agar serasi dengan homepage.
+  - Header shell card dirapikan (rounded lebih besar, ring halus), breadcrumb dibuat dinamis `Dashboard > {title}`.
+  - Active menu sidebar dipertegas dengan palet merah `#e7000b` dan aksen kiri merah, tanpa highlight biru.
+  - Header section create product di halaman products dibuat lebih informatif: breadcrumb kecil, subtitle lengkap (termasuk SEO), badge `Live Supabase`.
+  - Form create/edit product dipoles: section card putih premium, ring halus, required mark merah, input/select/textarea dengan hover + focus ring merah.
+  - Tombol submit form diseragamkan ke merah brand `#e7000b`.
+  - Rich text editor dipoles visual tanpa ubah behavior: toolbar compact, hover abu lembut `#EAECED`, active state merah lembut untuk format aktif.
+  - Product table dimodernkan: wrapper card halus, header table `#f8fafc`, row hover lembut, slug/SKU dimute, format harga Rupiah (`id-ID`), badge flags lebih rapi.
+  - Tombol aksi table: Edit bernuansa navy, Delete merah lembut sesuai guideline.
+- Perbaikan Lint Warning `_validate`:
+  - Tidak ada warning `_validate` tersisa pada state project saat validasi task ini.
+  - `actions.ts` yang terbaca sudah memakai pola payload tanpa variabel `_validate` tidak terpakai.
+- Batasan Scope yang Dijaga:
+  - Tidak ada perubahan logic Supabase CRUD/auth/database/schema/env.
+  - Tidak ada dependency baru.
+  - Tidak menyentuh homepage public selain palet yang sudah ada di task sebelumnya.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `src/app/admin/products/page.tsx`, `src/components/admin/AdminDashboardShell.tsx`, `src/components/admin/AdminRichTextEditor.tsx`, `src/components/admin/products/ProductForm.tsx`, `src/components/admin/products/ProductTable.tsx`.
+- Validasi Manual Browser:
+  - Belum dapat dijalankan dari CLI; perlu cek langsung `http://localhost:3000/admin/products` untuk konfirmasi visual/interaktif final.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Jalankan checklist manual di browser: input focus, rich text typing + toolbar, create button visibility, dan product list readability.
+
 ## [2026-05-11 02:46:57 WIB] Hilangkan Border Luar Kartu Promo Kanan Homepage
 - Tanggal/Waktu WIB: 2026-05-11 02:46:57 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
