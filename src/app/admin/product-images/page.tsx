@@ -1,9 +1,17 @@
 import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 import { createClient } from "@/lib/supabase/server";
 
+type ProductImageItem = {
+  id: string;
+  image_url: string;
+  is_primary: boolean;
+  sort_order: number;
+  product: { name?: string } | null;
+};
+
 async function getProductImages() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { data: [], dataUnavailable: true };
+    return { data: [] as ProductImageItem[], dataUnavailable: true };
   }
 
   try {
@@ -16,13 +24,13 @@ async function getProductImages() {
 
     if (error) {
       console.warn("[admin] product images read failed:", error.message);
-      return { data: [], dataUnavailable: true };
+      return { data: [] as ProductImageItem[], dataUnavailable: true };
     }
 
-    return { data: data ?? [], dataUnavailable: false };
+    return { data: (data ?? []) as ProductImageItem[], dataUnavailable: false };
   } catch {
     console.warn("[admin] unexpected error reading product images");
-    return { data: [], dataUnavailable: true };
+    return { data: [] as ProductImageItem[], dataUnavailable: true };
   }
 }
 

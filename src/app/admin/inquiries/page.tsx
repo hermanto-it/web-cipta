@@ -8,9 +8,22 @@ type PageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
+type InquiryItem = {
+  id: string;
+  name: string;
+  company: string | null;
+  email: string | null;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  source: string;
+  status: string;
+  created_at: string;
+};
+
 async function getInquiries(status: string) {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { data: [], dataUnavailable: true };
+    return { data: [] as InquiryItem[], dataUnavailable: true };
   }
 
   try {
@@ -28,13 +41,13 @@ async function getInquiries(status: string) {
 
     if (error) {
       console.warn("[admin] inquiries read failed:", error.message);
-      return { data: [], dataUnavailable: true };
+      return { data: [] as InquiryItem[], dataUnavailable: true };
     }
 
-    return { data: data ?? [], dataUnavailable: false };
+    return { data: (data ?? []) as InquiryItem[], dataUnavailable: false };
   } catch {
     console.warn("[admin] unexpected error reading inquiries");
-    return { data: [], dataUnavailable: true };
+    return { data: [] as InquiryItem[], dataUnavailable: true };
   }
 }
 

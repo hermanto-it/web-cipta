@@ -15,9 +15,9 @@ export async function updateInquiryStatusAction(formData: FormData) {
   const id = asText(formData.get("id"));
   const nextStatus = asText(formData.get("next_status"));
 
-  if (!id) return { ok: false, error: "Inquiry ID tidak valid." };
+  if (!id) return;
   if (!allowedStatuses.includes(nextStatus as (typeof allowedStatuses)[number])) {
-    return { ok: false, error: "Status inquiry tidak valid." };
+    return;
   }
 
   try {
@@ -26,13 +26,13 @@ export async function updateInquiryStatusAction(formData: FormData) {
 
     if (error) {
       console.warn("[admin] update inquiry status failed:", error.message);
-      return { ok: false, error: error.message };
+      return;
     }
 
     revalidatePath("/admin");
     revalidatePath("/admin/inquiries");
-    return { ok: true };
+    return;
   } catch {
-    return { ok: false, error: "Gagal mengubah status inquiry." };
+    return;
   }
 }

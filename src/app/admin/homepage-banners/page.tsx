@@ -1,11 +1,12 @@
 import { BannerForm } from "@/components/admin/homepage-banners/BannerForm";
+import type { BannerItem } from "@/components/admin/homepage-banners/BannerForm";
 import { BannerTable } from "@/components/admin/homepage-banners/BannerTable";
 import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 import { createClient } from "@/lib/supabase/server";
 
 async function getHomepageBanners() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { data: [], dataUnavailable: true };
+    return { data: [] as BannerItem[], dataUnavailable: true };
   }
 
   try {
@@ -17,13 +18,13 @@ async function getHomepageBanners() {
 
     if (error) {
       console.warn("[admin] homepage banners read failed:", error.message);
-      return { data: [], dataUnavailable: true };
+      return { data: [] as BannerItem[], dataUnavailable: true };
     }
 
-    return { data: data ?? [], dataUnavailable: false };
+    return { data: (data ?? []) as BannerItem[], dataUnavailable: false };
   } catch {
     console.warn("[admin] unexpected error reading homepage banners");
-    return { data: [], dataUnavailable: true };
+    return { data: [] as BannerItem[], dataUnavailable: true };
   }
 }
 

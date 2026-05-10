@@ -105,10 +105,7 @@ export async function createProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const payload = { ...mapped };
-    delete payload.validate;
-    const imageUrl = payload.image_url;
-    delete payload.image_url;
+    const { validate: _validate, image_url: imageUrl, ...payload } = mapped;
 
     const { data, error } = await supabase.from("products").insert(payload).select("id").single();
 
@@ -147,10 +144,7 @@ export async function updateProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const payload = { ...mapped };
-    delete payload.validate;
-    const imageUrl = payload.image_url;
-    delete payload.image_url;
+    const { validate: _validate, image_url: imageUrl, ...payload } = mapped;
     const { error } = await supabase.from("products").update(payload).eq("id", id);
 
     if (error) {
@@ -232,7 +226,8 @@ export async function toggleProductFlagAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const { error } = await supabase.from("products").update({ [field]: nextValue }).eq("id", id);
+    const flagPayload: Record<string, unknown> = { [field]: nextValue };
+    const { error } = await supabase.from("products").update(flagPayload).eq("id", id);
 
     if (error) {
       console.warn("[admin] toggle product flag failed:", error.message);

@@ -2,6 +2,166 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-11 01:25:30 WIB] Fix Fokus dan Stabilitas Toolbar Rich Text Editor Admin Products
+- Tanggal/Waktu WIB: 2026-05-11 01:25:30 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki Rich Text Editor di Admin Products untuk kolom Short Description dan Description ... audit file, cari penyebab, validasi lint + git status, catat AGENT_LOG, jangan commit/push."
+- Tujuan Task: Memastikan editor `Short Description` dan `Description` bisa fokus/ketik normal serta toolbar tidak menghapus konten.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `package.json`
+  - `tsconfig.json`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Audit Penyebab Bug:
+  - Sinkronisasi controlled value di `AdminRichTextEditor` berpotensi memanggil `setContent` saat editor sedang aktif, sehingga selection/caret bisa ter-reset ketika terjadi re-render.
+  - Wrapper root editor menggunakan elemen `<label>`, yang berisiko mengganggu perilaku fokus normal pada area `contenteditable` saat interaksi klik.
+- Perbaikan yang Dilakukan:
+  - Menambahkan guard sinkronisasi eksternal (`isSyncingFromExternalRef`) agar `onUpdate` tidak memicu loop update saat `setContent` dari parent.
+  - Membatasi `setContent` hanya ketika editor tidak sedang fokus (`!editor.isFocused`) dan nilai benar-benar berbeda.
+  - Mengganti wrapper root dari `<label>` menjadi `<div>` untuk menghindari konflik perilaku fokus `label` terhadap area editor.
+  - Menambahkan `onClick` pada `EditorContent` untuk memastikan klik area editor kosong tetap memanggil focus.
+- Hasil Validasi:
+  - `npm run lint`: sukses dengan 2 warning existing (tidak terkait editor) di `src/app/admin/products/actions.ts` baris 108 dan 147 (`_validate` unused).
+  - `git status --short --branch`: branch `main...origin/main` dengan beberapa file modified existing; perubahan task ini ada di `src/components/admin/AdminRichTextEditor.tsx` dan `AGENT_LOG.md`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI (perlu uji langsung di browser pada `http://localhost:3000/admin/products` untuk checklist interaktif caret/typing/toolbar/submit).
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error build/runtime yang dieksekusi pada task ini.
+  - Warning lint `_validate` dipertahankan karena berada di server action existing dan tidak terkait perbaikan fokus editor.
+- Status Hasil: Sukses parsial (perbaikan kode selesai + lint/status sudah dijalankan; validasi manual browser masih diperlukan).
+- Next Step:
+  - Jalankan uji manual checklist toolbar dan submit form produk di browser.
+  - Jika hasil sesuai, lanjut commit dengan pesan: `fix(admin): make product rich text editor focusable and toolbar functional`.
+
+## [2026-05-11 01:08:44 WIB] Menjalankan Development Server
+- Tanggal/Waktu WIB: 2026-05-11 01:08:44 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Testing/QA, Documentation
+- Perintah User: "npm run dev jalankan"
+- Tujuan Task: Menjalankan server development Next.js.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run dev`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Hasil Eksekusi:
+  - `next dev` berhasil start dengan status `Ready`.
+  - Local URL: `http://localhost:3000`.
+  - Network URL: `http://10.255.255.254:3000`.
+  - Terdapat warning: slow filesystem pada folder `.next/dev`.
+  - Server merespons `GET / 200`.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error aplikasi.
+  - Proses dihentikan otomatis oleh timeout CLI setelah server berhasil jalan (karena command long-running).
+- Status Hasil: Sukses (server terbukti bisa start)
+- Next Step:
+  - Jalankan ulang `npm run dev` di terminal lokal tanpa timeout untuk sesi development berkelanjutan.
+
+## [2026-05-11 01:07:53 WIB] Menjalankan Lint dan npm run
+- Tanggal/Waktu WIB: 2026-05-11 01:07:53 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Testing/QA, Documentation
+- Perintah User: "Jalankan: npm run lint npm run"
+- Tujuan Task: Menjalankan validasi lint dan menampilkan daftar script npm yang tersedia.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint; npm run`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Hasil Eksekusi:
+  - `npm run lint` selesai dengan 0 error dan 2 warning (`@typescript-eslint/no-unused-vars`) di `src/app/admin/products/actions.ts:108` dan `src/app/admin/products/actions.ts:147` untuk variabel `_validate` yang tidak digunakan.
+  - `npm run` menampilkan script tersedia: `dev`, `build`, `lint` (serta lifecycle `start`).
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error eksekusi command.
+  - Warning lint tidak dibetulkan karena user hanya meminta menjalankan command.
+- Status Hasil: Sukses
+- Next Step:
+  - Jika diinginkan, bersihkan 2 warning lint pada `src/app/admin/products/actions.ts` agar output lint sepenuhnya bersih.
+
+## [2026-05-11 01:05:22 WIB] Cek Kerjaan Terakhir
+- Tanggal/Waktu WIB: 2026-05-11 01:05:22 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Documentation, Testing/QA
+- Perintah User: "bantu cek kerjaan terakhir"
+- Tujuan Task: Mengecek status kerjaan terakhir berdasarkan log aktivitas terbaru dan status git saat ini.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `ls`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB' && git status --short --branch && git log --oneline -5`
+- Ringkasan Hasil Cek:
+  - Log kerjaan terakhir yang tercatat adalah "Re-check Fungsi Toolbar Admin Rich Text Editor" pada `2026-05-11 00:11:58 WIB`.
+  - Commit terbaru di branch `main` adalah `802b2ad` dengan pesan `fix(admin): replace custom rich text editor with stable TipTap editor`.
+  - Working tree saat ini masih dirty dengan beberapa file frontend/admin yang belum committed.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error command saat pengecekan.
+  - Keputusan teknis: tidak melakukan perubahan kode aplikasi; hanya audit status kerjaan terakhir sesuai permintaan.
+- Status Hasil: Sukses
+- Next Step:
+  - Jika diperlukan, lakukan audit detail diff file yang masih modified untuk menentukan mana yang siap di-commit.
+
+## [2026-05-11 00:11:58 WIB] Re-check Fungsi Toolbar Admin Rich Text Editor
+- Tanggal/Waktu WIB: 2026-05-11 00:11:58 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "check kembali apakah sudah berfungsi normal untuk semua fungsi toolbar."
+- Tujuan Task: Memvalidasi ulang fungsi toolbar editor produk dan memastikan tidak ada error kompilasi terkait toolbar.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `node_modules/@tiptap/extension-table/dist/index.d.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB' && npm run lint && npm run build`
+  - `npm run lint && npm run build && git status --short --branch && TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Hasil Validasi Toolbar:
+  - Toolbar di `AdminRichTextEditor` terpasang untuk: heading (Paragraph/H2/H3/H4), bold, italic, link, bullet list, ordered list, quote, table, image, align left/center/right, undo/redo.
+  - Integrasi ke form products tetap aktif untuk field `short_description` dan `description` melalui hidden input.
+- Error/Warning/Keputusan Teknis:
+  - Build awal gagal karena import `@tiptap/extension-table` menggunakan default import yang tidak tersedia di versi package saat ini.
+  - Perbaikan dilakukan dengan named import: `import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table"`.
+  - Setelah perbaikan, error toolbar hilang; build lanjut tetapi berhenti di error TypeScript yang tidak terkait toolbar pada `src/app/admin/brands/actions.ts:45` (`name` tidak ada di type `never[]`).
+- Status Hasil: Sebagian sukses (fungsi toolbar pada source code dan kompilasi komponen toolbar sudah normal; verifikasi build penuh terblokir error modul brands yang tidak terkait).
+- Next Step:
+  - Perbaiki type error terpisah di `src/app/admin/brands/actions.ts` agar build full project kembali hijau.
+  - Lanjutkan uji manual browser di `/admin/products` untuk konfirmasi perilaku interaktif toolbar end-to-end.
+
 ## [2026-05-10 23:51:30 WIB] Replace Custom Editor Dengan TipTap Stabil di Admin Products
 - Tanggal/Waktu WIB: 2026-05-10 23:51:30 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

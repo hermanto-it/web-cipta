@@ -1,11 +1,12 @@
 import { BrandForm } from "@/components/admin/brands/BrandForm";
+import type { BrandItem } from "@/components/admin/brands/BrandForm";
 import { BrandTable } from "@/components/admin/brands/BrandTable";
 import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 import { createClient } from "@/lib/supabase/server";
 
 async function getBrands() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { data: [], dataUnavailable: true };
+    return { data: [] as BrandItem[], dataUnavailable: true };
   }
 
   try {
@@ -17,13 +18,13 @@ async function getBrands() {
 
     if (error) {
       console.warn("[admin] brands read failed:", error.message);
-      return { data: [], dataUnavailable: true };
+      return { data: [] as BrandItem[], dataUnavailable: true };
     }
 
-    return { data: data ?? [], dataUnavailable: false };
+    return { data: (data ?? []) as BrandItem[], dataUnavailable: false };
   } catch {
     console.warn("[admin] unexpected error reading brands");
-    return { data: [], dataUnavailable: true };
+    return { data: [] as BrandItem[], dataUnavailable: true };
   }
 }
 

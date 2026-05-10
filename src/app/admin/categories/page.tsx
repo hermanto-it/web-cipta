@@ -1,11 +1,12 @@
 import { CategoryForm } from "@/components/admin/categories/CategoryForm";
+import type { CategoryItem } from "@/components/admin/categories/CategoryForm";
 import { CategoryTable } from "@/components/admin/categories/CategoryTable";
 import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 import { createClient } from "@/lib/supabase/server";
 
 async function getCategories() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return { data: [], dataUnavailable: true };
+    return { data: [] as CategoryItem[], dataUnavailable: true };
   }
 
   try {
@@ -14,13 +15,13 @@ async function getCategories() {
 
     if (error) {
       console.warn("[admin] categories read failed:", error.message);
-      return { data: [], dataUnavailable: true };
+      return { data: [] as CategoryItem[], dataUnavailable: true };
     }
 
-    return { data: data ?? [], dataUnavailable: false };
+    return { data: (data ?? []) as CategoryItem[], dataUnavailable: false };
   } catch {
     console.warn("[admin] unexpected error reading categories");
-    return { data: [], dataUnavailable: true };
+    return { data: [] as CategoryItem[], dataUnavailable: true };
   }
 }
 

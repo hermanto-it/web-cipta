@@ -1,4 +1,5 @@
 import { ProductForm } from "@/components/admin/products/ProductForm";
+import type { ProductItem, ProductOption, TaxonomyOption } from "@/components/admin/products/ProductForm";
 import { ProductTable } from "@/components/admin/products/ProductTable";
 import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 import { createClient } from "@/lib/supabase/server";
@@ -6,10 +7,10 @@ import { createClient } from "@/lib/supabase/server";
 async function getPageData() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return {
-      products: [],
-      brands: [],
-      categories: [],
-      taxonomies: [],
+      products: [] as ProductItem[],
+      brands: [] as ProductOption[],
+      categories: [] as ProductOption[],
+      taxonomies: [] as TaxonomyOption[],
       dataUnavailable: true,
     };
   }
@@ -31,7 +32,7 @@ async function getPageData() {
     if (productsRes.error || brandsRes.error || categoriesRes.error || taxonomyRes.error) {
       const message = productsRes.error?.message || brandsRes.error?.message || categoriesRes.error?.message || taxonomyRes.error?.message;
       console.warn("[admin] products page read failed:", message);
-      return { products: [], brands: [], categories: [], taxonomies: [], dataUnavailable: true };
+      return { products: [] as ProductItem[], brands: [] as ProductOption[], categories: [] as ProductOption[], taxonomies: [] as TaxonomyOption[], dataUnavailable: true };
     }
 
     const products = (productsRes.data ?? []).map((item) => ({
@@ -40,20 +41,20 @@ async function getPageData() {
       category_name: (item.category as { name?: string } | null)?.name ?? "Unknown Category",
       taxonomy_name: (item.taxonomy as { name?: string } | null)?.name ?? null,
       primary_image_url:
-        ((item.images as Array<{ image_url?: string; is_primary?: boolean }> | null) ?? []).find((image) => image.is_primary)?.image_url ??
+        ((item.images as unknown as Array<{ image_url?: string; is_primary?: boolean }> | null) ?? []).find((image) => image.is_primary)?.image_url ??
         null,
     }));
 
     return {
-      products,
-      brands: brandsRes.data ?? [],
-      categories: categoriesRes.data ?? [],
-      taxonomies: taxonomyRes.data ?? [],
+      products: products as ProductItem[],
+      brands: (brandsRes.data ?? []) as ProductOption[],
+      categories: (categoriesRes.data ?? []) as ProductOption[],
+      taxonomies: (taxonomyRes.data ?? []) as TaxonomyOption[],
       dataUnavailable: false,
     };
   } catch {
     console.warn("[admin] unexpected error reading products page data");
-    return { products: [], brands: [], categories: [], taxonomies: [], dataUnavailable: true };
+    return { products: [] as ProductItem[], brands: [] as ProductOption[], categories: [] as ProductOption[], taxonomies: [] as TaxonomyOption[], dataUnavailable: true };
   }
 }
 

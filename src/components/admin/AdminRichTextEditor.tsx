@@ -1,14 +1,11 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
-import Table from "@tiptap/extension-table";
-import TableRow from "@tiptap/extension-table-row";
-import TableCell from "@tiptap/extension-table-cell";
-import TableHeader from "@tiptap/extension-table-header";
+import { Table, TableRow, TableCell, TableHeader } from "@tiptap/extension-table";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
 
@@ -30,6 +27,8 @@ export function AdminRichTextEditor({
   placeholder = "Tulis konten...",
   minHeightClassName = "min-h-[160px]",
 }: AdminRichTextEditorProps) {
+  const isSyncingFromExternalRef = useRef(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -54,6 +53,7 @@ export function AdminRichTextEditor({
     content: value || "",
     immediatelyRender: false,
     onUpdate: ({ editor: currentEditor }) => {
+      if (isSyncingFromExternalRef.current) return;
       onChange(currentEditor.getHTML());
     },
     editorProps: {
@@ -66,8 +66,10 @@ export function AdminRichTextEditor({
   useEffect(() => {
     if (!editor) return;
     const currentHtml = editor.getHTML();
-    if (value !== currentHtml) {
+    if (!editor.isFocused && value !== currentHtml) {
+      isSyncingFromExternalRef.current = true;
       editor.commands.setContent(value || "", { emitUpdate: false });
+      isSyncingFromExternalRef.current = false;
     }
   }, [editor, value]);
 
@@ -95,15 +97,15 @@ export function AdminRichTextEditor({
 
   if (!editor) {
     return (
-      <label className="text-sm">
+      <div className="text-sm">
         <span className="mb-1 block font-medium text-slate-800">{label}</span>
         <div className="rounded-xl border border-slate-300 bg-white p-3 text-xs text-slate-500">Loading editor...</div>
-      </label>
+      </div>
     );
   }
 
   return (
-    <label className="admin-rich-editor text-sm">
+    <div className="admin-rich-editor text-sm">
       <span className="mb-1 block font-medium text-slate-800">{label}</span>
       <div className="overflow-hidden rounded-xl border border-slate-300 bg-white focus-within:border-[#DB1A1A] focus-within:ring-1 focus-within:ring-[#DB1A1A]">
         <div className="flex flex-wrap items-center gap-1 border-b border-slate-200 bg-white px-2 py-2">
@@ -182,8 +184,8 @@ export function AdminRichTextEditor({
           </button>
         </div>
 
-        <EditorContent editor={editor} />
+        <EditorContent editor={editor} onClick={() => editor.commands.focus()} />
       </div>
-    </label>
+    </div>
   );
 }
