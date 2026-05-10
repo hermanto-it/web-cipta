@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ProductForm } from "@/components/admin/products/ProductForm";
 import { ProductTable } from "@/components/admin/products/ProductTable";
+import { AdminLogoutButton } from "@/components/admin/AdminLogoutButton";
 import { createClient } from "@/lib/supabase/server";
 
 const navItems = [
@@ -95,7 +96,10 @@ export default async function AdminProductsPage() {
 
         <main className="flex-1 space-y-4">
           <header className="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-            <h2 className="text-xl font-bold">Products</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-xl font-bold">Products</h2>
+              <AdminLogoutButton />
+            </div>
             <p className="mt-1 text-sm text-slate-500">Kelola produk ecommerce lengkap dengan relasi brand, category, dan taxonomy.</p>
             {dataUnavailable ? (
               <p className="mt-2 text-xs text-amber-600">

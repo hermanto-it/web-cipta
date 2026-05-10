@@ -2,6 +2,106 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 15:23:19 WIB] Implementasi Login Admin + Forgot/Reset Password Supabase Auth
+- Tanggal/Waktu WIB: 2026-05-10 15:23:19 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, Security, Configuration, Documentation, Testing/QA
+- Perintah User: "Buat sistem login admin untuk Admin Dashboard menggunakan Supabase Auth ... Catat semua aktivitas, file yang dibaca/dibuat/diubah, command, error/warning, keputusan teknis, dan status hasil ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Mengamankan akses `/admin` dengan Supabase Auth + verifikasi `admin_users` aktif, menambahkan login/logout dan alur forgot/reset password.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `README.md`
+- File Dibuat:
+  - `middleware.ts`
+  - `src/lib/supabase/auth.ts`
+  - `src/components/admin/AdminLogoutButton.tsx`
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+- File Diubah:
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `README.md`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan halaman login admin responsif: `/admin/login`.
+  - Menambahkan halaman forgot password: `/admin/forgot-password`.
+  - Menambahkan halaman reset password: `/admin/reset-password`.
+  - Menambahkan komponen `AdminLogoutButton` dan memasangnya di header halaman admin utama (dashboard, banners, brands, categories, products).
+  - Menambahkan link "Forgot Password?" di halaman login.
+- Perubahan Backend:
+  - Menambahkan helper auth `src/lib/supabase/auth.ts` untuk:
+    - cek readiness env auth,
+    - validasi admin server (`getAuthenticatedAdmin`),
+    - login/logout/reset/update password berbasis Supabase Auth.
+  - Menambahkan `middleware.ts` untuk guard route `/admin/*`:
+    - redirect ke `/admin/login` jika belum login,
+    - validasi user di `public.admin_users` aktif,
+    - sign out + deny jika tidak terdaftar aktif,
+    - bypass hanya untuk `/admin/login`, `/admin/forgot-password`, `/admin/reset-password`.
+- Perubahan API: Tidak ada route API baru (menggunakan middleware + helper auth + client flows).
+- Perubahan Database: Tidak ada perubahan schema.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada service role key.
+  - Akses admin bergantung pada kombinasi Supabase Auth + `admin_users.is_active = true`.
+  - Jika RLS menghalangi read `admin_users`, middleware/login akan menolak akses dan mengarahkan ke login (error access denied).
+- Ringkasan Perubahan: Sistem auth admin dasar selesai dengan guard route, login, logout, forgot/reset password, dan dokumentasi setup Supabase Auth.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: memilih middleware sebagai guard paling sederhana dan aman untuk seluruh subtree `/admin` pada App Router.
+  - Keputusan teknis: tidak mematikan RLS; bila blocked, menampilkan pesan akses ditolak dan tetap aman.
+- Status Hasil: Sukses
+- Next Step:
+  - Tambahkan policy RLS read terkontrol untuk `admin_users` khusus user terkait agar validasi admin lebih konsisten saat auth sudah aktif di production.
+
+## [2026-05-10 15:11:29 WIB] Git Add Commit Push Supabase Storage Upload
+- Tanggal/Waktu WIB: 2026-05-10 15:11:29 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(admin): add Supabase Storage image upload\"\ngit push"
+- Tujuan Task: Staging semua perubahan, commit sesuai pesan user, dan push ke remote repository.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git add . && git commit -m "feat(admin): add Supabase Storage image upload" && git push && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Commit mencakup integrasi upload image reusable pada admin banners dan products.
+- Perubahan Backend: Commit mencakup helper storage Supabase serta update action products untuk sinkronisasi `product_images`.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Commit mencakup file policy storage (`supabase/storage-policies.sql`) untuk eksekusi manual.
+- Perubahan Infrastructure/Deployment: Commit `d63db3b` berhasil dipush ke `origin/main`.
+- Perubahan Security/Configuration: Tidak ada perubahan secret/env lokal.
+- Ringkasan Perubahan: Proses `git add`, `commit`, dan `push` sukses; branch lokal sinkron dengan remote.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning pada proses git.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: commit tambahan untuk menyertakan update AGENT_LOG terbaru ke remote.
+
 ## [2026-05-10 15:09:19 WIB] Integrasi Upload Image Supabase Storage (Products & Banners)
 - Tanggal/Waktu WIB: 2026-05-10 15:09:19 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

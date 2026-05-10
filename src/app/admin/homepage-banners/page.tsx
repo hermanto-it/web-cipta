@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { BannerForm } from "@/components/admin/homepage-banners/BannerForm";
 import { BannerTable } from "@/components/admin/homepage-banners/BannerTable";
+import { AdminLogoutButton } from "@/components/admin/AdminLogoutButton";
 import { createClient } from "@/lib/supabase/server";
 
 const navItems = [
@@ -65,7 +66,10 @@ export default async function AdminHomepageBannersPage() {
 
         <main className="flex-1 space-y-4">
           <header className="rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm">
-            <h2 className="text-xl font-bold">Homepage Banners</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-xl font-bold">Homepage Banners</h2>
+              <AdminLogoutButton />
+            </div>
             <p className="mt-1 text-sm text-slate-500">Kelola konten banner homepage untuk hero, promo samping, promo tengah, dan CTA bawah.</p>
             {dataUnavailable ? (
               <p className="mt-2 text-xs text-amber-600">

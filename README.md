@@ -94,3 +94,42 @@ Catatan policy:
 - Upload/update/delete disarankan `authenticated` only.
 - Jangan gunakan service role key di frontend.
 - Untuk production, disarankan gunakan auth admin + policy lebih ketat (role-based).
+
+## Admin Auth Setup
+
+Admin Dashboard sekarang menggunakan Supabase Auth + tabel `public.admin_users`.
+
+### 1) Buat user di Supabase Auth
+
+1. Buka `Authentication` -> `Users`.
+2. Tambahkan user admin (email + password) dari dashboard Supabase.
+
+### 2) Daftarkan user ke tabel `public.admin_users`
+
+Setelah user dibuat di Auth, ambil `user id` (UUID) dari tabel users, lalu insert ke `public.admin_users`.
+
+Contoh SQL:
+
+```sql
+insert into public.admin_users (user_id, email, name, role, is_active)
+values ('AUTH_USER_ID_DARI_SUPABASE', 'admin@email.com', 'Admin', 'admin', true);
+```
+
+### 3) Tambahkan Redirect URL reset password
+
+Di Supabase Dashboard, buka `Authentication` -> `URL Configuration`, lalu tambahkan:
+
+- `http://localhost:3000/admin/reset-password`
+- `https://domain-anda.com/admin/reset-password` (untuk production nanti)
+
+### 4) Alur akses admin
+
+- Route login: `/admin/login`
+- Jika belum login dan akses `/admin`, otomatis redirect ke login.
+- Setelah login, sistem cek user aktif di `public.admin_users`.
+- Jika tidak terdaftar / tidak aktif, akses ditolak dan user di-sign out.
+
+Catatan keamanan:
+
+- Jangan gunakan service role key di frontend.
+- Jangan buat public write policy untuk `admin_users`.

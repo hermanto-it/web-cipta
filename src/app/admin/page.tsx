@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { AdminLogoutButton } from "@/components/admin/AdminLogoutButton";
 
 type SummaryItem = {
   label: string;
@@ -83,7 +84,10 @@ export default async function AdminPage() {
                 <h2 className="text-xl font-bold">Dashboard Overview</h2>
                 <p className="text-sm text-slate-500">Monitor data ecommerce dan persiapan modul CRUD.</p>
               </div>
-              <span className="inline-flex w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Basic Foundation</span>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">Basic Foundation</span>
+                <AdminLogoutButton />
+              </div>
             </div>
           </header>
 
