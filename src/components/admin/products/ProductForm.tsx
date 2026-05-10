@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 
 import { createProductAction, updateProductAction } from "@/app/admin/products/actions";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 import { slugify } from "@/lib/utils/slugify";
 
 export type ProductOption = { id: string; name: string };
@@ -28,6 +29,7 @@ export type ProductItem = {
   is_active: boolean;
   badge: string | null;
   sort_order: number;
+  primary_image_url?: string | null;
 };
 
 type ProductFormProps = {
@@ -198,6 +200,8 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
           <textarea name="description" rows={2} defaultValue={initialData?.description ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
         </label>
       </div>
+
+      <ImageUploadField label="Primary Product Image" name="image_url" defaultValue={initialData?.primary_image_url ?? ""} folder="products" maxSizeMB={5} />
 
       <div className="grid gap-3 sm:grid-cols-5">
         <label className="text-sm">

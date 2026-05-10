@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 
 import { createBannerAction, updateBannerAction } from "@/app/admin/homepage-banners/actions";
+import { ImageUploadField } from "@/components/admin/ImageUploadField";
 
 type Placement = "hero" | "side_promo" | "middle_promo" | "bottom_cta";
 
@@ -92,10 +93,7 @@ export function BannerForm({ mode, initialData, onDone }: BannerFormProps) {
       </label>
 
       <div className="grid gap-3 sm:grid-cols-2">
-        <label className="text-sm">
-          <span className="mb-1 block font-medium">Image URL</span>
-          <input name="image_url" defaultValue={initialData?.image_url ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
-        </label>
+        <ImageUploadField label="Banner Image" name="image_url" defaultValue={initialData?.image_url ?? ""} folder="banners" maxSizeMB={5} />
         <label className="text-sm">
           <span className="mb-1 block font-medium">Price Text</span>
           <input name="price_text" defaultValue={initialData?.price_text ?? ""} className="w-full rounded-lg border border-slate-300 px-3 py-2" />

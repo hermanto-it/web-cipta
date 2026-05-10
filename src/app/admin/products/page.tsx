@@ -32,7 +32,7 @@ async function getPageData() {
       supabase
         .from("products")
         .select(
-          "id,brand_id,category_id,taxonomy_id,sku,name,slug,short_description,description,price,compare_at_price,currency,stock_quantity,is_featured,is_best_seller,is_promo,is_active,badge,sort_order,brand:brands(name),category:categories(name),taxonomy:product_taxonomy(name)",
+          "id,brand_id,category_id,taxonomy_id,sku,name,slug,short_description,description,price,compare_at_price,currency,stock_quantity,is_featured,is_best_seller,is_promo,is_active,badge,sort_order,brand:brands(name),category:categories(name),taxonomy:product_taxonomy(name),images:product_images(image_url,is_primary)",
         )
         .order("sort_order", { ascending: true }),
       supabase.from("brands").select("id,name").order("sort_order", { ascending: true }),
@@ -51,6 +51,9 @@ async function getPageData() {
       brand_name: (item.brand as { name?: string } | null)?.name ?? "Unknown Brand",
       category_name: (item.category as { name?: string } | null)?.name ?? "Unknown Category",
       taxonomy_name: (item.taxonomy as { name?: string } | null)?.name ?? null,
+      primary_image_url:
+        ((item.images as Array<{ image_url?: string; is_primary?: boolean }> | null) ?? []).find((image) => image.is_primary)?.image_url ??
+        null,
     }));
 
     return {

@@ -64,6 +64,7 @@ function mapInput(formData: FormData, mode: "create" | "edit") {
   const price = parseNumberOrNull(formData.get("price"));
   const compareAtPrice = parseNumberOrNull(formData.get("compare_at_price"));
   const stockQuantity = parseInteger(formData.get("stock_quantity"), 0);
+  const imageUrl = asNullableText(formData.get("image_url"));
 
   return {
     sku: asNullableText(formData.get("sku")),
@@ -84,6 +85,7 @@ function mapInput(formData: FormData, mode: "create" | "edit") {
     is_active: formData.get("is_active") === "on",
     badge: asNullableText(formData.get("badge")),
     sort_order: parseInteger(formData.get("sort_order"), 0),
+    image_url: imageUrl,
     validate: {
       name,
       slug,
@@ -105,11 +107,27 @@ export async function createProductAction(formData: FormData) {
     const supabase = await createClient();
     const payload = { ...mapped };
     delete payload.validate;
-    const { error } = await supabase.from("products").insert(payload);
+    const imageUrl = payload.image_url;
+    delete payload.image_url;
+
+    const { data, error } = await supabase.from("products").insert(payload).select("id").single();
 
     if (error) {
       console.warn("[admin] create product failed:", error.message);
       return { ok: false, error: error.message };
+    }
+
+    if (imageUrl && data?.id) {
+      const { error: imageError } = await supabase.from("product_images").insert({
+        product_id: data.id,
+        image_url: imageUrl,
+        is_primary: true,
+        sort_order: 0,
+      });
+
+      if (imageError) {
+        console.warn("[admin] create product image failed:", imageError.message);
+      }
     }
 
     refreshAdminPages();
@@ -131,11 +149,46 @@ export async function updateProductAction(formData: FormData) {
     const supabase = await createClient();
     const payload = { ...mapped };
     delete payload.validate;
+    const imageUrl = payload.image_url;
+    delete payload.image_url;
     const { error } = await supabase.from("products").update(payload).eq("id", id);
 
     if (error) {
       console.warn("[admin] update product failed:", error.message);
       return { ok: false, error: error.message };
+    }
+
+    if (imageUrl) {
+      const { data: existingImage, error: existingError } = await supabase
+        .from("product_images")
+        .select("id")
+        .eq("product_id", id)
+        .eq("is_primary", true)
+        .maybeSingle();
+
+      if (existingError) {
+        console.warn("[admin] read product primary image failed:", existingError.message);
+      } else if (existingImage?.id) {
+        const { error: updateImageError } = await supabase
+          .from("product_images")
+          .update({ image_url: imageUrl })
+          .eq("id", existingImage.id);
+
+        if (updateImageError) {
+          console.warn("[admin] update product image failed:", updateImageError.message);
+        }
+      } else {
+        const { error: insertImageError } = await supabase.from("product_images").insert({
+          product_id: id,
+          image_url: imageUrl,
+          is_primary: true,
+          sort_order: 0,
+        });
+
+        if (insertImageError) {
+          console.warn("[admin] insert product image failed:", insertImageError.message);
+        }
+      }
     }
 
     refreshAdminPages();

@@ -70,3 +70,27 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```bash
 npm run dev
 ```
+
+## Supabase Storage Setup
+
+Untuk upload gambar product/banner, gunakan bucket:
+
+- `ecommerce-assets`
+
+Langkah setup di Supabase Dashboard:
+
+1. Buka menu `Storage` -> `Buckets`.
+2. Buat bucket baru dengan nama `ecommerce-assets`.
+3. Untuk development, bucket boleh diset `Public` agar URL gambar bisa langsung ditampilkan di website.
+4. Jalankan SQL policy storage dari file berikut di Supabase SQL Editor:
+
+```bash
+supabase/storage-policies.sql
+```
+
+Catatan policy:
+
+- Public read diperbolehkan untuk object di bucket `ecommerce-assets`.
+- Upload/update/delete disarankan `authenticated` only.
+- Jangan gunakan service role key di frontend.
+- Untuk production, disarankan gunakan auth admin + policy lebih ketat (role-based).

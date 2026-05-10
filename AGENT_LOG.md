@@ -2,6 +2,92 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 15:09:19 WIB] Integrasi Upload Image Supabase Storage (Products & Banners)
+- Tanggal/Waktu WIB: 2026-05-10 15:09:19 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, Security, Configuration, Documentation, Testing/QA
+- Perintah User: "Buat fitur upload image untuk product dan homepage banner menggunakan Supabase Storage ... Catat semua aktivitas, file yang dibaca/dibuat/diubah, command, error/warning, keputusan teknis, dan status hasil ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Menambahkan fondasi upload image berbasis Supabase Storage yang reusable untuk admin banners dan products, termasuk dokumentasi bucket/policy.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/products/page.tsx`
+  - `README.md`
+- File Dibuat:
+  - `src/lib/supabase/storage.ts`
+  - `src/components/admin/ImageUploadField.tsx`
+  - `supabase/storage-policies.sql`
+- File Diubah:
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/products/page.tsx`
+  - `README.md`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan komponen reusable `ImageUploadField` dengan validasi file (tipe image, ekstensi png/jpg/jpeg/webp, max size), loading state, error state, dan preview gambar.
+  - Integrasi upload field ke form `/admin/homepage-banners` dan `/admin/products`.
+  - Produk kini mendukung upload `Primary Product Image` pada form create/edit.
+- Perubahan Backend:
+  - Menambahkan helper upload storage `src/lib/supabase/storage.ts` (client-side upload + public URL retrieval).
+  - Update action products agar setelah create/update bisa menyimpan URL image ke tabel `product_images` sebagai primary image.
+  - Update query products admin agar memuat primary image existing dari relasi `product_images`.
+- Perubahan API: Tidak ada route API baru (tetap server actions + storage client helper).
+- Perubahan Database:
+  - Tidak ada perubahan schema tabel.
+  - Menambahkan SQL policy manual untuk Supabase Storage di `supabase/storage-policies.sql`.
+- Perubahan Infrastructure/Deployment:
+  - Menetapkan bucket storage dokumentasi: `ecommerce-assets`.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada penggunaan service role key di frontend.
+  - Policy storage diarahkan ke `authenticated` write + public read untuk development.
+- Ringkasan Perubahan: Fitur upload image sudah siap dipakai di admin banners dan products; URL gambar disimpan ke database sesuai kebutuhan, dengan fallback/error handling aman.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: upload menggunakan public URL bucket `ecommerce-assets` untuk kemudahan dev; untuk production disarankan role-based auth policy.
+  - Catatan RLS: jika policy storage write atau policy tabel write belum cocok dengan anon/auth saat ini, UI akan menampilkan error upload/mutasi.
+- Status Hasil: Sukses
+- Next Step:
+  - Implement auth admin agar write policy storage dan DB bisa dibatasi per role dengan aman.
+
+## [2026-05-10 15:05:26 WIB] Git Add Commit Push Products CRUD
+- Tanggal/Waktu WIB: 2026-05-10 15:05:26 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(admin): add products CRUD\"\ngit push"
+- Tujuan Task: Melakukan staging semua perubahan, commit dengan pesan dari user, lalu push ke remote.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git add . && git commit -m "feat(admin): add products CRUD" && git push && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Commit mencakup halaman dan komponen CRUD products di admin dashboard.
+- Perubahan Backend: Commit mencakup server actions products untuk create/update/delete/toggle flags.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Commit `20bcd46` berhasil dipush ke `origin/main`.
+- Perubahan Security/Configuration: Tidak ada.
+- Ringkasan Perubahan: Proses `add`, `commit`, dan `push` sukses; branch lokal sinkron dengan remote.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning dari proses git.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: commit tambahan untuk memasukkan update AGENT_LOG terbaru ke remote.
+
 ## [2026-05-10 14:50:24 WIB] CRUD Basic Products Admin Dashboard
 - Tanggal/Waktu WIB: 2026-05-10 14:50:24 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
