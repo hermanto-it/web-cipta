@@ -6,6 +6,46 @@ type BrandRow = {
   slug: string;
 };
 
+type CategoryRow = {
+  id: string;
+  name: string;
+  slug: string;
+};
+
+type ProductRow = {
+  name: string;
+  slug: string;
+  price: number | null;
+  compare_at_price: number | null;
+  badge: string | null;
+  category: { name: string } | null;
+};
+
+type BannerRow = {
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  cta_label: string | null;
+  cta_href: string | null;
+  placement: "hero" | "side_promo" | "middle_promo" | "bottom_cta";
+  badge: string | null;
+  price_text: string | null;
+  sort_order: number;
+};
+
+type SectionRow = {
+  section_key: string;
+  title: string;
+  subtitle: string | null;
+  description: string | null;
+  sort_order: number;
+};
+
+type CompanySettingRow = {
+  key: string;
+  value: Record<string, string | boolean | number | null>;
+};
+
 type TaxonomyRow = {
   id: string;
   parent_id: string | null;
@@ -110,5 +150,185 @@ export async function getBrandCatalog(brandSlug: string) {
   } catch {
     console.warn("[supabase] getBrandCatalog unexpected error");
     return [] as BrandCatalogNode[];
+  }
+}
+
+export async function getCategories() {
+  if (!hasSupabasePublicEnv()) {
+    return [] as CategoryRow[];
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("categories")
+      .select("id,name,slug")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (error) {
+      console.warn("[supabase] getCategories failed:", error.message);
+      return [] as CategoryRow[];
+    }
+
+    return (data ?? []) as CategoryRow[];
+  } catch {
+    console.warn("[supabase] getCategories unexpected error");
+    return [] as CategoryRow[];
+  }
+}
+
+function formatIDR(value: number | null) {
+  if (value === null || Number.isNaN(value)) {
+    return null;
+  }
+
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function mapProductRow(row: ProductRow) {
+  return {
+    name: row.name,
+    category: row.category?.name ?? "General",
+    newPrice: formatIDR(row.price) ?? "-",
+    oldPrice: formatIDR(row.compare_at_price),
+    save:
+      row.compare_at_price && row.price && row.compare_at_price > row.price
+        ? `Save ${Math.round(((row.compare_at_price - row.price) / row.compare_at_price) * 100)}%`
+        : "Promo",
+    price: formatIDR(row.price) ?? "-",
+    badge: row.badge ?? "Promo",
+  };
+}
+
+export async function getFeaturedProducts() {
+  if (!hasSupabasePublicEnv()) {
+    return [] as ReturnType<typeof mapProductRow>[];
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("name,slug,price,compare_at_price,badge,category:categories(name)")
+      .eq("is_active", true)
+      .eq("is_featured", true)
+      .order("sort_order", { ascending: true })
+      .limit(8);
+
+    if (error) {
+      console.warn("[supabase] getFeaturedProducts failed:", error.message);
+      return [];
+    }
+
+    return ((data ?? []) as ProductRow[]).map(mapProductRow);
+  } catch {
+    console.warn("[supabase] getFeaturedProducts unexpected error");
+    return [];
+  }
+}
+
+export async function getBestSellerProducts() {
+  if (!hasSupabasePublicEnv()) {
+    return [] as ReturnType<typeof mapProductRow>[];
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("name,slug,price,compare_at_price,badge,category:categories(name)")
+      .eq("is_active", true)
+      .eq("is_best_seller", true)
+      .order("sort_order", { ascending: true })
+      .limit(10);
+
+    if (error) {
+      console.warn("[supabase] getBestSellerProducts failed:", error.message);
+      return [];
+    }
+
+    return ((data ?? []) as ProductRow[]).map(mapProductRow);
+  } catch {
+    console.warn("[supabase] getBestSellerProducts unexpected error");
+    return [];
+  }
+}
+
+export async function getHomepageBanners() {
+  if (!hasSupabasePublicEnv()) {
+    return [] as BannerRow[];
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("homepage_banners")
+      .select("title,subtitle,description,cta_label,cta_href,placement,badge,price_text,sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (error) {
+      console.warn("[supabase] getHomepageBanners failed:", error.message);
+      return [] as BannerRow[];
+    }
+
+    return (data ?? []) as BannerRow[];
+  } catch {
+    console.warn("[supabase] getHomepageBanners unexpected error");
+    return [] as BannerRow[];
+  }
+}
+
+export async function getHomepageSections() {
+  if (!hasSupabasePublicEnv()) {
+    return [] as SectionRow[];
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("homepage_sections")
+      .select("section_key,title,subtitle,description,sort_order")
+      .eq("is_active", true)
+      .order("sort_order", { ascending: true });
+
+    if (error) {
+      console.warn("[supabase] getHomepageSections failed:", error.message);
+      return [] as SectionRow[];
+    }
+
+    return (data ?? []) as SectionRow[];
+  } catch {
+    console.warn("[supabase] getHomepageSections unexpected error");
+    return [] as SectionRow[];
+  }
+}
+
+export async function getCompanySettings() {
+  if (!hasSupabasePublicEnv()) {
+    return [] as CompanySettingRow[];
+  }
+
+  try {
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from("company_settings")
+      .select("key,value")
+      .in("key", ["company_profile", "contact_info", "social_links", "header_settings", "footer_settings"]);
+
+    if (error) {
+      console.warn("[supabase] getCompanySettings failed:", error.message);
+      return [] as CompanySettingRow[];
+    }
+
+    return (data ?? []) as CompanySettingRow[];
+  } catch {
+    console.warn("[supabase] getCompanySettings unexpected error");
+    return [] as CompanySettingRow[];
   }
 }

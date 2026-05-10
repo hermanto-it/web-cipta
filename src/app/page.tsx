@@ -2,7 +2,17 @@
 
 import { useEffect, useState } from "react";
 
-import { getBrandCatalog, getBrands, hasSupabasePublicEnv } from "@/lib/supabase/queries";
+import {
+  getBestSellerProducts,
+  getBrandCatalog,
+  getBrands,
+  getCategories,
+  getCompanySettings,
+  getFeaturedProducts,
+  getHomepageBanners,
+  getHomepageSections,
+  hasSupabasePublicEnv,
+} from "@/lib/supabase/queries";
 
 export default function Home() {
   type CatalogNode = {
@@ -238,6 +248,61 @@ export default function Home() {
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
   const [expandedItems, setExpandedItems] = useState<Record<string, boolean>>({});
   const [brands, setBrands] = useState<BrandCatalog[]>(fallbackBrands);
+  const [categories, setCategories] = useState<string[]>([
+    "PC Desktop",
+    "Laptop",
+    "Workstation",
+    "Server",
+    "Storage",
+    "Networking",
+    "Accessories",
+    "UPS & Power",
+    "Software License",
+    "Security Appliance",
+  ]);
+  const [heroBanner, setHeroBanner] = useState({
+    title: "Enterprise IT Hardware",
+    subtitle: "Infrastructure Ready for Business",
+    description: "From endpoint hingga data center untuk operasional enterprise.",
+    ctaLabel: "Shop now",
+    priceText: "From Rp 2.870.000",
+  });
+  const [sidePromos, setSidePromos] = useState<string[]>(["Server Deals", "Networking Deals"]);
+  const [middlePromo, setMiddlePromo] = useState({
+    title: "Upgrade & SAVE BIG on Enterprise IT Infrastructure",
+    ctaLabel: "Shop now",
+    description: "Banner Image",
+  });
+  const [dealProducts, setDealProducts] = useState([
+    { name: "Dell PowerEdge Server", category: "Server", newPrice: "Rp 58.500.000", oldPrice: "Rp 63.200.000", save: "Save 8%" },
+    { name: "Lenovo ThinkPad Business Laptop", category: "Laptop", newPrice: "Rp 21.900.000", oldPrice: "Rp 24.400.000", save: "Save 10%" },
+    { name: "HP Z Workstation", category: "Workstation", newPrice: "Rp 43.750.000", oldPrice: "Rp 48.100.000", save: "Save 9%" },
+    { name: "Synology NAS Storage", category: "Storage", newPrice: "Rp 17.400.000", oldPrice: "Rp 19.250.000", save: "Save 9%" },
+  ]);
+  const [featuredMini, setFeaturedMini] = useState([
+    { name: "Cisco Managed Switch", price: "Rp 13.200.000" },
+    { name: "Ubiquiti Access Point", price: "Rp 4.250.000" },
+    { name: "APC UPS", price: "Rp 8.900.000" },
+    { name: "Enterprise SSD", price: "Rp 6.350.000" },
+  ]);
+  const [bestSellerGrid, setBestSellerGrid] = useState([
+    "Business Desktop PC",
+    "Enterprise Laptop",
+    "Rack Server",
+    "NAS Storage",
+    "Managed Switch",
+    "Wireless Access Point",
+    "Firewall Appliance",
+    "UPS Battery Backup",
+    "Workstation GPU",
+    "Monitor Professional",
+  ]);
+  const [companyProfile, setCompanyProfile] = useState({
+    name: "PT Cipta Solusi Techindo",
+    description: "Penyedia perangkat, solusi, dan layanan infrastruktur IT enterprise untuk bisnis modern.",
+    phone: "+62 811-9000-221",
+    email: "sales@cst.co.id",
+  });
 
   useEffect(() => {
     const loadSupabaseData = async () => {
@@ -247,9 +312,15 @@ export default function Home() {
       }
 
       try {
-        const [brandRows, dellRows] = await Promise.all([
+        const [brandRows, dellRows, categoryRows, featuredRows, bestSellerRows, bannerRows, sectionRows, settingRows] = await Promise.all([
           getBrands(),
           getBrandCatalog("dell-technologies"),
+          getCategories(),
+          getFeaturedProducts(),
+          getBestSellerProducts(),
+          getHomepageBanners(),
+          getHomepageSections(),
+          getCompanySettings(),
         ]);
 
         if (brandRows.length === 0) {
@@ -269,6 +340,63 @@ export default function Home() {
         });
 
         setBrands(mappedBrands);
+
+        if (categoryRows.length > 0) {
+          setCategories(categoryRows.map((row) => row.name));
+        }
+
+        if (featuredRows.length > 0) {
+          setDealProducts(featuredRows.slice(0, 4));
+          setFeaturedMini(featuredRows.slice(0, 4).map((row) => ({ name: row.name, price: row.price })));
+        }
+
+        if (bestSellerRows.length > 0) {
+          setBestSellerGrid(bestSellerRows.slice(0, 10).map((row) => row.name));
+        }
+
+        if (bannerRows.length > 0) {
+          const hero = bannerRows.find((row) => row.placement === "hero");
+          if (hero) {
+            setHeroBanner({
+              title: hero.title,
+              subtitle: hero.subtitle ?? heroBanner.subtitle,
+              description: hero.description ?? heroBanner.description,
+              ctaLabel: hero.cta_label ?? heroBanner.ctaLabel,
+              priceText: hero.price_text ?? heroBanner.priceText,
+            });
+          }
+
+          const side = bannerRows.filter((row) => row.placement === "side_promo").map((row) => row.title);
+          if (side.length > 0) {
+            setSidePromos(side.slice(0, 2));
+          }
+
+          const middle = bannerRows.find((row) => row.placement === "middle_promo");
+          if (middle) {
+            setMiddlePromo({
+              title: middle.title,
+              ctaLabel: middle.cta_label ?? middlePromo.ctaLabel,
+              description: middle.description ?? middlePromo.description,
+            });
+          }
+        }
+
+        if (sectionRows.length === 0) {
+          console.info("[homepage] Homepage sections empty, using default section labels.");
+        }
+
+        if (settingRows.length > 0) {
+          const profile = settingRows.find((row) => row.key === "company_profile")?.value;
+          const contact = settingRows.find((row) => row.key === "contact_info")?.value;
+
+          setCompanyProfile((current) => ({
+            name: typeof profile?.name === "string" ? profile.name : current.name,
+            description: typeof profile?.description === "string" ? profile.description : current.description,
+            phone: typeof contact?.phone === "string" ? contact.phone : current.phone,
+            email: typeof contact?.email === "string" ? contact.email : current.email,
+          }));
+        }
+
         console.info("[homepage] Loaded homepage brand data from Supabase.");
       } catch {
         console.warn("[homepage] Failed loading Supabase data, fallback is used.");
@@ -338,62 +466,13 @@ export default function Home() {
     { title: "Guarantee", desc: "Garansi resmi distributor" },
   ];
 
-  const dealProducts = [
-    {
-      name: "Dell PowerEdge Server",
-      category: "Server",
-      newPrice: "Rp 58.500.000",
-      oldPrice: "Rp 63.200.000",
-      save: "Save 8%",
-    },
-    {
-      name: "Lenovo ThinkPad Business Laptop",
-      category: "Laptop",
-      newPrice: "Rp 21.900.000",
-      oldPrice: "Rp 24.400.000",
-      save: "Save 10%",
-    },
-    {
-      name: "HP Z Workstation",
-      category: "Workstation",
-      newPrice: "Rp 43.750.000",
-      oldPrice: "Rp 48.100.000",
-      save: "Save 9%",
-    },
-    {
-      name: "Synology NAS Storage",
-      category: "Storage",
-      newPrice: "Rp 17.400.000",
-      oldPrice: "Rp 19.250.000",
-      save: "Save 9%",
-    },
-  ];
-
-  const featuredMini = [
-    { name: "Cisco Managed Switch", price: "Rp 13.200.000" },
-    { name: "Ubiquiti Access Point", price: "Rp 4.250.000" },
-    { name: "APC UPS", price: "Rp 8.900.000" },
-    { name: "Enterprise SSD", price: "Rp 6.350.000" },
-  ];
-
-  const bestSellerGrid = [
-    "Business Desktop PC",
-    "Enterprise Laptop",
-    "Rack Server",
-    "NAS Storage",
-    "Managed Switch",
-    "Wireless Access Point",
-    "Firewall Appliance",
-    "UPS Battery Backup",
-    "Workstation GPU",
-    "Monitor Professional",
-  ];
+  const safeMailto = `mailto:${companyProfile.email}`;
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
       <div className="border-b border-slate-200 bg-white text-xs text-slate-600 sm:text-sm">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 py-2">
-          <p>Call us for free: +62 811-9000-221</p>
+          <p>Call us for free: {companyProfile.phone}</p>
           <p className="font-medium text-blue-800">Free Consultation for Business IT</p>
           <div className="flex items-center gap-4">
             <a href="#" className="hover:text-blue-700">
@@ -409,11 +488,14 @@ export default function Home() {
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto w-full max-w-[1440px] px-4 py-5">
           <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-            <h1 className="text-2xl font-bold tracking-tight text-slate-900">PT Cipta Solusi Techindo</h1>
+            <h1 className="text-2xl font-bold tracking-tight text-slate-900">{companyProfile.name}</h1>
 
             <div className="flex w-full rounded-xl border border-slate-300 bg-white xl:max-w-3xl">
               <select className="w-36 border-r border-slate-300 px-3 text-sm text-slate-600 outline-none">
                 <option>All categories</option>
+                {categories.map((category) => (
+                  <option key={category}>{category}</option>
+                ))}
               </select>
               <input
                 type="text"
@@ -426,12 +508,12 @@ export default function Home() {
             <div className="grid grid-cols-2 gap-3 text-sm text-slate-700 sm:grid-cols-4 xl:flex xl:items-center xl:gap-10">
               <div className="flex flex-col items-center text-center">
                 <p className="text-xs text-slate-500">Sales</p>
-                <p className="whitespace-nowrap font-semibold">+62 811-9000-221</p>
+                <p className="whitespace-nowrap font-semibold">{companyProfile.phone}</p>
               </div>
               <div className="flex flex-col items-center text-center">
                 <p className="text-xs text-slate-500">Email</p>
                 <a
-                  href="mailto:sales@cst.co.id"
+                  href={safeMailto}
                   aria-label="Email sales"
                   className="inline-flex h-10 w-10 items-center justify-center text-slate-700"
                 >
@@ -508,17 +590,18 @@ export default function Home() {
           </aside>
 
           <article className="relative overflow-hidden rounded-xl bg-gradient-to-r from-slate-900 via-blue-900 to-slate-800 p-6 text-white shadow-md">
-            <p className="text-xs uppercase tracking-[0.2em] text-blue-200">Enterprise IT Hardware</p>
-            <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">Infrastructure Ready for Business</h2>
-            <p className="mt-3 text-sm text-slate-200">From Rp 2.870.000</p>
-            <button className="mt-5 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">Shop now</button>
+            <p className="text-xs uppercase tracking-[0.2em] text-blue-200">{heroBanner.title}</p>
+            <h2 className="mt-2 max-w-md text-3xl font-bold leading-tight">{heroBanner.subtitle}</h2>
+            <p className="mt-2 max-w-xl text-sm text-slate-200">{heroBanner.description}</p>
+            <p className="mt-3 text-sm text-slate-200">{heroBanner.priceText}</p>
+            <button className="mt-5 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">{heroBanner.ctaLabel}</button>
             <div className="mt-6 h-40 rounded-lg border border-white/20 bg-white/10 p-4 text-center text-sm text-blue-100 sm:absolute sm:bottom-6 sm:right-6 sm:mt-0 sm:w-72">
               Main Banner Image
             </div>
           </article>
 
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-            {["Server Deals", "Networking Deals"].map((item) => (
+            {sidePromos.map((item) => (
               <article key={item} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                 <div className="mb-3 inline-block rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">SALE</div>
                 <h3 className="font-bold text-slate-900">{item}</h3>
@@ -581,9 +664,9 @@ export default function Home() {
         </section>
 
         <section className="rounded-xl bg-gradient-to-r from-blue-900 via-blue-700 to-slate-800 p-6 text-white shadow-md">
-          <h3 className="text-2xl font-bold">Upgrade &amp; SAVE BIG on Enterprise IT Infrastructure</h3>
-          <button className="mt-4 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">Shop now</button>
-          <div className="mt-4 h-24 rounded-lg bg-white/15 p-3 text-center text-sm text-blue-100">Banner Image</div>
+          <h3 className="text-2xl font-bold">{middlePromo.title}</h3>
+          <button className="mt-4 rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">{middlePromo.ctaLabel}</button>
+          <div className="mt-4 h-24 rounded-lg bg-white/15 p-3 text-center text-sm text-blue-100">{middlePromo.description || "Banner Image"}</div>
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -664,8 +747,8 @@ export default function Home() {
       <footer className="border-t border-slate-200 bg-slate-900 text-slate-300">
         <div className="mx-auto grid w-full max-w-[1440px] gap-6 px-4 py-10 sm:grid-cols-2 lg:grid-cols-6">
           <div className="lg:col-span-2">
-            <h4 className="text-lg font-bold text-white">PT Cipta Solusi Techindo</h4>
-            <p className="mt-2 text-sm">Penyedia perangkat, solusi, dan layanan infrastruktur IT enterprise untuk bisnis modern.</p>
+            <h4 className="text-lg font-bold text-white">{companyProfile.name}</h4>
+            <p className="mt-2 text-sm">{companyProfile.description}</p>
           </div>
           <div>
             <h5 className="text-sm font-semibold text-white">Product Categories</h5>
@@ -694,8 +777,8 @@ export default function Home() {
           </div>
           <div>
             <h5 className="text-sm font-semibold text-white">Contact</h5>
-            <p className="mt-2 text-sm">sales@cst.co.id</p>
-            <p className="text-sm">+62 811-9000-221</p>
+            <p className="mt-2 text-sm">{companyProfile.email}</p>
+            <p className="text-sm">{companyProfile.phone}</p>
             <div className="mt-3 rounded bg-white/10 px-3 py-2 text-xs">Newsletter Subscribe Placeholder</div>
           </div>
         </div>

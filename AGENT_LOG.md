@@ -2,6 +2,138 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 14:29:40 WIB] Fondasi Basic Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 14:29:40 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Buat fondasi Admin Dashboard basic untuk project ecommerce PT Cipta Solusi Techindo ... Catat semua aktivitas ke AGENT_LOG.md sesuai aturan AGENTS.md."
+- Tujuan Task: Membuat route `/admin` dengan layout dashboard basic (sidebar, topbar/header, summary cards) dan mengambil count data dari Supabase dengan fallback aman.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/lib/supabase/server.ts`
+  - `src/lib/supabase/queries.ts`
+- File Dibuat:
+  - `src/app/admin/page.tsx`
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan halaman `src/app/admin/page.tsx` dengan layout responsive: sidebar kiri, header overview, main content, dan summary cards.
+  - Sidebar menu: Dashboard, Homepage Banners, Brands, Categories, Products, Product Images, Company Settings, Inquiries.
+  - UI clean enterprise berbasis Tailwind tanpa dependency tambahan.
+- Perubahan Backend:
+  - Di halaman admin server component, menambahkan helper `getCount(table)` yang membaca count tabel Supabase dengan server client.
+  - Mengambil count untuk `brands`, `categories`, `products`, `homepage_banners`, `inquiries` secara paralel.
+  - Menangani error/env kosong dengan fallback angka `0` + indikator `Data unavailable`.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada perubahan schema/seed.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Logging aman tanpa menampilkan secret/key.
+- Ringkasan Perubahan: Route `/admin` siap sebagai fondasi dashboard untuk pengembangan CRUD selanjutnya dengan summary count live dari Supabase dan fallback aman saat data tidak tersedia.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning; lint sukses.
+  - Keputusan teknis: menggunakan server component untuk query count agar tidak mengekspos logika query di client.
+- Status Hasil: Sukses
+- Next Step:
+  - Lanjut ke implementasi table/list per menu admin, lalu tambah create/edit/delete form dan autentikasi.
+
+## [2026-05-10 14:26:23 WIB] Validasi Final Homepage Read Supabase + Fallback
+- Tanggal/Waktu WIB: 2026-05-10 14:26:23 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, Testing/QA, Documentation
+- Perintah User: "Validasi apakah homepage benar-benar sudah membaca data dari Supabase ... Catat semua aktivitas ke AGENT_LOG.md sesuai aturan di AGENTS.md."
+- Tujuan Task: Verifikasi akhir bahwa homepage sudah dapat membaca data Supabase untuk brand/category/banner/products/company settings dan fallback tetap berjalan saat error/kosong.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Validasi struktur `src/app/page.tsx` menunjukkan homepage sudah memanggil query Supabase untuk brands, categories, banners, products, dan company settings.
+  - Validasi fallback: state default lokal tetap ada dan dipakai saat env tidak tersedia, query gagal, atau data kosong.
+- Perubahan Backend:
+  - Validasi `src/lib/supabase/queries.ts` mencakup fungsi data access untuk `getBrands`, `getBrandCatalog`, `getCategories`, `getFeaturedProducts`, `getBestSellerProducts`, `getHomepageBanners`, `getHomepageSections`, dan `getCompanySettings`.
+  - Error handling tiap query mengembalikan array kosong dan mencatat warning aman.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada secret/API key dicetak dalam log.
+- Ringkasan Perubahan: Validasi sukses; homepage telah terhubung ke Supabase untuk domain data utama yang diminta dan tetap aman berkat fallback data lokal.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning dari lint.
+  - Keputusan teknis: tidak melakukan perubahan schema maupun env karena instruksi validasi-only.
+- Status Hasil: Sukses
+- Next Step:
+  - Lanjutkan implementasi Admin Dashboard CRUD agar data Supabase dapat dikelola dari UI admin.
+
+## [2026-05-10 14:19:56 WIB] Validasi dan Penguatan Koneksi Homepage ke Supabase
+- Tanggal/Waktu WIB: 2026-05-10 14:19:56 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, Configuration, Testing/QA, Documentation
+- Perintah User: "Validasi apakah homepage benar-benar sudah membaca data dari Supabase ... Catat semua aktivitas ke AGENT_LOG.md sesuai aturan di AGENTS.md."
+- Tujuan Task: Memastikan homepage tidak hanya membaca brands, tapi juga categories, homepage banners, products, dan company settings dari Supabase dengan fallback aman saat kosong/gagal.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/lib/supabase/server.ts`
+  - `src/lib/supabase/client.ts`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/page.tsx`
+  - `.env.example`
+- File Dibuat: Tidak ada perubahan file dibuat pada task ini.
+- File Diubah:
+  - `src/lib/supabase/queries.ts`
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Homepage kini mengonsumsi data Supabase untuk kategori dropdown, hero banner, side promo banner, middle promo banner, daftar deal products, mini featured products, best seller grid, dan company profile/contact.
+  - Menjaga fallback state lokal agar UI tetap tampil saat env kosong, query gagal, atau tabel belum berisi data.
+- Perubahan Backend:
+  - Menambahkan/menyempurnakan query functions di `src/lib/supabase/queries.ts`:
+    - `getCategories()`
+    - `getFeaturedProducts()`
+    - `getBestSellerProducts()`
+    - `getHomepageBanners()`
+    - `getHomepageSections()`
+    - `getCompanySettings()`
+  - Menjaga helper existing `getBrands()` dan `getBrandCatalog()`.
+  - Menambahkan formatting harga aman (`IDR`) dan mapping hasil query ke bentuk yang dipakai UI.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Tidak ada perubahan schema/seed.
+- Perubahan Infrastructure/Deployment: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Logging aman menggunakan `console.info`/`console.warn` tanpa menampilkan URL, anon key, atau secret.
+- Ringkasan Perubahan: Homepage sekarang benar-benar mencoba membaca data utama dari Supabase (brands, categories, banners, products, company settings) dan otomatis fallback ke data lokal jika data belum tersedia atau terjadi kegagalan query.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint pada hasil akhir.
+  - Keputusan teknis: query layer tetap menggunakan browser client karena `page.tsx` saat ini Client Component untuk interaksi accordion.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: pisahkan data-fetching ke Server Component + pass props ke Client Sidebar untuk SSR dan SEO lebih optimal.
+
 ## [2026-05-10 14:07:45 WIB] Validasi Koneksi Homepage ke Supabase + Fallback
 - Tanggal/Waktu WIB: 2026-05-10 14:07:45 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
