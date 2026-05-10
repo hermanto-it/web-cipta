@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
-import { updateAdminPassword } from "@/lib/supabase/auth";
+import { AdminAuthShell } from "@/components/admin/AdminAuthShell";
+import { updateAdminPassword } from "@/lib/supabase/auth-client";
 
 export default function AdminResetPasswordPage() {
   const router = useRouter();
@@ -13,16 +14,14 @@ export default function AdminResetPasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">Reset Password</h1>
-        <p className="mt-1 text-sm text-slate-500">Masukkan password baru minimal 8 karakter.</p>
+    <AdminAuthShell title="Reset Password" subtitle="Admin Dashboard PT Cipta Solusi Techindo">
+      <p className="text-sm text-slate-500">Masukkan password baru minimal 8 karakter.</p>
 
-        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
-        {success ? <p className="mt-3 text-sm text-emerald-700">{success}</p> : null}
+      {error ? <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+      {success ? <p className="mt-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">{success}</p> : null}
 
-        <form
-          className="mt-4 grid gap-3"
+      <form
+          className="mt-4 grid gap-4"
           onSubmit={(event) => {
             event.preventDefault();
             setError(null);
@@ -66,15 +65,14 @@ export default function AdminResetPasswordPage() {
             <input name="confirm_password" type="password" required minLength={8} className="w-full rounded-lg border border-slate-300 px-3 py-2" />
           </label>
 
-          <button type="submit" disabled={pending} className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60">
+          <button type="submit" disabled={pending} className="w-full rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60">
             {pending ? "Updating..." : "Update Password"}
           </button>
-        </form>
+      </form>
 
-        <Link href="/admin/login" className="mt-3 inline-block text-sm font-medium text-blue-700 hover:text-blue-800">
-          Back to Login
-        </Link>
-      </div>
-    </div>
+      <Link href="/admin/login" className="mt-3 inline-block text-sm font-medium text-blue-700 hover:text-blue-800">
+        Back to Login
+      </Link>
+    </AdminAuthShell>
   );
 }

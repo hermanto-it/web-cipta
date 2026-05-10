@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 
-import { signOutAdminClient, signInAdminWithPassword } from "@/lib/supabase/auth";
+import { AdminAuthShell } from "@/components/admin/AdminAuthShell";
+import { signOutAdminClient, signInAdminWithPassword } from "@/lib/supabase/auth-client";
 import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
@@ -12,24 +13,22 @@ export default function AdminLoginPage() {
   const searchParams = useSearchParams();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [socialInfo, setSocialInfo] = useState<string | null>(null);
 
   const initialError = searchParams.get("error");
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100 px-4 py-10">
-      <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h1 className="text-2xl font-bold text-slate-900">Admin Login</h1>
-        <p className="mt-1 text-sm text-slate-500">PT Cipta Solusi Techindo</p>
+    <AdminAuthShell title="Log In" subtitle="Admin Dashboard PT Cipta Solusi Techindo">
+      {initialError === "access_denied" ? <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">Akses admin ditolak. Akun tidak terdaftar atau tidak aktif.</p> : null}
+      {initialError === "env_missing" ? <p className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">Supabase env belum tersedia.</p> : null}
+      {error ? <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
 
-        {initialError === "access_denied" ? <p className="mt-3 text-sm text-red-600">Akses admin ditolak. Akun tidak terdaftar atau tidak aktif.</p> : null}
-        {initialError === "env_missing" ? <p className="mt-3 text-sm text-amber-600">Supabase env belum tersedia.</p> : null}
-        {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
-
-        <form
-          className="mt-4 grid gap-3"
+      <form
+          className="mt-4 grid gap-4"
           onSubmit={(event) => {
             event.preventDefault();
             setError(null);
+            setSocialInfo(null);
 
             const formData = new FormData(event.currentTarget);
             const email = String(formData.get("email") ?? "").trim();
@@ -71,24 +70,71 @@ export default function AdminLoginPage() {
           }}
         >
           <label className="text-sm">
-            <span className="mb-1 block font-medium">Email</span>
-            <input name="email" type="email" required className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+            <span className="mb-1 block font-medium">Phone number *</span>
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="Your email"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 transition hover:border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+            />
           </label>
 
           <label className="text-sm">
-            <span className="mb-1 block font-medium">Password</span>
-            <input name="password" type="password" required className="w-full rounded-lg border border-slate-300 px-3 py-2" />
+            <span className="mb-1 block font-medium">Password *</span>
+            <input
+              name="password"
+              type="password"
+              required
+              placeholder="Enter your password"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 transition hover:border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+            />
           </label>
 
-          <button type="submit" disabled={pending} className="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-60">
+          <div className="-mt-1 text-right">
+            <Link href="/admin/forgot-password" className="text-sm font-medium text-slate-700 hover:text-red-600">
+              Forgot password ?
+            </Link>
+          </div>
+
+          <button type="submit" disabled={pending} className="w-full rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60">
             {pending ? "Signing in..." : "Login"}
           </button>
-        </form>
 
-        <Link href="/admin/forgot-password" className="mt-3 inline-block text-sm font-medium text-blue-700 hover:text-blue-800">
-          Forgot Password?
-        </Link>
-      </div>
-    </div>
+          <p className="text-center text-sm text-slate-600">
+            Don&apos;t you have an account?{" "}
+            <a href="#" title="Contact administrator" className="font-medium text-blue-700 hover:text-red-600">
+              Register
+            </a>
+          </p>
+
+          <div className="flex items-center gap-3 py-1">
+            <div className="h-px flex-1 bg-slate-200" />
+            <span className="text-xs font-medium text-slate-500">Or login with</span>
+            <div className="h-px flex-1 bg-slate-200" />
+          </div>
+
+          <div className="grid gap-2 sm:grid-cols-2">
+            <button
+              type="button"
+              onClick={() => setSocialInfo("Social login belum diaktifkan untuk admin.")}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:border-red-500 hover:text-red-600"
+            >
+              <span className="text-base font-bold">f</span>
+              <span>Facebook</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setSocialInfo("Social login belum diaktifkan untuk admin.")}
+              className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:border-red-500 hover:text-red-600"
+            >
+              <span className="text-base font-bold">G</span>
+              <span>Google</span>
+            </button>
+          </div>
+
+          {socialInfo ? <p className="text-center text-xs text-slate-500">{socialInfo}</p> : null}
+      </form>
+    </AdminAuthShell>
   );
 }

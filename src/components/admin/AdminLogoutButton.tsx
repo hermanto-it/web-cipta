@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { signOutAdminClient } from "@/lib/supabase/auth";
+import { signOutAdminClient } from "@/lib/supabase/auth-client";
 
 export function AdminLogoutButton() {
   const router = useRouter();

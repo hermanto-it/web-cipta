@@ -2,6 +2,249 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 19:45:51 WIB] Selesai Resize Modal Admin Login Lebih Ringkas
+- Tanggal/Waktu WIB: 2026-05-10 19:45:51 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perkecil lebar modal Admin Login ... max-width 460/480 ... responsive mobile ... jangan ubah logic/warna/background ... lint + git status."
+- Tujuan Task: Menurunkan lebar modal login desktop dan tetap menjaga responsivitas mobile tanpa mengubah struktur konten.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminAuthShell.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminAuthShell.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/UI:
+  - Mengubah wrapper modal dari `max-w-[560px]` menjadi `max-w-[480px]`.
+  - Menjaga `width` responsive dengan `w-[calc(100%-2rem)]` agar aman di mobile.
+  - Menyesuaikan padding dari pola besar ke `px-6 py-6` dan `sm:px-7 sm:py-7` agar proporsional dengan lebar baru.
+  - Konten field/button/social tetap full width mengikuti lebar modal.
+- Perubahan Security/Auth Logic:
+  - Tidak ada perubahan login flow Supabase, authorization, middleware, atau backend.
+- Perubahan API/Database/Configuration:
+  - Tidak ada perubahan API/schema/.env.
+- Perubahan Testing/QA:
+  - `npm run lint` sukses tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan sesuai scope (plus perubahan sebelumnya yang belum di-commit).
+- Ringkasan Perubahan: Modal admin login kini lebih kecil di desktop dan tetap nyaman di mobile, tanpa mengubah teks maupun behavior autentikasi.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: resize dipusatkan di komponen shell reusable agar konsisten untuk auth modal yang berbagi wrapper.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi visual manual di `/admin/login` untuk memastikan proporsi final sesuai preferensi.
+
+## [2026-05-10 19:45:18 WIB] Penyesuaian Lebar Modal Admin Login
+- Tanggal/Waktu WIB: 2026-05-10 19:45:18 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perkecil lebar modal Admin Login di /admin/login ... jangan ubah logic/warna/background ... lint + git status ... catat ke AGENT_LOG.md."
+- Tujuan Task: Mengecilkan lebar modal login agar proporsi desktop lebih ringkas dengan responsive mobile tetap aman.
+- Status Hasil: In Progress
+- Next Step:
+  - Update ukuran wrapper modal di komponen shell (`src/components/admin/AdminAuthShell.tsx`) tanpa mengubah konten/logic login.
+
+## [2026-05-10 19:34:37 WIB] Polish UI Modal Login Sesuai Referensi Visual
+- Tanggal/Waktu WIB: 2026-05-10 19:34:37 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki UI modal Admin Login agar lebih menyerupai contoh ... fokus UI login ... jangan ubah auth/security ... lint + git status ... jangan commit/push."
+- Tujuan Task: Menyamakan tampilan modal login admin ke referensi (label/placeholder/CTA/close/social visual) tanpa mengubah flow auth.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/components/admin/AdminAuthShell.tsx`
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminAuthShell.tsx`
+  - `src/app/admin/login/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/UI:
+  - Modal auth disesuaikan agar lebih mirip referensi:
+    - modal width diperlebar (`max-w-[560px]`), padding dan shadow lebih halus,
+    - tombol close `X` diperbesar, warna gelap, hover merah.
+  - Form login diperbarui sesuai copywriting target:
+    - label pertama: `Phone number *` (tetap input email),
+    - placeholder email: `Your email`,
+    - label password: `Password *`,
+    - placeholder password: `Enter your password`.
+  - Menambahkan state visual modern:
+    - link `Forgot password ?` rata kanan dengan hover merah,
+    - tombol Login full-width merah dengan hover merah lebih gelap,
+    - teks `Don't you have an account? Register` (Register nonaktif ke `#`, title `Contact administrator`),
+    - separator `Or login with`,
+    - tombol visual `Facebook` dan `Google` (type `button`, tidak submit),
+    - info kecil: `Social login belum diaktifkan untuk admin.` saat klik social button.
+  - Focus/hover input diperkuat ke border/ring merah tipis.
+- Perubahan Security/Auth Logic:
+  - Tidak ada perubahan flow autentikasi Supabase Auth.
+  - Tidak ada perubahan middleware/admin authorization.
+- Perubahan API/Database/Configuration:
+  - Tidak ada perubahan API, schema, atau `.env.local`.
+- Perubahan Testing/QA:
+  - `npm run lint` sukses tanpa error/warning.
+  - `git status --short --branch` menampilkan perubahan aktif, termasuk perubahan sebelumnya yang belum di-commit.
+  - Verifikasi manual browser URL `/admin/login` belum dieksekusi otomatis dari CLI dan perlu dicek langsung.
+- Ringkasan Perubahan: UI modal login kini lebih dekat ke referensi visual modern (struktur konten, CTA, social visual row, close action) dengan logic auth tetap utuh.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: social login dibuat visual-only sesuai instruksi, tanpa menambah OAuth logic/dependency.
+- Status Hasil: Sukses
+- Next Step:
+  - Lakukan review visual manual di `/admin/login` untuk fine-tuning jarak tipografi jika dibutuhkan.
+
+## [2026-05-10 19:33:29 WIB] Refinement UI Modal Admin Login Sesuai Referensi
+- Tanggal/Waktu WIB: 2026-05-10 19:33:29 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki UI modal Admin Login agar lebih menyerupai contoh ... fokus UI modal login ... jangan ubah logic auth/security ... lint + git status ... catat ke AGENT_LOG.md."
+- Tujuan Task: Menyempurnakan tampilan modal `/admin/login` (layout, typography, CTA, social visual buttons) tanpa mengubah logic autentikasi.
+- Status Hasil: In Progress
+- Next Step:
+  - Update `src/app/admin/login/page.tsx` dan `src/components/admin/AdminAuthShell.tsx` untuk match visual requirement.
+
+## [2026-05-10 19:14:16 WIB] Redesign Admin Auth UI Dengan Storefront Backdrop Modal
+- Tanggal/Waktu WIB: 2026-05-10 19:14:16 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA, Security
+- Perintah User: "Perbaiki tampilan Admin Login agar seperti modal login modern di atas background homepage ... jangan ubah logic auth/security ... lint + git status ... jangan commit/push."
+- Tujuan Task: Menghadirkan tampilan modal login modern dengan backdrop storefront mockup, overlay gelap+blur, dan konsistensi UI auth pages tanpa mengubah logic Supabase auth.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+- File Dibuat:
+  - `src/components/admin/AdminAuthShell.tsx`
+- File Diubah:
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/UI:
+  - Menambahkan komponen reusable `AdminAuthShell` untuk:
+    - backdrop mockup storefront non-interactive,
+    - overlay gelap + `backdrop-blur-sm`,
+    - modal auth centered (`rounded-2xl`, `shadow-xl`, responsive),
+    - tombol close `X` ke `/` dengan `aria-label="Close login"`.
+  - Menerapkan shell ke:
+    - `/admin/login`
+    - `/admin/forgot-password`
+    - `/admin/reset-password`
+  - Menyesuaikan login form UI:
+    - title: `Log In`
+    - subtitle: `Admin Dashboard PT Cipta Solusi Techindo`
+    - placeholder email/password sesuai instruksi
+    - forgot password link di bawah field password
+    - tombol login full width
+    - error/info message tetap aman (tanpa expose data sensitif)
+- Perubahan Security/Auth Logic:
+  - Tidak ada perubahan logic Supabase Auth (signIn/signOut/reset/update tetap sama).
+  - Tidak ada perubahan middleware/admin authorization.
+  - Tidak ada perubahan `.env.local` / service role / schema.
+- Perubahan API/Database: Tidak ada.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan file UI auth + perubahan sebelumnya yang memang belum di-commit.
+  - Validasi manual browser URL `http://localhost:3000/admin/login` belum dijalankan otomatis dari CLI (perlu cek visual di browser lokal).
+- Ringkasan Perubahan: Halaman admin auth kini tampil seperti modal modern di atas backdrop storefront dengan overlay blur, close action, dan tetap mempertahankan alur autentikasi + security yang sudah benar.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: menggunakan backdrop mockup statis agar ringan dan aman, tanpa mengimpor homepage penuh yang berpotensi membawa logic berat/conflict.
+- Status Hasil: Sukses
+- Next Step:
+  - Review visual manual di `/admin/login`, `/admin/forgot-password`, `/admin/reset-password` pada desktop/mobile.
+  - Jika perlu, commit terpisah untuk perubahan auth helper sebelumnya + redesign UI ini agar riwayat git tetap rapi.
+
+## [2026-05-10 19:12:22 WIB] Redesign UI Admin Login Jadi Modal di Atas Backdrop Storefront
+- Tanggal/Waktu WIB: 2026-05-10 19:12:22 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Perbaiki tampilan halaman Admin Login agar seperti modal login modern di atas background homepage ... jangan ubah auth/security/.env/dependency ... lint + git status ... catat ke AGENT_LOG.md."
+- Tujuan Task: Mengubah tampilan /admin/login (dan opsional forgot/reset untuk konsistensi) menjadi modal modern dengan storefront backdrop tanpa mengubah logic auth.
+- Status Hasil: In Progress
+- Next Step:
+  - Buat shell UI reusable untuk backdrop+overlay+modal, lalu terapkan ke halaman admin auth.
+
+## [2026-05-10 19:05:44 WIB] Fix Build Error /admin/login Import next/headers di Client
+- Tanggal/Waktu WIB: 2026-05-10 19:05:44 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Security, Documentation, Testing/QA
+- Perintah User: "Perbaiki error build di /admin/login ... pisahkan auth helper client/server ... jangan ubah middleware/security ... lint + git status --short --branch ... jangan commit/push."
+- Tujuan Task: Menghilangkan import chain `next/headers` dari Client Component admin auth pages tanpa menurunkan proteksi admin.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+  - `src/components/admin/AdminLogoutButton.tsx`
+  - `src/lib/supabase/auth.ts`
+  - `src/lib/supabase/client.ts`
+  - `src/lib/supabase/server.ts`
+  - `middleware.ts`
+- File Dibuat:
+  - `src/lib/supabase/auth-client.ts`
+- File Diubah:
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+  - `src/components/admin/AdminLogoutButton.tsx`
+  - `src/lib/supabase/auth.ts`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Client pages (`/admin/login`, `/admin/forgot-password`, `/admin/reset-password`) dan `AdminLogoutButton` kini mengimpor helper dari `src/lib/supabase/auth-client.ts`.
+  - Alur login/forgot/reset tetap memakai Supabase browser client (`signInWithPassword`, `resetPasswordForEmail`, `updateUser`, `signOut`).
+  - Verifikasi admin pasca-login di client tetap terbatasi ke user login saat ini (`user_id` atau `email`, `is_active=true`).
+- Perubahan Backend/Security:
+  - `src/lib/supabase/auth.ts` dibersihkan menjadi server-only helper (menghapus fungsi browser auth), sehingga tidak lagi menjadi sumber import chain `next/headers` ke client.
+  - `middleware.ts` tidak diubah; guard `/admin` tetap aktif (tidak bypass security).
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Tidak ada perubahan schema/query policy.
+- Perubahan Configuration:
+  - Tidak ada perubahan `.env.local`.
+  - Tidak ada service role key.
+- Perubahan Testing/QA:
+  - `npm run lint` berhasil tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan hanya pada file auth/client import separation.
+- Ringkasan Perubahan: Error build disebabkan client page mengimpor `auth.ts` yang mengimpor `server.ts` (`next/headers`). Solusi: pisahkan helper browser ke `auth-client.ts` dan arahkan seluruh Client Component ke helper tersebut; helper server tetap terpisah di `auth.ts`.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: memisahkan helper berdasarkan runtime (client vs server) untuk mencegah accidental import chain pada App Router.
+- Status Hasil: Sukses
+- Next Step:
+  - Jalankan build (`npm run build`) bila diperlukan untuk validasi akhir bahwa error import server API di client sudah hilang.
+
 ## [2026-05-10 18:55:57 WIB] Git Add Commit Push SEO + Sidebar Spacing
 - Tanggal/Waktu WIB: 2026-05-10 18:55:57 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
