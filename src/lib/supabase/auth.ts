@@ -20,14 +20,40 @@ export async function getAuthenticatedAdmin() {
       return { user: null, admin: null, error: userError?.message ?? "User belum login." };
     }
 
-    const { data: admin, error: adminError } = await supabase
+    let admin = null;
+    let adminError = null;
+
+    const byUserId = await supabase
       .from("admin_users")
       .select("id,email,role,is_active,user_id")
-      .or(`user_id.eq.${user.id},email.eq.${user.email ?? ""}`)
+      .eq("user_id", user.id)
       .eq("is_active", true)
       .maybeSingle();
 
+    admin = byUserId.data;
+    adminError = byUserId.error;
+
+    if (!admin && !adminError && user.email) {
+      const byEmail = await supabase
+        .from("admin_users")
+        .select("id,email,role,is_active,user_id")
+        .ilike("email", user.email)
+        .eq("is_active", true)
+        .maybeSingle();
+
+      admin = byEmail.data;
+      adminError = byEmail.error;
+    }
+
     if (adminError || !admin) {
+      if (adminError) {
+        console.warn("[auth] admin validation query failed:", {
+          message: adminError.message,
+          code: adminError.code,
+          hint: adminError.hint,
+          details: adminError.details,
+        });
+      }
       return { user, admin: null, error: adminError?.message ?? "Akses admin ditolak." };
     }
 

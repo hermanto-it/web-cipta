@@ -2,6 +2,129 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 20:37:26 WIB] Fix Validasi Admin Login Ditolak Meski user_id Cocok
+- Tanggal/Waktu WIB: 2026-05-10 20:37:26 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Security, Documentation, Testing/QA
+- Perintah User: "Perbaiki error login admin ... user_id cocok dan is_active=true tapi masih akses ditolak ... cek auth.ts/auth-client/login/middleware ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Memastikan query validasi admin stabil dan prioritas cek `user_id` agar login berhasil saat data admin valid.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/lib/supabase/auth.ts`
+  - `src/lib/supabase/auth-client.ts`
+  - `src/app/admin/login/page.tsx`
+  - `middleware.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/lib/supabase/auth.ts`
+  - `src/app/admin/login/page.tsx`
+  - `middleware.ts`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/Security:
+  - Mengganti query validasi admin dari satu query `.or(...)` menjadi dua tahap:
+    1) cek utama: `admin_users.user_id = auth.user.id` + `is_active = true`
+    2) fallback: `email` (case-insensitive `ilike`) + `is_active = true` jika tahap 1 tidak menemukan data.
+  - Diterapkan konsisten pada:
+    - halaman login client (`src/app/admin/login/page.tsx`),
+    - helper server auth (`src/lib/supabase/auth.ts`),
+    - `middleware.ts`.
+  - Menambahkan logging console yang lebih jelas saat query error (message/code/hint/details) untuk membantu diagnosis RLS/policy tanpa mengekspos detail ke user.
+  - Pesan user tetap generic: "Akses admin ditolak...".
+- Perubahan API/Database/Configuration:
+  - Tidak ada perubahan schema/RLS/env.
+  - Tidak menggunakan service role key.
+  - Middleware tetap aktif, tidak dibypass.
+- Perubahan Testing/QA:
+  - `npm run lint` sukses tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan file terkait plus perubahan lain yang sudah ada sebelumnya.
+- Ringkasan Penyebab dan Perbaikan:
+  - Penyebab potensial: filter `.or(user_id,email)` rentan mismatch/parsing edge case pada kondisi tertentu sehingga admin valid bisa tetap terbaca null/error.
+  - Perbaikan: cek `user_id` sebagai sumber kebenaran utama, fallback email bila perlu, dan log error teknis bila terblokir RLS.
+- Rekomendasi Policy Aman (jika tetap RLS error):
+  - Pastikan policy `select` tabel `public.admin_users` mengizinkan user `authenticated` membaca baris miliknya sendiri (`user_id = auth.uid()`), opsional fallback email yang sama, dan `is_active = true`.
+  - Jangan buat policy yang membuka list seluruh admin.
+- Status Hasil: Sukses
+- Next Step:
+  - Uji login dengan akun yang `auth.users.id` sudah dipetakan ke `admin_users.user_id` dan `is_active=true`.
+  - Jika masih gagal, cek log warning middleware/login untuk message/code RLS sebagai dasar perbaikan policy.
+
+## [2026-05-10 20:36:03 WIB] Debug Akses Admin Ditolak Walau user_id Cocok
+- Tanggal/Waktu WIB: 2026-05-10 20:36:03 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Security, Documentation, Testing/QA
+- Perintah User: "Cek dan perbaiki error login admin ... auth.users.id cocok admin_users.user_id & is_active=true tapi tetap akses ditolak ... jangan ubah UI/.env/RLS/service role ... lint + git status ... catat AGENT_LOG."
+- Tujuan Task: Memastikan validasi admin membaca `admin_users` secara robust berdasarkan `user_id` (fallback email bila perlu), serta memberikan logging jelas jika terkendala RLS.
+- Status Hasil: In Progress
+- Next Step:
+  - Refactor query admin check di login client, middleware, dan helper server dengan prioritas `user_id` lalu fallback email.
+
+## [2026-05-10 20:06:56 WIB] Penyelarasan UI Modal Forgot Password Dengan Modal Login
+- Tanggal/Waktu WIB: 2026-05-10 20:06:56 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA, Security
+- Perintah User: "Perbaiki tampilan modal Forgot Password agar sama gaya desainnya dengan modal Admin Login ... jangan ubah logic/security ... update README catatan forgot password ... lint + git status ... jangan commit/push."
+- Tujuan Task: Menyamakan visual modal forgot password dengan login modal sambil mempertahankan flow reset password Supabase yang aman.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/components/admin/AdminAuthShell.tsx`
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+  - `README.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/forgot-password/page.tsx`
+  - `README.md`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/UI:
+  - Modal forgot password tetap memakai `AdminAuthShell` sehingga backdrop/overlay/ukuran/border-radius/shadow konsisten dengan login.
+  - Menyesuaikan copy sesuai permintaan: deskripsi menjadi "Masukkan email admin untuk menerima link reset password.".
+  - Input diselaraskan dengan login style:
+    - label `Email *`
+    - placeholder `Your email`
+    - hover/focus border merah + ring merah tipis.
+  - Tombol `Send Reset Link` diselaraskan:
+    - full width
+    - merah (`bg-red-600`) + hover merah lebih gelap.
+  - Link `Back to Login` diberi hover merah.
+  - Success message tetap generic sesuai keamanan.
+  - Error message ditampilkan rapi sebagai alert merah soft tanpa info sensitif.
+- Perubahan Security/Auth Logic:
+  - Logic reset tetap memakai `supabase.auth.resetPasswordForEmail(email, { redirectTo: `${origin}/admin/reset-password` })` melalui helper existing.
+  - Tidak ada perubahan middleware, authorization, atau role admin check.
+- Perubahan API/Database/Configuration:
+  - Tidak ada perubahan API/schema/.env.local.
+- Perubahan Documentation:
+  - Menambah catatan README untuk forgot password:
+    - reset link dikirim ke email input,
+    - cek inbox/spam,
+    - rekomendasi SMTP Supabase di production,
+    - redirect URL reset harus terdaftar.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan file pada scope task.
+- Ringkasan Perubahan: UI forgot password kini selaras dengan login modal reference (visual, interaksi input/button/link), sambil mempertahankan keamanan dan flow reset password yang ada.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: mempertahankan shared shell agar konsistensi antar modal auth terjaga dengan perubahan minimal.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual hover/focus/submit di `/admin/forgot-password` pada desktop dan mobile.
+
 ## [2026-05-10 19:45:51 WIB] Selesai Resize Modal Admin Login Lebih Ringkas
 - Tanggal/Waktu WIB: 2026-05-10 19:45:51 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

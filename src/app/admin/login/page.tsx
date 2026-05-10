@@ -51,14 +51,40 @@ export default function AdminLoginPage() {
                 return;
               }
 
-              const { data: admin, error: adminError } = await supabase
+              let admin = null;
+              let adminError = null;
+
+              const byUserId = await supabase
                 .from("admin_users")
                 .select("id,is_active")
-                .or(`user_id.eq.${user.id},email.eq.${user.email ?? ""}`)
+                .eq("user_id", user.id)
                 .eq("is_active", true)
                 .maybeSingle();
 
+              admin = byUserId.data;
+              adminError = byUserId.error;
+
+              if (!admin && !adminError && user.email) {
+                const byEmail = await supabase
+                  .from("admin_users")
+                  .select("id,is_active")
+                  .ilike("email", user.email)
+                  .eq("is_active", true)
+                  .maybeSingle();
+
+                admin = byEmail.data;
+                adminError = byEmail.error;
+              }
+
               if (adminError || !admin) {
+                if (adminError) {
+                  console.warn("[admin-login] admin_users check failed:", {
+                    message: adminError.message,
+                    code: adminError.code,
+                    hint: adminError.hint,
+                    details: adminError.details,
+                  });
+                }
                 await signOutAdminClient();
                 setError("Akses admin ditolak. Akun tidak terdaftar atau tidak aktif.");
                 return;

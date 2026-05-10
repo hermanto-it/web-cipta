@@ -122,6 +122,12 @@ Di Supabase Dashboard, buka `Authentication` -> `URL Configuration`, lalu tambah
 - `http://localhost:3000/admin/reset-password`
 - `https://domain-anda.com/admin/reset-password` (untuk production nanti)
 
+### 3.1) Catatan Forgot Password
+
+- Link reset password dikirim ke email yang dimasukkan di halaman `/admin/forgot-password`.
+- Selalu cek Inbox/Spam pada email tersebut.
+- Untuk production, sangat disarankan konfigurasi SMTP email di Supabase agar deliverability lebih baik.
+
 ### 4) Alur akses admin
 
 - Route login: `/admin/login`
