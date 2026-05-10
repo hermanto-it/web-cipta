@@ -2,6 +2,83 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 22:11:28 WIB] Implementasi Standardisasi UI Admin Dashboard
+- Tanggal/Waktu WIB: 2026-05-10 22:11:28 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Standarisasi UI Admin Dashboard agar konsisten dengan halaman utama ... fokus hanya admin pages ... lint + git status ... jangan commit/push."
+- Tujuan Task: Menyatukan layout admin menjadi enterprise shell yang konsisten, responsive, dan rapi di semua halaman admin utama.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/app/admin/inquiries/page.tsx`
+- File Dibuat:
+  - `src/components/admin/AdminDashboardShell.tsx`
+- File Diubah:
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/app/admin/inquiries/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend/UI:
+  - Menambahkan shell layout reusable `AdminDashboardShell` berisi:
+    - sidebar card putih,
+    - menu admin konsisten,
+    - active state merah brand (`#DB1A1A`),
+    - desktop sticky sidebar,
+    - background `slate-50`,
+    - header halaman standar (title, subtitle, badge `Live Supabase`, logout).
+  - Menerapkan shell ke halaman:
+    - `/admin`
+    - `/admin/homepage-banners`
+    - `/admin/brands`
+    - `/admin/categories`
+    - `/admin/products`
+    - `/admin/inquiries`
+  - Dashboard Overview dirapikan:
+    - statistik cards konsisten (`rounded-2xl`, border halus, shadow ringan),
+    - responsive grid 1/2/3/5 kolom sesuai viewport,
+    - panel `Next Development Steps` diubah menjadi checklist profesional 2 kolom desktop.
+  - Halaman inquiries:
+    - filter chip active merah,
+    - tombol status `Contacted` disesuaikan aksen merah agar sejalan brand.
+- Perubahan Backend/API/Database/Security:
+  - Tidak ada perubahan logic auth, middleware, Supabase config, schema SQL, atau homepage public.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan file sesuai scope standardisasi UI admin.
+  - Pengujian manual URL admin tidak dieksekusi otomatis dari CLI (perlu validasi visual langsung di browser).
+- Ringkasan Perubahan: UI admin kini memakai satu sistem layout enterprise yang konsisten lintas halaman, lebih bersih, responsif, dan sejalan dengan identitas visual aplikasi.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: standardisasi dipusatkan pada shell reusable agar konsisten dan meminimalkan duplikasi kode antar halaman admin.
+- Status Hasil: Sukses
+- Next Step:
+  - Review manual semua URL admin setelah login untuk memastikan pengalaman mobile/desktop sesuai ekspektasi.
+
+## [2026-05-10 22:07:35 WIB] Standardisasi UI Admin Dashboard Enterprise
+- Tanggal/Waktu WIB: 2026-05-10 22:07:35 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation
+- Perintah User: "Standarisasi UI Admin Dashboard agar konsisten dengan halaman utama ... fokus tampilan admin dan halaman terkait ... lint + git status ... jangan commit/push."
+- Tujuan Task: Membuat tampilan admin lebih konsisten, modern, dan responsive dengan layout/sidebar/header terstandar tanpa mengubah auth logic dan homepage public.
+- Status Hasil: In Progress
+- Next Step:
+  - Buat shell layout admin reusable dan terapkan ke halaman dashboard, banners, brands, categories, products, inquiries.
+
 ## [2026-05-10 20:37:26 WIB] Fix Validasi Admin Login Ditolak Meski user_id Cocok
 - Tanggal/Waktu WIB: 2026-05-10 20:37:26 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
