@@ -25,6 +25,8 @@ export default function Home() {
     catalog?: CatalogNode[];
   };
 
+  const comingSoonCatalog: CatalogNode[] = [{ name: "Product lines coming soon" }];
+
   const dellCatalog: CatalogNode[] = [
     {
       name: "PC Desktop",
@@ -56,8 +58,8 @@ export default function Home() {
           children: [{ name: "Dell Pro 3" }, { name: "Dell Pro 5" }, { name: "Dell Pro 7" }, { name: "Dell Pro Premium" }],
         },
         { name: "XPS", children: [{ name: "XPS 14" }] },
-        { name: "Dell Plus", children: [{ name: "Dell 16 Plus Intel" }, { name: "Dell 16 Plus AMD" }] },
-        { name: "Dell", children: [{ name: "Dell 15 Intel" }, { name: "Dell 15 AMD" }] },
+         { name: "Dell Plus", children: [{ name: "Dell 16 Plus Intel" }, { name: "Dell 16 Plus AMD" }] },
+         { name: "Dell PC", children: [{ name: "Dell 15 Intel" }, { name: "Dell 15 AMD" }] },
       ],
     },
     {
@@ -141,7 +143,7 @@ export default function Home() {
                 { name: "PowerEdge MX760c (Intel)" },
                 { name: "PowerEdge C6620 (Intel)" },
                 { name: "PowerEdge R450 (Intel)" },
-                { name: "PowerEdge R550 (Intel)" },
+                { name: "PowerEdge R550(Intel)" },
                 { name: "PowerEdge R7725 (AMD)" },
                 { name: "PowerEdge R7725xd (AMD)" },
                 { name: "PowerEdge R6725 (AMD)" },
@@ -232,17 +234,17 @@ export default function Home() {
 
   const fallbackBrands: BrandCatalog[] = [
     { name: "Dell Technologies", catalog: dellCatalog },
-    { name: "HPE" },
-    { name: "Lenovo" },
-    { name: "Asus" },
-    { name: "Synology" },
-    { name: "Supermicro" },
-    { name: "Mikrotik" },
-    { name: "Cisco" },
-    { name: "Fortinet" },
-    { name: "APC" },
-    { name: "Microsoft" },
-    { name: "VMware" },
+    { name: "HPE", catalog: comingSoonCatalog },
+    { name: "Lenovo", catalog: comingSoonCatalog },
+    { name: "Asus", catalog: comingSoonCatalog },
+    { name: "Synology", catalog: comingSoonCatalog },
+    { name: "Supermicro", catalog: comingSoonCatalog },
+    { name: "Mikrotik", catalog: comingSoonCatalog },
+    { name: "Cisco", catalog: comingSoonCatalog },
+    { name: "Fortinet", catalog: comingSoonCatalog },
+    { name: "APC", catalog: comingSoonCatalog },
+    { name: "Microsoft", catalog: comingSoonCatalog },
+    { name: "VMware", catalog: comingSoonCatalog },
   ];
 
   const [expandedBrand, setExpandedBrand] = useState<string | null>(null);
@@ -336,7 +338,7 @@ export default function Home() {
             };
           }
 
-          return { name: row.name };
+          return { name: row.name, catalog: comingSoonCatalog };
         });
 
         setBrands(mappedBrands);
@@ -416,16 +418,32 @@ export default function Home() {
     }));
   };
 
-  const getLevelClass = (level: number) => {
-    if (level === 0) return "text-sm font-semibold text-slate-800";
-    if (level === 1) return "text-sm font-medium text-slate-700";
-    if (level === 2) return "text-xs font-medium text-slate-700";
-    return "text-xs text-slate-600";
+  const getLevelClass = (level: number, hasChildren: boolean, label: string) => {
+    const isPlaceholder = label === "Product lines coming soon";
+    if (isPlaceholder) return "text-xs italic text-slate-400";
+    if (!hasChildren) return "text-sm font-normal text-slate-600";
+    if (level === 0) return "text-sm font-semibold text-slate-900";
+    if (level === 1) return "text-sm font-semibold text-slate-800";
+    if (level === 2) return "text-sm font-medium text-slate-800";
+    return "text-sm font-medium text-slate-700";
+  };
+
+  const getIndentClass = (level: number) => {
+    if (level === 0) return "pl-4";
+    if (level === 1) return "pl-5";
+    if (level === 2) return "pl-7";
+    if (level === 3) return "pl-9";
+    if (level === 4) return "pl-11";
+    return "pl-12";
+  };
+
+  const getRowPaddingClass = (hasChildren: boolean) => {
+    return hasChildren ? "py-2" : "py-1.5";
   };
 
   const renderCatalog = (nodes: CatalogNode[], level = 0, parentPath = "dell") => {
     return (
-      <ul className={`space-y-1 ${level > 0 ? "mt-1 border-l border-slate-200 pl-3" : ""}`}>
+      <ul className={`space-y-0.5 ${level > 0 ? "mt-1 border-l border-slate-200" : ""}`}>
         {nodes.map((node) => {
           const path = `${parentPath}/${node.name}`;
           const hasChildren = Boolean(node.children?.length);
@@ -437,17 +455,19 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => toggleItem(path)}
-                  className={`flex w-full items-center justify-between gap-2 rounded px-1 py-0.5 text-left hover:bg-slate-50 ${getLevelClass(level)} ${
+                  className={`flex min-h-8 w-full items-center justify-between gap-2 rounded ${getIndentClass(level)} pr-2 ${getRowPaddingClass(
+                    hasChildren,
+                  )} text-left hover:bg-slate-50 ${getLevelClass(level, hasChildren, node.name)} ${
                     isOpen ? "bg-red-50/30" : ""
                   }`}
+                  aria-expanded={isOpen}
                 >
-                  <span>{node.name}</span>
-                  <span className="text-slate-400">{isOpen ? "▼" : "▶"}</span>
+                  <span className="min-w-0 flex-1 break-words leading-snug">{node.name}</span>
+                  <span className="w-4 shrink-0 text-right text-slate-400">{isOpen ? "▼" : "▶"}</span>
                 </button>
               ) : (
-                <div className={`flex items-center gap-2 px-1 py-0.5 ${getLevelClass(level)}`}>
-                  <span className="text-slate-300">•</span>
-                  <span>{node.name}</span>
+                <div className={`min-h-7 ${getIndentClass(level)} ${getRowPaddingClass(hasChildren)} ${getLevelClass(level, hasChildren, node.name)}`}>
+                  <span className="block min-w-0 break-words leading-snug">{node.name}</span>
                 </div>
               )}
               {hasChildren && isOpen ? renderCatalog(node.children ?? [], level + 1, path) : null}
@@ -467,9 +487,35 @@ export default function Home() {
   ];
 
   const safeMailto = `mailto:${companyProfile.email}`;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "PT Cipta Solusi Techindo",
+    url: siteUrl,
+    email: "sales@cst.co.id",
+    telephone: "+62 811-9000-221",
+    address: {
+      "@type": "PostalAddress",
+      addressCountry: "ID",
+    },
+  };
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "PT Cipta Solusi Techindo",
+    url: siteUrl,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: `${siteUrl}/search?q={search_term_string}`,
+      "query-input": "required name=search_term_string",
+    },
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
       <div className="border-b border-slate-200 bg-white text-xs text-slate-600 sm:text-sm">
         <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 py-2">
           <p>Call us for free: {companyProfile.phone}</p>
@@ -563,8 +609,9 @@ export default function Home() {
                   return (
                     <li key={brand.name} className={isActive ? "bg-red-50/30" : ""}>
                       <button
-                        className="flex w-full items-center justify-between px-4 py-3 text-left hover:bg-slate-50"
+                        className="flex min-h-10 w-full items-center justify-between gap-2 px-4 py-2.5 text-left hover:bg-slate-50"
                         type="button"
+                        aria-expanded={isActive}
                         onClick={() => {
                           if (!hasCatalog) {
                             return;
@@ -573,10 +620,12 @@ export default function Home() {
                           setExpandedBrand((current) => (current === brand.name ? null : brand.name));
                         }}
                       >
-                        <span className="flex items-center gap-2">
-                          <span className={`text-sm ${isActive ? "font-semibold text-red-700" : "text-slate-700"}`}>{brand.name}</span>
+                        <span className="min-w-0 flex-1">
+                          <span className={`block break-words text-sm ${isActive ? "font-semibold text-red-700" : "font-semibold text-slate-800"}`}>
+                            {brand.name}
+                          </span>
                         </span>
-                        <span className="text-slate-400">{isActive ? "▼" : "▶"}</span>
+                        {hasCatalog ? <span className="w-4 shrink-0 text-right text-slate-400">{isActive ? "▼" : "▶"}</span> : null}
                       </button>
                       {isActive && brand.catalog ? (
                         <div className="border-t border-slate-200 bg-white px-4 pb-3 pt-2">
@@ -627,9 +676,9 @@ export default function Home() {
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="mb-4 text-xl font-bold text-slate-900">
+          <h2 className="mb-4 text-xl font-bold text-slate-900">
             Deal Of The Day <span className="text-red-600">🔥</span>
-          </h3>
+          </h2>
           <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             {dealProducts.map((product) => (
               <article key={product.name} className="rounded-xl border border-slate-200 p-4">
@@ -668,7 +717,7 @@ export default function Home() {
         </section>
 
         <section className="rounded-xl bg-gradient-to-r from-blue-900 via-blue-700 to-slate-800 p-6 text-white shadow-md">
-          <h3 className="text-2xl font-bold">{middlePromo.title}</h3>
+          <h2 className="text-2xl font-bold">{middlePromo.title}</h2>
           <a href="/inquiry" className="mt-4 inline-block rounded-lg bg-red-600 px-5 py-2.5 text-sm font-semibold hover:bg-red-700">
             {middlePromo.ctaLabel}
           </a>
@@ -720,7 +769,7 @@ export default function Home() {
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-          <h3 className="mb-4 text-xl font-bold">Best Seller</h3>
+          <h2 className="mb-4 text-xl font-bold">Best Seller</h2>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-5">
             {bestSellerGrid.map((item) => (
               <article key={item} className="rounded-lg border border-slate-200 p-3">
@@ -735,7 +784,7 @@ export default function Home() {
         </section>
 
         <section className="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm">
-          <h3 className="text-2xl font-bold">Need Complete IT Infrastructure for Your Business?</h3>
+          <h2 className="text-2xl font-bold">Need Complete IT Infrastructure for Your Business?</h2>
           <p className="mx-auto mt-2 max-w-3xl text-sm text-slate-600">
             Konsultasikan kebutuhan server, storage, networking, endpoint, dan security untuk perusahaan Anda.
           </p>

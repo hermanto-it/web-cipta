@@ -134,6 +134,67 @@ Catatan keamanan:
 - Jangan gunakan service role key di frontend.
 - Jangan buat public write policy untuk `admin_users`.
 
+## SEO & Crawler Readiness
+
+Fondasi SEO teknis yang sudah disiapkan:
+
+- Metadata global melalui App Router Metadata API (`src/app/layout.tsx`)
+- `sitemap.xml` melalui `src/app/sitemap.ts`
+- `robots.txt` melalui `src/app/robots.ts`
+- Structured data JSON-LD (Organization + WebSite) di homepage
+- Admin area di-set `noindex,nofollow` lewat `src/app/admin/layout.tsx`
+
+Catatan penting:
+
+- Konten penting sebaiknya tersedia pada HTML awal agar mudah di-crawl search engine modern.
+- Hindari menyembunyikan konten utama hanya lewat client-side fetch.
+- Jangan blokir homepage (`/`) dan inquiry (`/inquiry`) di robots.
+
+## URL Strategy (Recommended)
+
+Struktur URL bersih yang direkomendasikan:
+
+- Product detail: `/products/[slug]`
+- Category page: `/categories/[slug]`
+- Brand page: `/brands/[slug]`
+
+Saat route public di atas sudah tersedia, tambahkan ke `src/app/sitemap.ts`.
+
+## SEO Data Field Recommendation
+
+Untuk pengembangan SEO dinamis ke depan, disarankan field berikut:
+
+- `products`: `seo_title`, `seo_description`, `slug`, `image_alt`, `canonical_url`
+- `categories`: `seo_title`, `seo_description`, `slug`
+- `homepage_banners`: `alt_text`
+- `knowledge_base`: `title`, `slug`, `excerpt`, `content`, `seo_title`, `seo_description`
+
+Catatan: rekomendasi ini bersifat dokumentasi. Jangan ubah schema production tanpa persetujuan.
+
+## Image SEO Notes
+
+- Gunakan `next/image` untuk gambar nyata saat implementasi image final.
+- Isi `alt` sesuai konten aktual (nama produk/banner), hindari alt yang menyesatkan.
+- Untuk upload image dari admin, sertakan pengisian `alt_text` sebagai standar operasional.
+
+## Performance & Core Web Vitals Notes
+
+- Kompres image sebelum upload.
+- Tetapkan ukuran (`width`/`height`) pada image nyata.
+- Gunakan lazy loading untuk image di bawah fold.
+- Hindari script pihak ketiga yang tidak perlu.
+
+## Google Search Console Setup
+
+Lakukan setelah website production aktif di domain final:
+
+1. Deploy website ke domain production.
+2. Buka Google Search Console.
+3. Tambahkan property domain.
+4. Verifikasi DNS TXT record.
+5. Submit sitemap: `https://domain-anda.com/sitemap.xml`.
+6. Gunakan URL Inspection untuk mengecek homepage.
+
 ## Public Inquiry + Admin Inquiries Setup
 
 Fitur inquiry terdiri dari:

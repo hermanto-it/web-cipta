@@ -2,6 +2,164 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-10 18:55:57 WIB] Git Add Commit Push SEO + Sidebar Spacing
+- Tanggal/Waktu WIB: 2026-05-10 18:55:57 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Infrastructure/Deployment, Documentation
+- Perintah User: "git add .\ngit commit -m \"feat(seo): add crawler-ready metadata and refine sidebar spacing\"\ngit push\ngit status"
+- Tujuan Task: Melakukan staging seluruh perubahan, commit dengan pesan user, push ke remote, lalu verifikasi status repository.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `git status --short --branch`
+  - `git diff --stat && git diff --cached --stat`
+  - `git log --oneline -5`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend: Commit akan mencakup refinement spacing sidebar taxonomy dan perubahan SEO public pages.
+- Perubahan Backend: Tidak ada perubahan backend.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Database: Tidak ada perubahan schema/migration.
+- Perubahan Infrastructure/Deployment: Menjalankan workflow git add/commit/push sesuai instruksi user.
+- Perubahan Security/Configuration: Tidak ada perubahan secret/.env.local.
+- Ringkasan Perubahan: Persiapan proses commit dan push perubahan SEO + sidebar.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error pada tahap persiapan git.
+  - Keputusan teknis: mengikuti pesan commit user secara persis.
+- Status Hasil: In Progress
+- Next Step:
+  - Eksekusi `git add .`, `git commit`, `git push`, dan `git status`.
+
+## [2026-05-10 17:51:39 WIB] Selesai Spacing Sidebar + Fondasi SEO Crawler-Ready
+- Tanggal/Waktu WIB: 2026-05-10 17:51:39 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Configuration, Testing/QA, Security
+- Perintah User: "Perbaiki spacing Sidebar All Brands dan tambahkan fondasi SEO teknis ... jangan ubah palette/hero/header/footer/product card ... jangan ubah globals.css ... lint + git status ... jangan commit/push."
+- Tujuan Task: Merapikan hirarki spacing sidebar taxonomy dan menambahkan fondasi SEO metadata/sitemap/robots/structured data pada public site.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/layout.tsx`
+  - `src/app/inquiry/page.tsx`
+  - `src/lib/supabase/queries.ts`
+- File Dibuat:
+  - `src/app/sitemap.ts`
+  - `src/app/robots.ts`
+  - `src/app/admin/layout.tsx`
+  - `src/app/inquiry/InquiryForm.tsx`
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/app/layout.tsx`
+  - `src/app/inquiry/page.tsx`
+  - `README.md`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - **Sidebar spacing (only):**
+    - Menambahkan kelas bertingkat berbasis level (`pl-4`, `pl-5`, `pl-7`, `pl-9`, `pl-11`, `pl-12`) agar hierarchy brand/category/subcategory/type/product lebih proporsional.
+    - Parent row menggunakan `min-h` + `py-2` dan triangle di kanan dengan `w-4 shrink-0 text-right`.
+    - Label node memakai `flex-1 min-w-0 break-words leading-snug` agar teks panjang wrap rapi.
+    - Product/leaf dibuat lebih soft (`text-sm`, `text-slate-600`) tanpa triangle.
+    - Placeholder `Product lines coming soon` dibuat italic dan kecil (`text-xs italic text-slate-400`).
+    - Default sidebar tetap collapsed (tidak auto-open).
+  - Menyesuaikan label hierarchy Dell: `Dell PC` dan `PowerEdge R550(Intel)` sesuai struktur terbaru.
+  - Menjaga area hero/header/footer/cards agar tidak diubah layout/palette.
+- Perubahan Backend: Tidak ada perubahan logic backend.
+- Perubahan API: Tidak ada route API baru.
+- Perubahan Security/Configuration:
+  - Menambahkan metadata noindex untuk subtree admin melalui `src/app/admin/layout.tsx`.
+  - Tidak ada perubahan `.env.local` dan tidak ada secret baru.
+- Perubahan Documentation:
+  - Menambahkan section `SEO & Crawler Readiness` di `README.md` termasuk URL strategy, field SEO recommendation, image SEO, CWV notes, dan Google Search Console setup.
+- Perubahan UI/UX:
+  - Hierarki taxonomy sidebar menjadi lebih jelas secara visual tanpa mengubah komposisi layout homepage utama.
+- Perubahan Testing/QA:
+  - `npm run lint` lulus tanpa error/warning.
+  - `git status` menunjukkan perubahan file sesuai scope task.
+- Ringkasan Perubahan SEO:
+  - Metadata global lengkap di `src/app/layout.tsx` (title template, description, keywords, OG, Twitter, robots, metadataBase).
+  - JSON-LD Organization + WebSite ditambahkan di homepage (`src/app/page.tsx`).
+  - `sitemap.xml` ditambahkan via `src/app/sitemap.ts` (hanya URL public valid: `/`, `/inquiry`).
+  - `robots.txt` ditambahkan via `src/app/robots.ts` (allow public, disallow `/admin`, `/api/`).
+  - `inquiry` page dijadikan server page + metadata, form interaktif dipindah ke komponen client terpisah.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning lint.
+  - Keputusan teknis: memisahkan `InquiryForm` sebagai client component agar halaman inquiry tetap bisa memakai metadata server-side.
+  - Keputusan teknis: tidak menambahkan `/products` ke sitemap karena route public belum tersedia, untuk menghindari broken URL.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual hasil wrap label panjang dan alignment triangle di sidebar pada viewport mobile/desktop.
+  - Setelah route public products tersedia, tambahkan URL products ke sitemap.
+
+## [2026-05-10 17:32:18 WIB] Perapihan Spacing Sidebar + Fondasi SEO Teknis Public Site
+- Tanggal/Waktu WIB: 2026-05-10 17:32:18 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Configuration, Testing/QA
+- Perintah User: "Perbaiki spacing Sidebar All Brands dan tambahkan fondasi SEO teknis ... jangan ubah warna/layout hero/header/footer/product card ... jangan ubah globals.css ... tambah metadata/sitemap/robots/JSON-LD ... lint + git status ... catat ke AGENT_LOG.md."
+- Tujuan Task: Merapikan spacing taxonomy sidebar tanpa mengubah area lain, serta menambahkan fondasi SEO crawler-ready pada public site.
+- Status Hasil: In Progress
+- Next Step:
+  - Refactor class spacing sidebar di `src/app/page.tsx`.
+  - Implement metadata global, JSON-LD, sitemap, robots, noindex admin, dan dokumentasi SEO.
+
+## [2026-05-10 17:18:44 WIB] Implementasi Ulang Accordion Sidebar All Brands Sesuai Hierarchy Terbaru
+- Tanggal/Waktu WIB: 2026-05-10 17:18:44 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki Sidebar All Brands accordion sesuai hierarchy terbaru ... fokus hanya sidebar ... jangan ubah globals.css ... lint + git status + ringkasan file berubah + saran commit message ... jangan commit/push."
+- Tujuan Task: Menyelaraskan tree hierarchy Dell dan perilaku accordion sidebar agar konsisten lintas level, termasuk placeholder brand non-Dell.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (awal)
+  - `npm run lint && git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'` (akhir)
+- Dependency yang Ditambah/Dihapus: Tidak ada.
+- Perubahan Frontend:
+  - Menambahkan fallback `comingSoonCatalog` untuk brand non-Dell agar semua brand tampil sebagai parent row collapsed dengan triangle `▶` dan bisa expand ke text `Product lines coming soon`.
+  - Menyempurnakan hierarchy Dell agar sesuai permintaan terbaru:
+    - `Laptop > Dell PC` (menggantikan label `Dell`),
+    - `PowerEdge R550(Intel)` pada `Server > Data Center Rackmount Server > 2-socket`.
+  - Menjaga integrasi Supabase homepage; brand non-Dell hasil mapping dari Supabase tetap diberi fallback catalog placeholder.
+  - Memperbaiki recursive accordion:
+    - node dengan children -> button + `aria-expanded` + triangle (`▶/▼`),
+    - node leaf -> tanpa triangle,
+    - toggle expand/collapse berbasis path unik `expandedItems`.
+  - Memperjelas indentasi per level via helper `getIndentClass` (level 0 sampai 4+), serta menghapus bullet dot leaf agar tampilan text tree rapi.
+- Perubahan Backend: Tidak ada.
+- Perubahan API: Tidak ada.
+- Perubahan Database: Tidak ada.
+- Perubahan Security/Configuration:
+  - Tidak ada perubahan auth, inquiry, admin, Supabase config, checkout, atau `.env.local`.
+  - `src/app/globals.css` tidak diubah sesuai instruksi.
+- Perubahan Testing/QA:
+  - `npm run lint` berhasil tanpa error/warning.
+  - `git status --short --branch` menunjukkan perubahan pada file scope implementasi.
+- Ringkasan Perubahan: Sidebar All Brands kini menggunakan accordion bertingkat konsisten, hierarchy Dell sesuai struktur terbaru, dan brand non-Dell memiliki state collapsed + placeholder yang dapat di-expand.
+- Error/Warning/Keputusan Teknis:
+  - Tidak ada error/warning saat lint.
+  - Keputusan teknis: tetap mempertahankan struktur homepage lain (hero/header/footer/cards) tanpa perubahan, hanya memodifikasi area data+render sidebar di `src/app/page.tsx`.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual interaksi expand/collapse di browser untuk seluruh cabang Dell hingga leaf dan placeholder brand non-Dell.
+
 ## [2026-05-10 16:42:21 WIB] Selesai Perapihan Hierarchy Accordion Sidebar Brands
 - Tanggal/Waktu WIB: 2026-05-10 16:42:21 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
