@@ -35,7 +35,14 @@ const placementOptions: Placement[] = ["hero", "side_promo", "middle_promo", "bo
 export function BannerForm({ mode, initialData, onDone, formId, showSubmit = true }: BannerFormProps) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [placementValue, setPlacementValue] = useState<Placement>(initialData?.placement ?? "hero");
   const fieldClassName = "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition hover:border-[#e7000b]/60 focus:border-[#e7000b] focus:ring-2 focus:ring-[#e7000b]/20";
+  const placementRecommendedSize: Record<Placement, string> = {
+    hero: "1200x620 px",
+    side_promo: "600x320 px",
+    middle_promo: "1400x360 px",
+    bottom_cta: "1400x320 px",
+  };
 
   return (
     <form
@@ -56,6 +63,7 @@ export function BannerForm({ mode, initialData, onDone, formId, showSubmit = tru
           }
 
           event.currentTarget.reset();
+          setPlacementValue(mode === "create" ? "hero" : initialData?.placement ?? "hero");
           onDone?.();
         });
       }}
@@ -70,7 +78,7 @@ export function BannerForm({ mode, initialData, onDone, formId, showSubmit = tru
 
         <label className="text-sm">
           <span className="mb-1 block font-medium">Placement *</span>
-          <select name="placement" required defaultValue={initialData?.placement ?? "hero"} className={fieldClassName}>
+          <select name="placement" required value={placementValue} onChange={(event) => setPlacementValue(event.currentTarget.value as Placement)} className={fieldClassName}>
             {placementOptions.map((placement) => (
               <option key={placement} value={placement}>
                 {placement}
@@ -102,6 +110,11 @@ export function BannerForm({ mode, initialData, onDone, formId, showSubmit = tru
           <span className="mb-1 block font-medium">Price Text</span>
           <input name="price_text" defaultValue={initialData?.price_text ?? ""} className={fieldClassName} />
         </label>
+      </div>
+      <div className="rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600 ring-1 ring-slate-200/70">
+        <p className="font-semibold text-slate-700">Recommended: {placementRecommendedSize[placementValue]}</p>
+        <p>Hero: 1200x620 px | Side Promo: 600x320 px | Middle Promo: 1400x360 px | Bottom CTA: 1400x320 px</p>
+        <p>Format: WebP/PNG/JPG, max 1MB</p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3">

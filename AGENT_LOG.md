@@ -2,6 +2,49 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-11 13:12:18 WIB] Tambah Helper Text Rekomendasi Ukuran Gambar Homepage Banners
+- Tanggal/Waktu WIB: 2026-05-11 13:12:18 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Tambahkan helper text rekomendasi ukuran gambar pada form Homepage Banners ... tampilkan rekomendasi per placement jika memungkinkan, lint + git status, catat AGENT_LOG."
+- Tujuan Task: Memberi panduan ukuran gambar agar upload banner konsisten per placement.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan yang Dilakukan:
+  - Menambahkan helper text di bawah field `Banner Image`.
+  - Menambahkan rekomendasi dinamis berdasarkan placement terpilih:
+    - `hero` -> `1200x620 px`
+    - `side_promo` -> `600x320 px`
+    - `middle_promo` -> `1400x360 px`
+    - `bottom_cta` -> `1400x320 px`
+  - Menampilkan ringkasan ukuran lengkap + format file:
+    - `Hero: 1200x620 px`
+    - `Side Promo: 600x320 px`
+    - `Middle Promo: 1400x360 px`
+    - `Bottom CTA: 1400x320 px`
+    - `Format: WebP/PNG/JPG, max 1MB`
+  - Styling helper text dibuat kecil, rapi, dan soft (`bg-slate-50`, `text-xs`, ring halus) agar konsisten dengan UI admin.
+  - Logic upload/CRUD/Supabase tidak diubah.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `src/components/admin/homepage-banners/BannerForm.tsx` (status saat validasi), lalu bertambah `AGENT_LOG.md` setelah logging.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung `http://localhost:3000/admin/homepage-banners` untuk konfirmasi helper text dinamis saat placement berubah.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual pergantian placement menampilkan ukuran rekomendasi yang benar.
+
 ## [2026-05-11 12:25:48 WIB] Standardisasi UI Multi-Halaman Admin Dashboard + Action Button Create Product
 - Tanggal/Waktu WIB: 2026-05-11 12:25:48 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
