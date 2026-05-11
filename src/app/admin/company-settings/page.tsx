@@ -44,7 +44,7 @@ export default async function AdminCompanySettingsPage() {
       subtitle="Kelola informasi perusahaan, kontak, dan konfigurasi tampilan website."
       dataUnavailable={dataUnavailable}
     >
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+      <section className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200/70">
         <div className="mb-4 flex items-center justify-between gap-2">
           <h3 className="text-lg font-semibold text-slate-900">Company Profile</h3>
           <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">Read-only</span>
@@ -53,27 +53,27 @@ export default async function AdminCompanySettingsPage() {
         <form className="grid gap-3 sm:grid-cols-2">
           <label className="text-sm">
             <span className="mb-1 block font-medium">Company Name</span>
-            <input readOnly value={asText(profile.name)} className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700" />
+            <input readOnly value={asText(profile.name)} className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700" />
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Tagline</span>
-            <input readOnly value={asText(profile.tagline)} className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700" />
+            <input readOnly value={asText(profile.tagline)} className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700" />
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Email</span>
-            <input readOnly value={asText(contact.email)} className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700" />
+            <input readOnly value={asText(contact.email)} className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700" />
           </label>
           <label className="text-sm">
             <span className="mb-1 block font-medium">Phone</span>
-            <input readOnly value={asText(contact.phone)} className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700" />
+            <input readOnly value={asText(contact.phone)} className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700" />
           </label>
           <label className="text-sm sm:col-span-2">
             <span className="mb-1 block font-medium">Address</span>
-            <textarea readOnly rows={3} value={asText(contact.address)} className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700" />
+            <textarea readOnly rows={3} value={asText(contact.address)} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700" />
           </label>
           <label className="text-sm sm:col-span-2">
             <span className="mb-1 block font-medium">Footer Copyright</span>
-            <input readOnly value={asText(footer.copyright_text)} className="h-10 w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 text-slate-700" />
+            <input readOnly value={asText(footer.copyright_text)} className="h-10 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-slate-700" />
           </label>
         </form>
 

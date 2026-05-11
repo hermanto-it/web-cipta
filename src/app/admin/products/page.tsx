@@ -68,17 +68,18 @@ export default async function AdminProductsPage() {
       subtitle="Kelola produk ecommerce lengkap dengan relasi brand, category, taxonomy, dan SEO."
       dataUnavailable={dataUnavailable}
     >
-      <section className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200/70">
-        <div className="mb-4 flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 pb-4">
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-slate-400">Dashboard &gt; Products</p>
-            <h3 className="mt-1 text-xl font-bold text-[#33414e]">Products</h3>
-            <p className="mt-1 text-sm text-slate-500">Kelola produk ecommerce lengkap dengan relasi brand, category, taxonomy, dan SEO.</p>
-          </div>
-          <span className="inline-flex rounded-full bg-red-50 px-3 py-1 text-xs font-semibold text-[#e7000b] ring-1 ring-[#e7000b]/20">Live Supabase</span>
+      <section className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <h4 className="text-base font-semibold text-[#33414e]">Create Product</h4>
+          <button
+            type="submit"
+            form="create-product-form"
+            className="rounded-xl bg-[#e7000b] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#c9000a]"
+          >
+            Create Product
+          </button>
         </div>
-        <h4 className="mb-3 text-base font-semibold text-slate-900">Create Product</h4>
-        <ProductForm mode="create" brands={brands} categories={categories} taxonomies={taxonomies} />
+        <ProductForm formId="create-product-form" showSubmit={false} mode="create" brands={brands} categories={categories} taxonomies={taxonomies} />
       </section>
 
       <ProductTable products={products} brands={brands} categories={categories} taxonomies={taxonomies} dataUnavailable={dataUnavailable} />

@@ -47,9 +47,9 @@ export default async function AdminPage() {
 
   return (
     <AdminDashboardShell currentPath="/admin" title="Dashboard Overview" subtitle="Monitor data ecommerce dan persiapan modul CRUD.">
-      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
+      <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5">
         {summaries.map((item) => (
-          <article key={item.label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+          <article key={item.label} className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{item.label}</p>
             <p className="mt-2 text-3xl font-bold text-slate-900">{item.value}</p>
             {item.dataUnavailable ? <p className="mt-1 text-xs text-amber-600">Data unavailable</p> : <p className="mt-1 text-xs text-emerald-600">Live from Supabase</p>}
@@ -57,8 +57,8 @@ export default async function AdminPage() {
         ))}
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-        <h3 className="text-base font-semibold text-slate-900">Next Development Steps</h3>
+      <section className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-slate-200/70">
+        <h3 className="text-base font-semibold text-[#33414e]">Dashboard Overview</h3>
         <div className="mt-3 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
           {[
             "Implement list and table view yang konsisten di seluruh menu.",

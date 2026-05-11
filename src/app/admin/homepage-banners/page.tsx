@@ -38,9 +38,12 @@ export default async function AdminHomepageBannersPage() {
       subtitle="Kelola konten banner untuk hero, promo samping, promo tengah, dan CTA bawah."
       dataUnavailable={dataUnavailable}
     >
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-        <h3 className="mb-3 text-lg font-semibold text-slate-900">Create Banner</h3>
-        <BannerForm mode="create" />
+      <section className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-base font-semibold text-[#33414e]">Create Banner</h3>
+          <button type="submit" form="create-banner-form" className="rounded-xl bg-[#e7000b] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-[#c9000a]">Create Banner</button>
+        </div>
+        <BannerForm mode="create" formId="create-banner-form" showSubmit={false} />
       </section>
 
       <BannerTable banners={banners} dataUnavailable={dataUnavailable} />

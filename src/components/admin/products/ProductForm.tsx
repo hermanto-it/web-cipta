@@ -40,9 +40,11 @@ type ProductFormProps = {
   categories: ProductOption[];
   taxonomies: TaxonomyOption[];
   onDone?: () => void;
+  formId?: string;
+  showSubmit?: boolean;
 };
 
-export function ProductForm({ mode, initialData, brands, categories, taxonomies, onDone }: ProductFormProps) {
+export function ProductForm({ mode, initialData, brands, categories, taxonomies, onDone, formId, showSubmit = true }: ProductFormProps) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [slugValue, setSlugValue] = useState(initialData?.slug ?? "");
@@ -62,12 +64,13 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
     "h-10 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800 outline-none transition hover:border-[#e7000b]/60 focus:border-[#e7000b] focus:ring-2 focus:ring-[#e7000b]/20";
   const textareaClassName =
     "w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-slate-800 outline-none transition hover:border-[#e7000b]/60 focus:border-[#e7000b] focus:ring-2 focus:ring-[#e7000b]/20";
-  const sectionClassName = "rounded-2xl bg-white p-5 shadow-sm ring-1 ring-slate-200/70";
+  const sectionClassName = "rounded-2xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70";
   const requiredMark = <span className="text-[#e7000b]">*</span>;
 
   return (
     <form
-      className="grid gap-4"
+      id={formId}
+      className="grid gap-3"
       onSubmit={(event) => {
         event.preventDefault();
         setError(null);
@@ -95,7 +98,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
       {mode === "edit" ? <input type="hidden" name="id" defaultValue={initialData?.id} /> : null}
 
       <section className={sectionClassName}>
-        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#33414e]">Basic Information</h4>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#33414e]">Basic Information</h4>
         <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm">
           <span className="mb-1 block font-medium text-slate-700">Name {requiredMark}</span>
@@ -191,7 +194,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
       </section>
 
       <section className={sectionClassName}>
-        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#33414e]">Pricing &amp; Inventory</h4>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#33414e]">Pricing &amp; Inventory</h4>
         <div className="grid gap-3 sm:grid-cols-3">
         <label className="text-sm">
           <span className="mb-1 block font-medium text-slate-700">Price</span>
@@ -209,7 +212,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
       </section>
 
       <section className={sectionClassName}>
-        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#33414e]">Description</h4>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#33414e]">Description</h4>
         <input type="hidden" name="short_description" value={shortDescription} />
         <input type="hidden" name="description" value={description} />
         <div className="grid gap-3 sm:grid-cols-2">
@@ -231,7 +234,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
       </section>
 
       <section className={sectionClassName}>
-        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#33414e]">Media &amp; SEO</h4>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#33414e]">Media &amp; SEO</h4>
         <ImageUploadField label="Primary Product Image" name="image_url" defaultValue={initialData?.primary_image_url ?? ""} folder="products" maxSizeMB={5} />
         <p className="mt-3 text-xs text-slate-500">SEO fields membantu Google dan search engine memahami halaman produk.</p>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -268,7 +271,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
       </section>
 
       <section className={sectionClassName}>
-        <h4 className="mb-4 text-sm font-semibold uppercase tracking-wide text-[#33414e]">Status</h4>
+        <h4 className="mb-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#33414e]">Status</h4>
         <div className="grid gap-3 sm:grid-cols-5">
         <label className="text-sm">
           <span className="mb-1 block font-medium text-slate-700">Sort Order</span>
@@ -291,12 +294,12 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
 
       {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
-      <div className="flex flex-wrap items-center gap-2">
+      {showSubmit ? <div className="sticky bottom-2 z-10 flex flex-wrap items-center gap-2 rounded-xl bg-white/95 px-2 py-2 backdrop-blur">
         <button type="submit" disabled={pending} className="rounded-xl bg-[#e7000b] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-[#c9000a] disabled:opacity-60">
         {pending ? "Saving..." : mode === "create" ? "Create Product" : "Update Product"}
         </button>
         {mode === "edit" ? <span className="text-xs text-slate-500">Gunakan tombol close pada panel edit untuk membatalkan perubahan.</span> : null}
-      </div>
+      </div> : null}
     </form>
   );
 }

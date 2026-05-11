@@ -16,7 +16,7 @@ export function BannerTable({ banners, dataUnavailable }: BannerTableProps) {
   const [pending, startTransition] = useTransition();
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+    <section className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold">Homepage Banners</h3>
         {dataUnavailable ? <span className="text-xs text-amber-600">Data unavailable</span> : null}
@@ -30,7 +30,7 @@ export function BannerTable({ banners, dataUnavailable }: BannerTableProps) {
         <div className="overflow-x-auto">
           <table className="min-w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-xs uppercase tracking-wide text-slate-500">
+              <tr className="bg-[#f8fafc] text-xs uppercase tracking-wide text-slate-500">
                 <th className="px-3 py-2">Title</th>
                 <th className="px-3 py-2">Placement</th>
                 <th className="px-3 py-2">Sort</th>
@@ -40,7 +40,7 @@ export function BannerTable({ banners, dataUnavailable }: BannerTableProps) {
             </thead>
             <tbody>
               {banners.map((banner) => (
-                <tr key={banner.id} className="border-b border-slate-100 align-top">
+                <tr key={banner.id} className="border-b border-slate-100 align-top hover:bg-[#EAECED]/55">
                   <td className="px-3 py-3">
                     <p className="font-medium text-slate-900">{banner.title}</p>
                     {banner.subtitle ? <p className="text-xs text-slate-500">{banner.subtitle}</p> : null}
@@ -63,14 +63,14 @@ export function BannerTable({ banners, dataUnavailable }: BannerTableProps) {
                           }
                         });
                       }}
-                      className={`rounded-full px-3 py-1 text-xs font-semibold ${banner.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-600"}`}
+                      className={`rounded-full px-3 py-1 text-xs font-semibold ${banner.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"}`}
                     >
                       {banner.is_active ? "Active" : "Inactive"}
                     </button>
                   </td>
                   <td className="px-3 py-3">
                     <div className="flex flex-wrap gap-2">
-                      <button type="button" onClick={() => setEditingId((current) => (current === banner.id ? null : banner.id))} className="rounded-lg border border-slate-300 px-3 py-1 text-xs font-medium hover:bg-slate-50">
+                      <button type="button" onClick={() => setEditingId((current) => (current === banner.id ? null : banner.id))} className="rounded-lg border border-slate-400 px-3 py-1 text-xs font-medium text-[#33414e] transition hover:bg-[#33414e] hover:text-white">
                         {editingId === banner.id ? "Close" : "Edit"}
                       </button>
                       <button
@@ -91,13 +91,13 @@ export function BannerTable({ banners, dataUnavailable }: BannerTableProps) {
                             }
                           });
                         }}
-                        className="rounded-lg border border-red-300 px-3 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+                        className="rounded-lg border border-red-300 px-3 py-1 text-xs font-medium text-[#e7000b] transition hover:bg-red-50"
                       >
                         Delete
                       </button>
                     </div>
                     {editingId === banner.id ? (
-                      <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                      <div className="mt-3 rounded-xl bg-[#f8fafc] p-3 ring-1 ring-slate-200/70">
                         <BannerForm mode="edit" initialData={banner} onDone={() => setEditingId(null)} />
                       </div>
                     ) : null}

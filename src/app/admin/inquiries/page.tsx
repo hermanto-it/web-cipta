@@ -74,7 +74,7 @@ export default async function AdminInquiriesPage({ searchParams }: PageProps) {
       subtitle="Daftar inquiry yang masuk dari halaman publik dan status follow-up tim sales."
       dataUnavailable={dataUnavailable}
     >
-      <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70">
         <div className="flex flex-wrap gap-2">
           {[
             { label: "All", value: "all" },
@@ -85,19 +85,19 @@ export default async function AdminInquiriesPage({ searchParams }: PageProps) {
             <Link
               key={item.value}
               href={`/admin/inquiries?status=${item.value}`}
-              className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
-                selectedStatus === item.value ? "bg-[#DB1A1A] text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-              }`}
-            >
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold ${
+                  selectedStatus === item.value ? "bg-[#e7000b] text-white" : "bg-slate-100 text-slate-700 hover:bg-[#EAECED] hover:text-[#e7000b]"
+                }`}
+              >
               {item.label}
             </Link>
           ))}
         </div>
       </section>
 
-      <section className="overflow-x-auto rounded-2xl border border-slate-200 bg-white shadow-sm">
+      <section className="overflow-x-auto rounded-3xl bg-white shadow-sm ring-1 ring-slate-200/70">
             <table className="min-w-full text-sm">
-              <thead className="bg-slate-50 text-left text-xs uppercase tracking-wide text-slate-500">
+              <thead className="bg-[#f8fafc] text-left text-xs uppercase tracking-wide text-slate-500">
                 <tr>
                   <th className="px-4 py-3">Date</th>
                   <th className="px-4 py-3">Contact</th>
@@ -116,7 +116,7 @@ export default async function AdminInquiriesPage({ searchParams }: PageProps) {
                   </tr>
                 ) : (
                   inquiries.map((item) => (
-                    <tr key={item.id} className="align-top">
+                    <tr key={item.id} className="align-top hover:bg-[#EAECED]/55">
                       <td className="whitespace-nowrap px-4 py-3 text-xs text-slate-500">{formatDate(item.created_at)}</td>
                       <td className="px-4 py-3">
                         <p className="font-semibold text-slate-900">{item.name}</p>
@@ -130,12 +130,12 @@ export default async function AdminInquiriesPage({ searchParams }: PageProps) {
                       </td>
                       <td className="max-w-sm px-4 py-3 text-slate-700">{item.message}</td>
                       <td className="px-4 py-3">
-                        <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">{item.status}</span>
+                        <span className={`rounded-full px-2 py-1 text-xs font-semibold ${item.status === "closed" ? "bg-emerald-100 text-emerald-700" : item.status === "contacted" ? "bg-amber-100 text-amber-700" : "bg-red-50 text-[#e7000b]"}`}>{item.status}</span>
                       </td>
                       <td className="px-4 py-3">
                         <form action={updateInquiryStatusAction} className="flex flex-wrap gap-2">
                           <input type="hidden" name="id" value={item.id} />
-                          <button name="next_status" value="new" className="rounded border border-slate-300 px-2 py-1 text-xs hover:bg-slate-50">
+                          <button name="next_status" value="new" className="rounded border border-slate-300 px-2 py-1 text-xs transition hover:bg-slate-50">
                             New
                           </button>
                           <button name="next_status" value="contacted" className="rounded border border-red-300 px-2 py-1 text-xs text-red-700 hover:bg-red-50">

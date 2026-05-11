@@ -2,6 +2,168 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-11 12:25:48 WIB] Standardisasi UI Multi-Halaman Admin Dashboard + Action Button Create Product
+- Tanggal/Waktu WIB: 2026-05-11 12:25:48 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Rapikan dan standarkan UI semua halaman Admin Dashboard ... Prioritas 1 pindahkan tombol Create Product ke kanan atas ... validasi lint + git status + log."
+- Tujuan Task: Menyatukan visual seluruh halaman admin mengikuti style products terbaru tanpa menyentuh logic CRUD/auth/Supabase.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/company-settings/page.tsx`
+  - `src/app/admin/inquiries/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/components/admin/brands/BrandTable.tsx`
+  - `src/components/admin/categories/CategoryForm.tsx`
+  - `src/components/admin/categories/CategoryTable.tsx`
+  - `src/components/admin/AdminDashboardShell.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/company-settings/page.tsx`
+  - `src/app/admin/inquiries/page.tsx`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/components/admin/brands/BrandTable.tsx`
+  - `src/components/admin/categories/CategoryForm.tsx`
+  - `src/components/admin/categories/CategoryTable.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+  - `src/components/admin/AdminDashboardShell.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan UI Per Halaman:
+  - `/admin/products`:
+    - Tombol `Create Product` dipindah ke kanan atas sejajar title card create.
+    - Tombol tetap submit form yang sama via `form="create-product-form"` (logic submit tidak diubah).
+    - Form products dipadatkan (spacing/section heading) + submit internal dibuat opsional (`showSubmit`) untuk mode create.
+    - Toolbar rich text editor dipadatkan visual (fungsi editor tetap).
+  - `/admin`:
+    - Stat cards dan section overview diseragamkan ke card putih modern + ring halus.
+  - `/admin/homepage-banners`:
+    - Card create distandarkan; tombol create diposisikan kanan atas.
+    - Table banners distandarkan: header lembut, row hover halus, tombol aksi konsisten.
+  - `/admin/brands`:
+    - Card create distandarkan; tombol create kanan atas.
+    - Form input style konsisten focus merah.
+    - Table brands distandarkan: header lembut, hover row, aksi edit/delete konsisten.
+  - `/admin/categories`:
+    - Card create distandarkan; tombol create kanan atas.
+    - Form input style konsisten focus merah.
+    - Table categories distandarkan: header lembut, hover row, aksi edit/delete konsisten.
+  - `/admin/product-images`:
+    - Card upload/list distandarkan; row hover halus.
+  - `/admin/company-settings`:
+    - Card dan field readonly dirapikan (radius, border halus) untuk konsistensi visual.
+  - `/admin/inquiries`:
+    - Filter pills dan tabel dirapikan; status badge dibuat lebih informatif (new/contacted/closed) dengan style konsisten.
+  - Sidebar/Top Header global (`AdminDashboardShell`):
+    - Hover menu sidebar diseragamkan ke latar lembut + text merah sesuai brand.
+    - Active state merah lembut + aksen kiri merah tetap dipertahankan.
+- Logic yang Disentuh:
+  - Tidak ada perubahan logic CRUD/auth/Supabase/database/env.
+  - Perubahan hanya UI/styling + wiring form submit standard via atribut `form`.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan banyak file admin UI modified sesuai scope standardisasi.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu buka seluruh route admin sesuai checklist user untuk verifikasi visual dan interaksi final.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Lakukan checklist manual semua halaman admin: layout, active sidebar, submit create forms, dan readability tabel.
+
+## [2026-05-11 11:56:01 WIB] Revalidasi UI Admin Products (Permintaan Ulang)
+- Tanggal/Waktu WIB: 2026-05-11 11:56:01 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Testing/QA, Documentation
+- Perintah User: "Rapikan UI halaman Admin Products agar lebih modern, compact, dan mudah digunakan ... lint + git status, catat AGENT_LOG."
+- Tujuan Task: Memastikan kembali status implementasi UI products terbaru dan hasil validasi command.
+- File Dibaca:
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan UI yang Dilakukan:
+  - Tidak ada perubahan kode tambahan pada permintaan ulang ini.
+  - Perubahan UI utama sudah berada di file products sebelumnya (`page.tsx`, `ProductForm.tsx`, `ProductTable.tsx`, `AdminRichTextEditor.tsx`) dan tetap dipertahankan.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `AGENT_LOG.md`, `src/app/admin/products/page.tsx`, `src/components/admin/AdminRichTextEditor.tsx`, `src/components/admin/products/ProductForm.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu cek langsung `http://localhost:3000/admin/products` sesuai checklist user.
+- Status Hasil: Sukses (revalidasi command)
+- Next Step:
+  - Lanjut verifikasi manual UI/UX products di browser; jika sesuai, lanjut commit.
+
+## [2026-05-11 03:40:25 WIB] Refinement UI Compact Halaman Admin Products
+- Tanggal/Waktu WIB: 2026-05-11 03:40:25 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Rapikan UI halaman Admin Products agar lebih modern, compact, dan mudah digunakan ... lint + git status, catat AGENT_LOG."
+- Tujuan Task: Memadatkan layout UI products supaya lebih ringkas, tetap modern, dan tidak mengubah logic aplikasi.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/AdminRichTextEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `TZ='Asia/Jakarta' date '+%Y-%m-%d %H:%M:%S WIB'`
+- Perubahan UI yang Dilakukan:
+  - Menghapus header products yang berulang di dalam card create form untuk membuat hierarchy lebih ringkas (tetap menyisakan page header utama dari dashboard shell + judul `Create Product`).
+  - Membuat card create form lebih compact (`p-4 sm:p-5`) agar vertikal space lebih efisien.
+  - Memadatkan jarak antar section form (`gap-4` -> `gap-3`) tanpa mengubah struktur grid per section.
+  - Menyetel heading section menjadi uppercase kecil (`text-xs` + tracking) agar terasa dashboard ecommerce modern.
+  - Menambahkan action bar submit yang sticky di bawah form (`sticky bottom-2`) supaya tombol Create/Update selalu mudah dijangkau user.
+  - Memadatkan tinggi visual toolbar rich text editor dengan mengurangi padding vertikal (`py-2` -> `py-1.5`) sambil mempertahankan seluruh fungsi editor.
+- Batasan Scope yang Dijaga:
+  - Tidak ada perubahan logic CRUD/auth/Supabase/database/env.
+  - Tidak ada dependency baru.
+  - Tidak mengubah tabel/filter logic products.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error/warning.
+  - `git status --short --branch`: `## main...origin/main` dengan file modified `src/app/admin/products/page.tsx`, `src/components/admin/AdminRichTextEditor.tsx`, `src/components/admin/products/ProductForm.tsx`.
+- Validasi Manual Browser:
+  - Belum dijalankan di CLI; perlu verifikasi langsung di `http://localhost:3000/admin/products` untuk cek final spacing/compactness.
+- Status Hasil: Sukses
+- Next Step:
+  - Verifikasi manual: form compact, tombol submit mudah terlihat, editor tetap normal saat ketik/format.
+
 ## [2026-05-11 03:34:04 WIB] Kompakkan Tinggi Top Header Admin Dashboard
 - Tanggal/Waktu WIB: 2026-05-11 03:34:04 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

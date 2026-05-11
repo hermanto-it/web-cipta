@@ -108,7 +108,7 @@ export function AdminRichTextEditor({
     <div className="admin-rich-editor text-sm">
       <span className="mb-1 block font-medium text-slate-800">{label}</span>
       <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200/80 focus-within:ring-2 focus-within:ring-[#e7000b]/35">
-        <div className="flex flex-wrap items-center gap-1 border-b border-slate-100 bg-slate-50 px-2.5 py-2">
+        <div className="flex flex-wrap items-center gap-1 border-b border-slate-100 bg-slate-50 px-2 py-1.5">
           <select
             className="rounded-lg border border-slate-200 px-2 py-1 text-[11px] font-medium text-slate-700 transition hover:border-[#e7000b]/60 hover:bg-white"
             value={

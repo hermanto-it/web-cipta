@@ -49,7 +49,7 @@ export function AdminDashboardShell({ currentPath, title, subtitle, children, da
                     className={`relative block rounded-xl px-3 py-2.5 text-sm transition ${
                       item.href === currentPath
                         ? "bg-red-50 font-semibold text-[#e7000b] before:absolute before:left-0 before:top-2 before:h-6 before:w-1 before:rounded-r before:bg-[#e7000b]"
-                        : "text-slate-700 hover:bg-slate-100"
+                        : "text-slate-700 hover:bg-[#EAECED] hover:text-[#e7000b]"
                     }`}
                   >
                     {item.label}
@@ -68,7 +68,7 @@ export function AdminDashboardShell({ currentPath, title, subtitle, children, da
                     className={`relative block rounded-xl px-3 py-2.5 text-sm transition ${
                       item.href === currentPath
                         ? "bg-red-50 font-semibold text-[#e7000b] before:absolute before:left-0 before:top-2 before:h-6 before:w-1 before:rounded-r before:bg-[#e7000b]"
-                        : "text-slate-700 hover:bg-slate-100"
+                        : "text-slate-700 hover:bg-[#EAECED] hover:text-[#e7000b]"
                     }`}
                   >
                     {item.label}
@@ -87,7 +87,7 @@ export function AdminDashboardShell({ currentPath, title, subtitle, children, da
                     className={`relative block rounded-xl px-3 py-2.5 text-sm transition ${
                       item.href === currentPath
                         ? "bg-red-50 font-semibold text-[#e7000b] before:absolute before:left-0 before:top-2 before:h-6 before:w-1 before:rounded-r before:bg-[#e7000b]"
-                        : "text-slate-700 hover:bg-slate-100"
+                        : "text-slate-700 hover:bg-[#EAECED] hover:text-[#e7000b]"
                     }`}
                   >
                     {item.label}
