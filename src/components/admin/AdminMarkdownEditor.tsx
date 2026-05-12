@@ -79,7 +79,7 @@ export function AdminMarkdownEditor({
 
   const applyHeading = (value: string) => {
     if (value === "p") {
-      exec("formatBlock", "p");
+      runCommand("formatBlock", "p");
       return;
     }
     runCommand("formatBlock", value);

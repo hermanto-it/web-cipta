@@ -2,6 +2,303 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-12 16:09:15 WIB] Audit Ulang & Build Hijau: Verifikasi Stale Fix + Penyelesaian Blocker Lanjutan
+- Tanggal/Waktu WIB: 2026-05-12 16:09:15 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, API, Testing/QA, Documentation
+- Perintah User: "Audit ulang dan perbaiki build sampai benar-benar hijau; pastikan fix aktual untuk `exec` dan cast homepage benar-benar diterapkan."
+- Tujuan Task: Memastikan stale issue tidak ada lagi dan menyelesaikan seluruh blocker TypeScript hingga `npm run build` sukses.
+- File Dibaca:
+  - `src/app/page.tsx`
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/admin/login/page.tsx`
+  - `src/lib/supabase/types.ts`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/lib/supabase/queries.ts`
+  - `src/app/admin/login/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Select-String -Path "src/components/admin/AdminMarkdownEditor.tsx" -Pattern "exec\("`
+  - `Select-String -Path "src/app/page.tsx" -Pattern "images:product_images|as ProductDbRow\[\]"`
+  - `npm run build` (2x)
+  - `npm run lint` (2x)
+  - `git status --short --branch` (2x)
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"` (2x)
+- Bukti Audit Stale Issue:
+  - Pencarian `exec(` pada `AdminMarkdownEditor` menghasilkan **tidak ada output** (tidak ada pemanggilan `exec(...)` tersisa).
+  - Pencarian `images:product_images|as ProductDbRow[]` pada `src/app/page.tsx` menghasilkan **tidak ada output** (nested relation/cast lama sudah hilang).
+- Perbaikan yang Dilakukan:
+  - Menangani blocker type baru di `src/lib/supabase/queries.ts`:
+    - `ProductRow.category` diperluas untuk mengakomodasi bentuk error relasi generated type (`{ error: true }`).
+    - `mapProductRow` diubah agar aman via guard `"name" in row.category` sebelum baca nama kategori.
+  - Menangani blocker build baru di `/admin/login` terkait `useSearchParams`:
+    - Halaman login dibungkus `Suspense`.
+    - `useSearchParams` dipindah efektif ke komponen konten di dalam boundary.
+    - Fallback `AdminAuthShell` diberi children placeholder agar sesuai contract props.
+- Hasil Validasi Final:
+  - `npm run build`: **sukses/hijau** (type check dan static generation selesai).
+  - `npm run lint`: sukses tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai file yang disentuh.
+- Error/Warning:
+  - Ada log warning runtime data unavailable saat static generation admin/homepage (expected fallback behavior), tidak memblokir build.
+- Status Hasil: Sukses (build hijau tercapai)
+- Next Step:
+  - Opsional: review warning data unavailable pada static generation jika ingin output build lebih bersih.
+
+## [2026-05-12 15:58:10 WIB] Fix AdminMarkdownEditor: Ganti `exec` ke `runCommand`
+- Tanggal/Waktu WIB: 2026-05-12 15:58:10 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Testing/QA, Documentation
+- Perintah User: "Perbaiki blocker build di `src/components/admin/AdminMarkdownEditor.tsx` karena `exec` tidak terdefinisi, lanjut sampai build hijau."
+- Tujuan Task: Menghilangkan reference function tidak dikenal pada editor markdown admin.
+- File Dibaca:
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perbaikan yang Dilakukan:
+  - Pada `applyHeading`, pemanggilan `exec("formatBlock", "p")` diganti menjadi `runCommand("formatBlock", "p")`.
+  - Tidak ada perubahan fitur editor lain selain koreksi helper command.
+- Hasil Validasi:
+  - Error target `Cannot find name 'exec'` teratasi.
+  - `npm run lint`: sukses tanpa error.
+  - `npm run build`: masih gagal oleh blocker lain di file berbeda:
+    - `src/lib/supabase/queries.ts:240`
+    - cast `ProductRow[]` tidak kompatibel karena relasi `category:categories(name)` belum dikenali di generated types.
+  - `git status --short --branch`: perubahan task tercatat.
+- Error/Warning:
+  - Build global belum hijau karena blocker lanjutan di Supabase query typing.
+- Status Hasil: Parsial sukses (blocker `exec` fixed, build masih terhambat file lain)
+- Next Step:
+  - Refactor query featured/best-seller di `src/lib/supabase/queries.ts` untuk menghindari nested relation cast langsung ke `ProductRow[]`.
+
+## [2026-05-12 15:45:45 WIB] Fix Homepage Typing: Query Product Images Terpisah dari Products
+- Tanggal/Waktu WIB: 2026-05-12 15:45:45 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, Testing/QA, Documentation
+- Perintah User: "Perbaiki blocker build terakhir di `src/app/page.tsx` akibat relasi nested `product_images` tidak dikenali di generated types, sampai build hijau."
+- Tujuan Task: Menghilangkan error cast `ProductDbRow[]` dengan memisahkan query image produk dari query products utama di homepage.
+- File Dibaca:
+  - `src/app/page.tsx`
+  - `src/lib/supabase/types.ts`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perbaikan yang Dilakukan:
+  - Menambahkan `id` ke `ProductDbRow` untuk kebutuhan mapping image.
+  - Menambahkan type aman:
+    - `ProductBaseRow = Omit<ProductDbRow, "images">`
+    - `ProductImageRow` untuk hasil query `product_images`.
+  - Menghapus nested relation `images:product_images(...)` dari query products homepage.
+  - Menambahkan query terpisah ke `product_images` berdasarkan daftar `product_id` hasil query products.
+  - Menyusun `imageMap` (`Map<product_id, images[]>`) dengan prioritas urutan:
+    - `is_primary desc`
+    - `sort_order asc`
+  - Menggabungkan manual ke `ProductDbRow[]`:
+    - `images` diisi dari `imageMap`
+    - fallback `null` jika tidak ada image.
+  - Mapping card tetap memakai prioritas:
+    - image primary jika ada
+    - image pertama jika primary tidak ada
+    - placeholder jika tidak ada image sama sekali.
+- Hasil Validasi:
+  - Error typing target di `src/app/page.tsx:186` teratasi.
+  - `npm run lint`: sukses tanpa error.
+  - `npm run build`: masih gagal oleh blocker lain di file berbeda:
+    - `src/components/admin/AdminMarkdownEditor.tsx:82`
+    - `Cannot find name 'exec'`.
+  - `git status --short --branch`: perubahan task tercatat.
+- Error/Warning:
+  - Build belum hijau total karena blocker baru di editor markdown admin (di luar scope homepage query).
+- Status Hasil: Parsial sukses (blocker homepage query fixed, build global masih terhambat file lain)
+- Next Step:
+  - Perbaiki reference `exec` di `src/components/admin/AdminMarkdownEditor.tsx` agar `npm run build` hijau total.
+
+## [2026-05-12 15:34:59 WIB] Fix Typing Produk untuk ProductTable di Admin Products Page
+- Tanggal/Waktu WIB: 2026-05-12 15:34:59 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, API, Testing/QA, Documentation
+- Perintah User: "Lanjut perbaiki blocker build di `src/app/admin/products/page.tsx` untuk mismatch `ProductItem[]` vs kebutuhan prop `ProductTable`."
+- Tujuan Task: Menyamakan tipe data products agar selalu memiliki `brand_name`, `category_name`, `taxonomy_name` sebelum dikirim ke `ProductTable`.
+- File Dibaca:
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/lib/supabase/types.ts`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/products/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perbaikan yang Dilakukan:
+  - Menambahkan type lokal:
+    - `type ProductTableItem = ProductItem & { brand_name: string; category_name: string; taxonomy_name: string | null }`
+  - Menyesuaikan return `getPageData()` agar `products` bertipe `ProductTableItem[]` untuk semua branch (success/error/env unavailable).
+  - Mapping products dari query kini menghasilkan object dengan fallback nama relasi:
+    - `brand_name` fallback `Unknown Brand`
+    - `category_name` fallback `Unknown Category`
+    - `taxonomy_name` fallback `null`
+  - Menghilangkan cast balik ke `ProductItem[]` agar contract prop `ProductTable` tetap konsisten.
+- Hasil Validasi:
+  - Blocker yang diminta di `src/app/admin/products/page.tsx:85` teratasi.
+  - `npm run lint`: sukses, tanpa error.
+  - `npm run build`: masih gagal oleh blocker lanjutan di file berbeda:
+    - `src/app/page.tsx:186`
+    - type cast hasil select `images:product_images(...)` tidak kompatibel karena Supabase type menganggap relasi tidak ditemukan.
+  - `git status --short --branch`: perubahan task tercatat.
+- Error/Warning:
+  - Build blocker baru berada di homepage query typing (bukan lagi pada admin products page).
+- Status Hasil: Parsial sukses (blocker admin products page fixed, build global masih ada blocker homepage typing)
+- Next Step:
+  - Rapikan typing query featured products di `src/app/page.tsx` (hindari cast langsung ke `ProductDbRow[]` ketika relasi `images` belum terdefinisi di generated types).
+
+## [2026-05-12 15:24:04 WIB] Fix Products Payload: Hilangkan Helper `validate` dari Insert/Update Supabase
+- Tanggal/Waktu WIB: 2026-05-12 15:24:04 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Backend, API, Configuration, Testing/QA, Documentation
+- Perintah User: "Perbaiki blocker build di `src/app/admin/products/actions.ts` karena payload insert products masih membawa properti helper `validate`."
+- Tujuan Task: Memastikan payload `insert/update products` hanya berisi kolom database valid, tanpa properti helper non-schema.
+- File Dibaca:
+  - `src/app/admin/products/actions.ts`
+  - `src/lib/supabase/types.ts`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/products/actions.ts`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build` (2x)
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"` (2x)
+- Perbaikan yang Dilakukan:
+  - Menambahkan typing Supabase eksplisit:
+    - `type ProductInsert = Database["public"]["Tables"]["products"]["Insert"]`
+    - `type ProductUpdate = Database["public"]["Tables"]["products"]["Update"]`
+  - Refactor `mapInput` agar memisahkan object helper dari payload DB:
+    - `productPayload` berisi hanya kolom tabel `products`
+    - `validate` tetap dipakai hanya untuk validasi internal
+    - `image_url` tetap dipisah untuk insert/update `product_images`
+  - `createProductAction` sekarang insert dengan `payload: ProductInsert` (tanpa `validate`).
+  - `updateProductAction` sekarang update dengan `payload: ProductUpdate` (tanpa `validate`).
+  - Memperbaiki typing toggle flag payload menjadi `ProductUpdate` agar lolos type check Supabase strict.
+- Hasil Validasi:
+  - Blocker yang diminta (`validate` ikut payload insert/update) sudah teratasi.
+  - `npm run lint`: sukses tanpa error.
+  - `npm run build`: masih gagal oleh blocker lanjutan di file berbeda:
+    - `src/app/admin/products/page.tsx:85`
+    - mismatch typing `products` prop ke `ProductTable` (`brand_name/category_name/taxonomy_name` belum terpenuhi di type cast akhir).
+  - `git status --short --branch`: perubahan task tercatat.
+- Error/Warning:
+  - Build blocker baru di luar scope file aksi yang diminta user, muncul setelah blocker sebelumnya selesai.
+- Status Hasil: Parsial sukses (blocker payload `validate` fixed, build global masih ada blocker lanjutan)
+- Next Step:
+  - Rapikan tipe hasil `products` di `src/app/admin/products/page.tsx` agar cocok dengan `ProductTable` prop contract.
+
+## [2026-05-12 15:15:20 WIB] Lanjutan Fix Build Blocker: Product Images Form Action Return Type
+- Tanggal/Waktu WIB: 2026-05-12 15:15:20 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Backend, API, Testing/QA, Documentation
+- Perintah User: "Lanjut perbaiki blocker build berikutnya untuk mismatch form action di product-images dan pastikan action return void."
+- Tujuan Task: Menyesuaikan server action `product-images` agar kompatibel dengan `<form action={...}>` Next.js App Router.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/product-images/actions.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/product-images/actions.ts`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perbaikan yang Dilakukan:
+  - Mengubah signature action berikut menjadi `Promise<void>`:
+    - `createProductImageAction`
+    - `updateProductImageAction`
+    - `deleteProductImageAction`
+  - Menghapus return object (`{ ok: ... }`) agar action yang dipakai langsung di `<form action>` sesuai kontrak Next.js.
+  - Menjaga behavior submit tetap aman dengan `return;` pada validasi/error.
+- Hasil Validasi:
+  - Error mismatch action pada `src/app/admin/product-images/page.tsx:67` teratasi.
+  - `npm run lint`: sukses, tanpa error.
+  - `npm run build`: masih gagal oleh blocker TypeScript lanjutan di file berbeda:
+    - `src/app/admin/products/actions.ts:135`
+    - error payload insert `products` karena properti `validate` masih terbaca dalam type inference.
+  - `git status --short --branch`: perubahan task tercatat.
+- Error/Warning:
+  - Build blocker lanjutan di luar scope instruksi saat ini (products actions payload typing).
+- Status Hasil: Parsial sukses (blocker product-images fixed, build global masih ada blocker lain)
+- Next Step:
+  - Rapikan typing payload insert/update di `src/app/admin/products/actions.ts` agar properti helper `validate` tidak masuk ke payload Supabase.
+
+## [2026-05-12 15:10:07 WIB] Fix Type Error Json pada Company Settings Action
+- Tanggal/Waktu WIB: 2026-05-12 15:10:07 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Backend, API, Configuration, Testing/QA, Documentation
+- Perintah User: "Perbaiki error TypeScript `Record<string, unknown> is not assignable to Json` di `src/app/admin/company-settings/actions.ts`, lalu jalankan build/lint/status."
+- Tujuan Task: Menyelaraskan type payload `value` untuk upsert `company_settings` agar kompatibel dengan tipe Supabase `Json`.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/admin/company-settings/actions.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/app/admin/company-settings/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/admin/company-settings/actions.ts`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build` (2x)
+  - `npm run lint` (2x)
+  - `git status --short --branch` (2x)
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"` (2x)
+- Perbaikan yang Dilakukan:
+  - Import `Json` dari `src/lib/supabase/types.ts`.
+  - Ubah signature helper `upsertSetting` dari `value: Record<string, unknown>` menjadi `value: Json`.
+  - Sesuaikan `updateCompanySettingsAction` menjadi `Promise<void>` agar cocok dipakai pada atribut `<form action={...}>` di Next.js App Router.
+- Hasil Validasi:
+  - Error awal user (`Record<string, unknown>` vs `Json`) sudah teratasi.
+  - `npm run lint`: sukses tanpa error.
+  - `npm run build`: masih gagal oleh error lain di file berbeda (`src/app/admin/product-images/page.tsx`), yaitu form action return type dari `createProductImageAction` yang belum `void | Promise<void>`.
+  - `git status --short --branch`: perubahan task terdeteksi pada `src/app/admin/company-settings/actions.ts`.
+- Error/Warning:
+  - Build blocker lanjutan (di luar file yang diminta user):
+    - `src/app/admin/product-images/page.tsx:67`
+    - action type mismatch untuk `<form action={createProductImageAction}>`.
+- Status Hasil: Parsial sukses (error target diperbaiki, build global masih ada blocker lain terdeteksi)
+- Next Step:
+  - Perbaiki signature return type server action di `src/app/admin/product-images/actions.ts` agar kompatibel dengan `<form action>` Next.js, lalu rerun build.
+
 ## [2026-05-12 14:32:36 WIB] Hilangkan Tint Abu-Abu pada Area Image Product Card Homepage
 - Tanggal/Waktu WIB: 2026-05-12 14:32:36 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

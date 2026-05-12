@@ -2,13 +2,14 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import { useState, useTransition } from "react";
 
 import { AdminAuthShell } from "@/components/admin/AdminAuthShell";
 import { signOutAdminClient, signInAdminWithPassword } from "@/lib/supabase/auth-client";
 import { createClient } from "@/lib/supabase/client";
 
-export default function AdminLoginPage() {
+function AdminLoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [pending, startTransition] = useTransition();
@@ -162,5 +163,13 @@ export default function AdminLoginPage() {
           {socialInfo ? <p className="text-center text-xs text-slate-500">{socialInfo}</p> : null}
       </form>
     </AdminAuthShell>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={<AdminAuthShell title="Log In" subtitle="Admin Dashboard PT Cipta Solusi Techindo"><div className="mt-4 h-10" /></AdminAuthShell>}>
+      <AdminLoginContent />
+    </Suspense>
   );
 }

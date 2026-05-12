@@ -3,7 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
+import type { Database } from "@/lib/supabase/types";
 import { isValidSlug, slugify } from "@/lib/utils/slugify";
+
+type ProductInsert = Database["public"]["Tables"]["products"]["Insert"];
+type ProductUpdate = Database["public"]["Tables"]["products"]["Update"];
 
 function asNullableText(value: FormDataEntryValue | null) {
   if (typeof value !== "string") return null;
@@ -75,7 +79,7 @@ function mapInput(formData: FormData, mode: "create" | "edit") {
   const finalPrice = parseNumberOrNull(formData.get("final_price"));
   const imageUrl = asNullableText(formData.get("image_url"));
 
-  return {
+  const productPayload: ProductInsert = {
     sku: asNullableText(formData.get("sku")),
     name,
     slug,
@@ -105,6 +109,10 @@ function mapInput(formData: FormData, mode: "create" | "edit") {
     og_image_url: asNullableText(formData.get("og_image_url")),
     canonical_url: asNullableText(formData.get("canonical_url")),
     sort_order: parseInteger(formData.get("sort_order"), 0),
+  };
+
+  return {
+    productPayload,
     image_url: imageUrl,
     validate: {
       name,
@@ -128,9 +136,8 @@ export async function createProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const { image_url: imageUrl, ...payloadWithValidate } = mapped;
-    const payload = { ...payloadWithValidate };
-    delete (payload as { validate?: unknown }).validate;
+    const payload: ProductInsert = mapped.productPayload;
+    const imageUrl = mapped.image_url;
 
     const { data, error } = await supabase.from("products").insert(payload).select("id").single();
 
@@ -169,9 +176,8 @@ export async function updateProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const { image_url: imageUrl, ...payloadWithValidate } = mapped;
-    const payload = { ...payloadWithValidate };
-    delete (payload as { validate?: unknown }).validate;
+    const payload: ProductUpdate = mapped.productPayload;
+    const imageUrl = mapped.image_url;
     const { error } = await supabase.from("products").update(payload).eq("id", id);
 
     if (error) {
@@ -253,7 +259,7 @@ export async function toggleProductFlagAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
-    const flagPayload: Record<string, unknown> = { [field]: nextValue };
+    const flagPayload: ProductUpdate = { [field]: nextValue };
     const { error } = await supabase.from("products").update(flagPayload).eq("id", id);
 
     if (error) {

@@ -20,6 +20,7 @@ type BannerRow = {
 type BrandRow = { name: string };
 type CategoryRow = { name: string };
 type ProductDbRow = {
+  id: string;
   name: string;
   slug: string;
   short_description: string | null;
@@ -34,6 +35,13 @@ type ProductDbRow = {
   category: { name?: string } | null;
   taxonomy: { name?: string } | null;
   images: Array<{ image_url?: string; is_primary?: boolean }> | null;
+};
+type ProductBaseRow = Omit<ProductDbRow, "images">;
+type ProductImageRow = {
+  product_id: string;
+  image_url: string;
+  is_primary: boolean;
+  sort_order: number;
 };
 type CompanySettingsRow = { key: string; value: Record<string, string | boolean | number | null> };
 
@@ -166,7 +174,7 @@ export default async function Home() {
         supabase.from("categories").select("name").eq("is_active", true).order("sort_order", { ascending: true }),
         supabase
           .from("products")
-          .select("name,slug,short_description,description,price,final_price,compare_at_price,badge,is_featured,is_best_seller,is_promo,category:categories(name),taxonomy:product_taxonomy(name),images:product_images(image_url,is_primary)")
+          .select("id,name,slug,short_description,description,price,final_price,compare_at_price,badge,is_featured,is_best_seller,is_promo,category:categories(name),taxonomy:product_taxonomy(name)")
           .eq("is_active", true)
           .order("is_featured", { ascending: false })
           .order("is_best_seller", { ascending: false })
@@ -183,7 +191,33 @@ export default async function Home() {
       if (!categoriesRes.error && (categoriesRes.data ?? []).length > 0) categories = (categoriesRes.data as CategoryRow[]).map((row) => row.name);
 
       if (!featuredRes.error && (featuredRes.data ?? []).length > 0) {
-        const rows = (featuredRes.data ?? []) as ProductDbRow[];
+        const productRows = (featuredRes.data ?? []) as ProductBaseRow[];
+        const productIds = productRows.map((product) => product.id);
+
+        let imageMap = new Map<string, Array<{ image_url?: string; is_primary?: boolean }>>();
+        if (productIds.length > 0) {
+          const { data: imageRows, error: imageError } = await supabase
+            .from("product_images")
+            .select("product_id,image_url,is_primary,sort_order")
+            .in("product_id", productIds)
+            .order("is_primary", { ascending: false })
+            .order("sort_order", { ascending: true });
+
+          if (!imageError) {
+            imageMap = (imageRows ?? []).reduce<Map<string, Array<{ image_url?: string; is_primary?: boolean }>>>((acc, image) => {
+              const typedImage = image as ProductImageRow;
+              const existing = acc.get(typedImage.product_id) ?? [];
+              existing.push({ image_url: typedImage.image_url, is_primary: typedImage.is_primary });
+              acc.set(typedImage.product_id, existing);
+              return acc;
+            }, new Map<string, Array<{ image_url?: string; is_primary?: boolean }>>());
+          }
+        }
+
+        const rows: ProductDbRow[] = productRows.map((product) => ({
+          ...product,
+          images: imageMap.get(product.id) ?? null,
+        }));
         dealProducts = rows.map(mapProductToHomepageCard);
       }
 

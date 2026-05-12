@@ -3,18 +3,19 @@
 import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/types";
 
 function asText(value: FormDataEntryValue | null) {
   if (typeof value !== "string") return "";
   return value.trim();
 }
 
-async function upsertSetting(key: string, value: Record<string, unknown>) {
+async function upsertSetting(key: string, value: Json) {
   const supabase = await createClient();
   return supabase.from("company_settings").upsert({ key, value }, { onConflict: "key" });
 }
 
-export async function updateCompanySettingsAction(formData: FormData) {
+export async function updateCompanySettingsAction(formData: FormData): Promise<void> {
   try {
     const profile = {
       name: asText(formData.get("company_name")),
@@ -49,14 +50,13 @@ export async function updateCompanySettingsAction(formData: FormData) {
     const firstError = profileRes.error ?? contactRes.error ?? footerRes.error ?? seoRes.error;
     if (firstError) {
       console.warn("[admin] update company settings failed:", firstError.message);
-      return { ok: false, error: firstError.message };
+      return;
     }
 
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/admin/company-settings");
-    return { ok: true };
   } catch {
-    return { ok: false, error: "Gagal mengubah company settings." };
+    return;
   }
 }

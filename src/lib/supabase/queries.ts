@@ -19,7 +19,7 @@ type ProductRow = {
   final_price: number | null;
   compare_at_price: number | null;
   badge: string | null;
-  category: { name: string } | null;
+  category: { name: string } | { error: true } | null;
 };
 
 type BannerRow = {
@@ -203,9 +203,10 @@ function formatIDR(value: number | null) {
 
 function mapProductRow(row: ProductRow) {
   const effectivePrice = row.final_price ?? row.price;
+  const categoryName = row.category && "name" in row.category ? row.category.name : "General";
   return {
     name: row.name,
-    category: row.category?.name ?? "General",
+    category: categoryName,
     newPrice: formatIDR(effectivePrice) ?? "-",
     oldPrice: formatIDR(row.compare_at_price),
     save:

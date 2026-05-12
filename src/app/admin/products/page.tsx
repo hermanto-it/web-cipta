@@ -4,10 +4,16 @@ import { ProductTable } from "@/components/admin/products/ProductTable";
 import { AdminDashboardShell } from "@/components/admin/AdminDashboardShell";
 import { createClient } from "@/lib/supabase/server";
 
+type ProductTableItem = ProductItem & {
+  brand_name: string;
+  category_name: string;
+  taxonomy_name: string | null;
+};
+
 async function getPageData() {
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
     return {
-      products: [] as ProductItem[],
+      products: [] as ProductTableItem[],
       brands: [] as ProductOption[],
       categories: [] as ProductOption[],
       taxonomies: [] as TaxonomyOption[],
@@ -32,10 +38,10 @@ async function getPageData() {
     if (productsRes.error || brandsRes.error || categoriesRes.error || taxonomyRes.error) {
       const message = productsRes.error?.message || brandsRes.error?.message || categoriesRes.error?.message || taxonomyRes.error?.message;
       console.warn("[admin] products page read failed:", message);
-      return { products: [] as ProductItem[], brands: [] as ProductOption[], categories: [] as ProductOption[], taxonomies: [] as TaxonomyOption[], dataUnavailable: true };
+      return { products: [] as ProductTableItem[], brands: [] as ProductOption[], categories: [] as ProductOption[], taxonomies: [] as TaxonomyOption[], dataUnavailable: true };
     }
 
-    const products = (productsRes.data ?? []).map((item) => ({
+    const products: ProductTableItem[] = (productsRes.data ?? []).map((item) => ({
       ...item,
       brand_name: (item.brand as { name?: string } | null)?.name ?? "Unknown Brand",
       category_name: (item.category as { name?: string } | null)?.name ?? "Unknown Category",
@@ -43,10 +49,10 @@ async function getPageData() {
       primary_image_url:
         ((item.images as unknown as Array<{ image_url?: string; is_primary?: boolean }> | null) ?? []).find((image) => image.is_primary)?.image_url ??
         null,
-    }));
+    })) as ProductTableItem[];
 
     return {
-      products: products as ProductItem[],
+      products,
       brands: (brandsRes.data ?? []) as ProductOption[],
       categories: (categoriesRes.data ?? []) as ProductOption[],
       taxonomies: (taxonomyRes.data ?? []) as TaxonomyOption[],
@@ -54,7 +60,7 @@ async function getPageData() {
     };
   } catch {
     console.warn("[admin] unexpected error reading products page data");
-    return { products: [] as ProductItem[], brands: [] as ProductOption[], categories: [] as ProductOption[], taxonomies: [] as TaxonomyOption[], dataUnavailable: true };
+    return { products: [] as ProductTableItem[], brands: [] as ProductOption[], categories: [] as ProductOption[], taxonomies: [] as TaxonomyOption[], dataUnavailable: true };
   }
 }
 

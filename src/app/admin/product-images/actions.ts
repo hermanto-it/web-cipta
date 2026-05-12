@@ -26,12 +26,12 @@ function refresh() {
   revalidatePath("/admin/products");
 }
 
-export async function createProductImageAction(formData: FormData) {
+export async function createProductImageAction(formData: FormData): Promise<void> {
   const productId = asText(formData.get("product_id"));
   const imageUrl = asText(formData.get("image_url"));
 
   if (!productId || !imageUrl) {
-    return { ok: false, error: "Product dan image wajib diisi." };
+    return;
   }
 
   try {
@@ -44,17 +44,16 @@ export async function createProductImageAction(formData: FormData) {
       is_primary: formData.get("is_primary") === "on",
     });
 
-    if (error) return { ok: false, error: error.message };
+    if (error) return;
     refresh();
-    return { ok: true };
   } catch {
-    return { ok: false, error: "Gagal menambah product image." };
+    return;
   }
 }
 
-export async function updateProductImageAction(formData: FormData) {
+export async function updateProductImageAction(formData: FormData): Promise<void> {
   const id = asText(formData.get("id"));
-  if (!id) return { ok: false, error: "Image ID tidak valid." };
+  if (!id) return;
 
   try {
     const supabase = await createClient();
@@ -68,25 +67,23 @@ export async function updateProductImageAction(formData: FormData) {
       })
       .eq("id", id);
 
-    if (error) return { ok: false, error: error.message };
+    if (error) return;
     refresh();
-    return { ok: true };
   } catch {
-    return { ok: false, error: "Gagal mengubah product image." };
+    return;
   }
 }
 
-export async function deleteProductImageAction(formData: FormData) {
+export async function deleteProductImageAction(formData: FormData): Promise<void> {
   const id = asText(formData.get("id"));
-  if (!id) return { ok: false, error: "Image ID tidak valid." };
+  if (!id) return;
 
   try {
     const supabase = await createClient();
     const { error } = await supabase.from("product_images").delete().eq("id", id);
-    if (error) return { ok: false, error: error.message };
+    if (error) return;
     refresh();
-    return { ok: true };
   } catch {
-    return { ok: false, error: "Gagal menghapus product image." };
+    return;
   }
 }
