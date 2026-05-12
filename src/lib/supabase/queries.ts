@@ -15,11 +15,22 @@ type CategoryRow = {
 type ProductRow = {
   name: string;
   slug: string;
+  category_id: string;
   price: number | null;
   final_price: number | null;
   compare_at_price: number | null;
   badge: string | null;
-  category: { name: string } | { error: true } | null;
+  category: { name: string } | null;
+};
+
+type ProductBaseRow = {
+  name: string;
+  slug: string;
+  category_id: string;
+  price: number | null;
+  final_price: number | null;
+  compare_at_price: number | null;
+  badge: string | null;
 };
 
 type BannerRow = {
@@ -203,10 +214,9 @@ function formatIDR(value: number | null) {
 
 function mapProductRow(row: ProductRow) {
   const effectivePrice = row.final_price ?? row.price;
-  const categoryName = row.category && "name" in row.category ? row.category.name : "General";
   return {
     name: row.name,
-    category: categoryName,
+    category: row.category?.name ?? "General",
     newPrice: formatIDR(effectivePrice) ?? "-",
     oldPrice: formatIDR(row.compare_at_price),
     save:
@@ -218,6 +228,33 @@ function mapProductRow(row: ProductRow) {
   };
 }
 
+async function attachCategoryNamesToProducts(productRows: ProductBaseRow[]) {
+  if (productRows.length === 0) return [] as ProductRow[];
+
+  const supabase = createBrowserClient();
+  const categoryIds = Array.from(new Set(productRows.map((row) => row.category_id).filter((id) => id && id.length > 0)));
+
+  if (categoryIds.length === 0) {
+    return productRows.map((row) => ({ ...row, category: null }));
+  }
+
+  const { data: categoryRows, error: categoryError } = await supabase
+    .from("categories")
+    .select("id,name")
+    .in("id", categoryIds);
+
+  if (categoryError) {
+    console.warn("[supabase] attach categories failed:", categoryError.message);
+    return productRows.map((row) => ({ ...row, category: null }));
+  }
+
+  const categoryMap = new Map<string, string>((categoryRows ?? []).map((row) => [row.id as string, row.name as string]));
+  return productRows.map((row) => ({
+    ...row,
+    category: categoryMap.get(row.category_id) ? { name: categoryMap.get(row.category_id) as string } : null,
+  }));
+}
+
 export async function getFeaturedProducts() {
   if (!hasSupabasePublicEnv()) {
     return [] as ReturnType<typeof mapProductRow>[];
@@ -227,7 +264,7 @@ export async function getFeaturedProducts() {
     const supabase = createBrowserClient();
     const { data, error } = await supabase
       .from("products")
-      .select("name,slug,price,final_price,compare_at_price,badge,category:categories(name)")
+      .select("name,slug,category_id,price,final_price,compare_at_price,badge")
       .eq("is_active", true)
       .eq("is_featured", true)
       .order("sort_order", { ascending: true })
@@ -238,7 +275,9 @@ export async function getFeaturedProducts() {
       return [];
     }
 
-    return ((data ?? []) as ProductRow[]).map(mapProductRow);
+    const rows = (data ?? []) as ProductBaseRow[];
+    const rowsWithCategory = await attachCategoryNamesToProducts(rows);
+    return rowsWithCategory.map(mapProductRow);
   } catch {
     console.warn("[supabase] getFeaturedProducts unexpected error");
     return [];
@@ -254,7 +293,7 @@ export async function getBestSellerProducts() {
     const supabase = createBrowserClient();
     const { data, error } = await supabase
       .from("products")
-      .select("name,slug,price,final_price,compare_at_price,badge,category:categories(name)")
+      .select("name,slug,category_id,price,final_price,compare_at_price,badge")
       .eq("is_active", true)
       .eq("is_best_seller", true)
       .order("sort_order", { ascending: true })
@@ -265,7 +304,9 @@ export async function getBestSellerProducts() {
       return [];
     }
 
-    return ((data ?? []) as ProductRow[]).map(mapProductRow);
+    const rows = (data ?? []) as ProductBaseRow[];
+    const rowsWithCategory = await attachCategoryNamesToProducts(rows);
+    return rowsWithCategory.map(mapProductRow);
   } catch {
     console.warn("[supabase] getBestSellerProducts unexpected error");
     return [];

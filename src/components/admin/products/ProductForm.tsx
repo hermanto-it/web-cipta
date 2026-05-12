@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import { createProductAction, updateProductAction } from "@/app/admin/products/actions";
 import { ImageUploadField } from "@/components/admin/ImageUploadField";
@@ -79,6 +80,7 @@ function formatIdr(value: number | null) {
 }
 
 export function ProductForm({ mode, initialData, brands, categories, taxonomies, onDone, formId, showSubmit = true }: ProductFormProps) {
+  const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -226,6 +228,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
         formData.set("og_image_url", resolvedOgImageUrl);
         formData.set("og_description", resolvedOgDescription);
         formData.set("tax_rate", String(taxRateValue));
+        formData.set("compare_at_price", compareAtPriceInput.trim());
         formData.set("tax_amount", taxAmount === null ? "" : String(taxAmount));
         formData.set("final_price", finalPrice === null ? "" : String(finalPrice));
         formData.set("is_tax_included", isTaxIncluded ? "on" : "off");
@@ -243,6 +246,7 @@ export function ProductForm({ mode, initialData, brands, categories, taxonomies,
           } else {
             setSuccess("Product berhasil diperbarui.");
           }
+          router.refresh();
           onDone?.();
         });
       }}

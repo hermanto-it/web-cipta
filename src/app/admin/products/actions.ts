@@ -36,6 +36,14 @@ function parseNumberOrNull(value: FormDataEntryValue | null) {
 function refreshAdminPages() {
   revalidatePath("/admin");
   revalidatePath("/admin/products");
+  revalidatePath("/");
+}
+
+function refreshProductPages(slugs: Array<string | null | undefined>) {
+  const uniqueSlugs = Array.from(new Set(slugs.map((slug) => (slug ?? "").trim()).filter((slug) => slug.length > 0)));
+  uniqueSlugs.forEach((slug) => {
+    revalidatePath(`/products/${slug}`);
+  });
 }
 
 function validateProductPayload(payload: {
@@ -160,6 +168,7 @@ export async function createProductAction(formData: FormData) {
     }
 
     refreshAdminPages();
+    refreshProductPages([payload.slug]);
     return { ok: true };
   } catch {
     return { ok: false, error: "Gagal membuat product." };
@@ -176,6 +185,7 @@ export async function updateProductAction(formData: FormData) {
 
   try {
     const supabase = await createClient();
+    const { data: existingProduct } = await supabase.from("products").select("slug").eq("id", id).maybeSingle();
     const payload: ProductUpdate = mapped.productPayload;
     const imageUrl = mapped.image_url;
     const { error } = await supabase.from("products").update(payload).eq("id", id);
@@ -219,6 +229,7 @@ export async function updateProductAction(formData: FormData) {
     }
 
     refreshAdminPages();
+    refreshProductPages([existingProduct?.slug as string | undefined, payload.slug]);
     return { ok: true };
   } catch {
     return { ok: false, error: "Gagal mengubah product." };

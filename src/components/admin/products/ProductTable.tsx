@@ -117,6 +117,7 @@ export function ProductTable({ products, brands, categories, taxonomies, dataUna
                   </td>
                   <td className="px-3 py-3 text-slate-700">
                     <p className="font-semibold text-slate-800">{formatRupiah(product.final_price ?? product.price)}</p>
+                    {product.compare_at_price ? <p className="text-xs text-slate-400 line-through">{formatRupiah(product.compare_at_price)}</p> : null}
                     <p className="text-xs text-slate-500">Stock: {product.stock_quantity}</p>
                   </td>
                   <td className="px-3 py-3">

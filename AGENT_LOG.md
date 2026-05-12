@@ -2,6 +2,340 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-12 21:01:29 WIB] Simplify Price Card: Hapus Availability/Tax Section + Integrasi Stock & Tax Badge
+- Tanggal/Waktu WIB: 2026-05-12 21:01:29 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Tolong rapikan halaman Product Detail bagian Price dan hapus section Availability & Tax Information."
+- Tujuan Task: Merapikan area harga detail produk dengan menghapus section Availability/Tax terpisah, memindahkan stock dan tax status ke price card, serta memastikan alur compare_at_price tetap benar.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/products/[slug]/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/products/[slug]/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Select-String -Path "src/components/admin/products/ProductForm.tsx","src/app/admin/products/actions.ts","src/app/products/[slug]/page.tsx" -Pattern "compare_at_price|compareAtPrice"`
+  - `Select-String -Path "src/app/admin/products/actions.ts" -Pattern "revalidatePath"`
+  - `Select-String -Path "src/components/admin/products/ProductForm.tsx" -Pattern "router.refresh\(\)"`
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perubahan UI yang Dilakukan:
+  - Menghapus total section `Availability & Tax Information` dari kolom kanan detail produk.
+  - Menambahkan tax badge pada header price card:
+    - `Include PPN` jika `is_tax_included = true`
+    - `Exclude PPN` jika `is_tax_included = false`
+  - Menambahkan info `Stock: {stock_quantity} unit` tepat di bawah harga/compare price pada price card.
+  - Mempertahankan logic harga utama:
+    - `final_price` sebagai prioritas utama
+    - fallback ke `price`
+  - Mempertahankan compare-at-price sebagai harga coret jika tersedia.
+- Audit Compare At Price:
+  - `ProductForm`:
+    - state `compareAtPriceInput` aktif
+    - value awal dari `initialData.compare_at_price`
+    - `onChange` mengubah state
+    - submit mengirim `formData.set("compare_at_price", compareAtPriceInput.trim())`
+  - `actions.ts`:
+    - `compare_at_price` diparse via `parseNumberOrNull` (kosong -> `null`, angka -> `Number`)
+    - payload insert/update menyertakan `compare_at_price`
+    - revalidasi ada untuk `/admin/products`, `/`, dan `/products/{slug}`
+  - `ProductForm` sudah memanggil `router.refresh()` setelah update/create sukses.
+- Hasil Validasi:
+  - `npm run build`: sukses.
+  - `npm run lint`: sukses.
+  - `git status --short --branch`: perubahan tercatat, tidak ada commit/push.
+- Error/Warning:
+  - Warning existing static generation admin/homepage tetap muncul, non-blocking.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: jika ingin label stock lebih kontekstual, bisa ubah ke `Ready Stock` saat > 0 dan `Pre-order` saat 0.
+
+## [2026-05-12 20:38:00 WIB] Polish Tampilan Specifications: Bullet/Spacing Selaras Preview Editor Admin
+- Tanggal/Waktu WIB: 2026-05-12 20:38:00 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Tolong lanjut rapikan tampilan Specifications di halaman Product Detail agar sama seperti preview Description di admin Products."
+- Tujuan Task: Membuat render `product.description` di Product Detail tampil bullet, bold, dan spacing yang lebih rapi seperti preview Description editor admin tanpa mengubah sumber data.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/products/[slug]/page.tsx`
+  - `src/components/admin/AdminMarkdownEditor.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/products/[slug]/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perbaikan yang Dilakukan:
+  - Menambahkan helper `formatDescriptionContent(...)` di detail product:
+    - Tetap menggunakan sanitizer existing (`script/style/on*/javascript` dihapus).
+    - Jika konten sudah HTML (ada tag), dirender apa adanya (tidak diubah strukturnya).
+    - Jika konten plain text newline, otomatis diformat menjadi `<p>` + `<ul><li>...</li></ul>` agar rapi seperti daftar spesifikasi.
+  - Memperkuat styling wrapper `dangerouslySetInnerHTML` dengan utility class spesifik:
+    - Typography dasar: `text-[15px] leading-7 text-slate-700`
+    - `p`: margin-bottom rapi
+    - `ul/ol`: list marker + padding + spacing
+    - `li`: line-height nyaman + spacing antar item
+    - `strong/b`: `font-semibold text-slate-950`
+    - `h1/h2/h3`: ukuran dan margin rapi
+    - `table/th/td`: border + spacing agar tabel dari editor tetap terbaca
+- Keputusan Teknis:
+  - Tidak mengubah sumber data (`product.description`) dan tidak mengembalikan fallback table spesifikasi.
+  - Format newline hanya dipakai saat input bukan HTML agar kompatibel dengan dua kemungkinan data editor (HTML vs plain text multiline).
+- Hasil Validasi:
+  - `npm run build`: sukses.
+  - `npm run lint`: sukses.
+  - `git status --short --branch`: perubahan tercatat, tidak ada commit/push.
+- Error/Warning:
+  - Warning existing static generation admin/homepage tetap muncul, non-blocking.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: sinkronkan style class preview editor admin dengan detail page ke util/class reusable agar konsistensi visual 100% di satu sumber style.
+
+## [2026-05-12 19:52:52 WIB] Audit Ulang Aktual Kedua: Verifikasi Manual Patterns + Rebuild/Lint Ulang
+- Tanggal/Waktu WIB: 2026-05-12 19:52:52 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Testing/QA, Documentation
+- Perintah User: "Tolong audit ulang dan perbaiki benar-benar file aktual. Jangan hanya update AGENT_LOG."
+- Tujuan Task: Memastikan perubahan benar-benar sudah aktif di file aktual dan memverifikasi ulang seluruh pola lama terkait Specifications fallback serta alur compare_at_price.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/products/[slug]/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/lib/supabase/types.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Select-String -LiteralPath "src/app/products/[slug]/page.tsx" -Pattern "Processor / Configuration|Warranty / Support|taxonomy_name|buildSpec|specRows|Brand|SKU|Stock|Tax"`
+  - `Select-String -Path "src/components/admin/products/ProductForm.tsx","src/app/admin/products/actions.ts","src/app/products/[slug]/page.tsx" -Pattern "compare_at_price|compareAtPrice"`
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Hasil Audit Teknis:
+  - Kode fallback `specRows/buildSpec` untuk Specifications **sudah tidak ada**.
+  - Section Specifications sudah berbasis render HTML `product.description` + sanitizer sederhana (script/style/on*/javascript).
+  - Short description sudah `text-base` + `font-semibold`.
+  - Stock/Tax sudah dipisah ke section `Availability & Tax Information`.
+  - Alur compare_at_price terverifikasi ada di:
+    - state + input + submit FormData (`ProductForm`)
+    - parse + payload insert/update (`actions.ts`)
+    - render strikethrough di detail price card (`page.tsx`)
+- Validasi Build/Lint:
+  - `npm run build`: sukses.
+  - `npm run lint`: sukses.
+- Error/Warning:
+  - Warning existing saat static generation admin/homepage tetap muncul, non-blocking.
+- Status Hasil: Sukses (audit ulang selesai, file aktual terverifikasi)
+- Next Step:
+  - Jika browser masih menampilkan UI lama, lakukan hard refresh + restart `npm run dev` untuk memastikan hot-reload cache lokal tidak stale.
+
+## [2026-05-12 19:37:43 WIB] Audit Ulang Aktual: Specifications dari Description + Fix Compare At Price Refresh
+- Tanggal/Waktu WIB: 2026-05-12 19:37:43 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, UI/UX, Testing/QA, Documentation
+- Perintah User: "Tolong audit ulang dan perbaiki benar-benar file aktual. Jangan hanya update AGENT_LOG."
+- Tujuan Task: Menghapus spec fallback table di detail produk, merender description HTML editor admin secara aman, memisahkan Stock/Tax section, dan memperbaiki alur update compare_at_price agar tidak stale.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/products/[slug]/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `src/lib/supabase/types.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/products/[slug]/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Select-String -LiteralPath "src/app/products/[slug]/page.tsx" -Pattern "Processor / Configuration|Warranty / Support|taxonomy_name|buildSpec|specRows|Brand|SKU|Stock|Tax"`
+  - `Select-String -Path "src/components/admin/products/ProductForm.tsx","src/app/admin/products/actions.ts","src/app/products/[slug]/page.tsx" -Pattern "compare_at_price|compareAtPrice"`
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perbaikan Product Detail yang Dilakukan:
+  - Menghapus rendering fallback `specRows` (Brand/Category/Taxonomy/SKU/Processor/Memory/Storage/Warranty/Stock/Tax) dari section Specifications.
+  - Menambahkan helper `sanitizeDescriptionHtml(...)` untuk render HTML description dengan minimal sanitasi:
+    - hapus tag `<script>`
+    - hapus tag `<style>`
+    - hapus atribut event handler `on*`
+    - hapus `javascript:` URL
+  - Section `Specifications` kini langsung render `product.description` via `dangerouslySetInnerHTML` dengan styling prose-like untuk bullet + bold.
+  - Menambahkan fallback text bila description kosong.
+  - Menaikkan visual short description menjadi lebih menonjol (`text-base`, `font-semibold`, warna lebih gelap).
+  - Menambahkan section terpisah `Availability & Tax Information` berisi Stock, PPN, Tax Status, Tax Amount, dan Final Price (bukan di Specifications).
+  - Menambahkan field `tax_rate` dan `tax_amount` pada select produk detail agar data tax akurat di UI.
+- Perbaikan Compare At Price yang Dilakukan:
+  - Memastikan `compare_at_price` tetap di-set eksplisit saat submit form edit/create: `formData.set("compare_at_price", compareAtPriceInput.trim())`.
+  - Menambahkan `router.refresh()` setelah update/create sukses di `ProductForm` agar panel edit/list tidak stale.
+  - Menambahkan revalidasi path tambahan di server action:
+    - `revalidatePath("/")`
+    - `revalidatePath("/admin/products")`
+    - `revalidatePath("/products/{slug}")` untuk slug lama dan slug baru (jika berubah).
+  - Menampilkan compare-at-price di `ProductTable` (strikethrough) untuk memudahkan verifikasi hasil update.
+- Hasil Verifikasi Select-String:
+  - Pattern spec fallback (`buildSpec|specRows|Processor / Configuration|Warranty / Support`) **tidak ditemukan lagi** di file detail produk.
+  - Referensi `compare_at_price|compareAtPrice` ditemukan di `ProductForm`, `actions.ts`, dan detail page sesuai alur state + payload + render.
+- Error/Warning:
+  - Tidak ada error lint/build dari perubahan ini.
+  - Warning static generation admin/homepage masih existing dan non-blocking.
+- Hasil Validasi:
+  - `npm run build`: sukses.
+  - `npm run lint`: sukses.
+  - `git status --short --branch`: perubahan tercatat sesuai file yang disentuh + existing dirty files lain.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: tambah sanitizer lebih ketat berbasis allowlist tag/atribut jika nantinya description menerima HTML dari sumber non-admin.
+
+## [2026-05-12 17:56:59 WIB] Refactor Total UI Product Detail Sesuai Referensi Visual
+- Tanggal/Waktu WIB: 2026-05-12 17:56:59 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, UI/UX, Testing/QA, Documentation
+- Perintah User: "Tolong refactor total halaman Product Detail agar tampilannya mengikuti referensi gambar `contoh_halaman_detail_product.png` semirip mungkin."
+- Tujuan Task: Menyesuaikan tampilan halaman detail produk agar mengikuti struktur referensi (gallery kiri + price card, info/spec kanan, trust strip, compare variants 3 card) tanpa mengubah database dan tetap memakai query terpisah.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `AGENTS.md`
+  - `src/app/products/[slug]/page.tsx`
+  - `package.json`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/products/[slug]/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run build`
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Implementasi yang Dilakukan:
+  - Refactor total layout detail produk menjadi:
+    - Breadcrumb di atas.
+    - Main grid 2 kolom desktop (`42%/58%`) dan stack di mobile.
+    - Kolom kiri: gallery card + thumbnail row + price card terpisah tepat di bawahnya.
+    - Kolom kanan: badge kategori, judul produk, chips fitur, short description, dan tabel `Specifications` dua kolom.
+    - Trust benefit strip 4 item di bawah main grid.
+    - Section `Compare Product Variants` dengan maksimal 3 card termasuk current product.
+  - Menyesuaikan style visual enterprise navy/blue/white:
+    - border halus `#dbe5f1`
+    - background putih / very light blue
+    - shadow ringan
+    - radius `rounded-xl`/`rounded-2xl`
+  - Gallery behavior diperbarui:
+    - main image menggunakan `object-contain` pada background terang
+    - tombol zoom kecil di kanan atas (visual affordance)
+    - thumbnail maksimal 4, item pertama tampil active border biru
+    - fallback thumbnail text jika gambar belum tersedia
+  - Price card diperbarui:
+    - label Price, harga final, compare price strikethrough
+    - CTA `Request Quotation` ke `/inquiry?product={slug}`
+    - CTA outline `Contact Sales`
+    - mini highlight `Enterprise-Grade Performance` + subtext
+  - Specification table diperbarui:
+    - parsing sederhana dari nama/short description/description untuk processor, memory, storage, warranty
+    - fallback rows tetap tersedia (Brand, Category, Taxonomy, SKU, Stock, Tax)
+  - Compare variants diperbarui:
+    - query tetap terpisah dan exclude current pada pool awal
+    - ambil 2 produk serupa (prioritas taxonomy sama) lalu inject current product sebagai card ketiga
+    - fetch image compare secara query terpisah berdasarkan `product_id`
+    - current product diberi emphasis border biru + highlight text khusus
+  - Menambahkan `generateMetadata`:
+    - `title` dari `seo_title` fallback `{product.name} | PT Cipta Solusi Techindo`
+    - `description` dari `seo_description` fallback `short_description`
+    - `openGraph.images` dari `og_image_url` fallback primary product image
+- Keputusan Teknis:
+  - Tetap mempertahankan pola query terpisah antar tabel (`products`, `product_images`, `brands`, `categories`, `product_taxonomy`, `company_settings`) untuk menghindari masalah type relation Supabase generated types.
+  - Parsing chips/spec memakai helper typed (tanpa `any`) agar tetap robust meskipun format deskripsi produk bervariasi.
+- Error/Warning:
+  - Tidak ada error lint/build dari perubahan ini.
+  - Warning static generation admin/homepage masih muncul seperti sebelumnya (existing behavior) dan tidak memblokir build.
+- Hasil Validasi:
+  - `npm run build`: sukses.
+  - `npm run lint`: sukses.
+  - `git status --short --branch`: working tree masih berisi perubahan lain dari task sebelumnya (tidak direvert).
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: jika ingin thumbnail benar-benar interaktif (klik thumbnail ganti main image), ubah gallery menjadi client component kecil khusus media viewer.
+
+## [2026-05-12 16:47:30 WIB] Implementasi Product Detail + Shared Header/Footer Homepage
+- Tanggal/Waktu WIB: 2026-05-12 16:47:30 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, UI/UX, Testing/QA, Documentation
+- Perintah User: "Continue if you have next steps, or stop and ask for clarification if you are unsure how to proceed."
+- Tujuan Task: Melanjutkan implementasi halaman detail produk `/products/[slug]`, memastikan CTA "View Details" tetap terhubung, dan memulihkan footer agar tampil di homepage serta detail produk.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `AGENTS.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/home/HomepageProductCard.tsx`
+  - `src/app/layout.tsx`
+- File Dibuat:
+  - `src/app/products/[slug]/page.tsx`
+  - `src/components/home/HomeFooter.tsx`
+  - `src/components/home/HomeHeader.tsx`
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/app/products/[slug]/page.tsx`
+  - `src/components/home/HomeFooter.tsx`
+  - `src/components/home/HomeHeader.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"` (2x)
+  - `npm run build` (3x)
+  - `npm run lint` (2x)
+  - `git status --short --branch`
+- Implementasi yang Dilakukan:
+  - Membuat komponen shared `HomeHeader` untuk top bar + header utama, lalu mengintegrasikannya ke homepage.
+  - Membuat komponen shared `HomeFooter` dan memasangnya di homepage agar footer kembali tampil konsisten.
+  - Membuat route baru `src/app/products/[slug]/page.tsx` dengan pengambilan data terpisah (tanpa nested relation kompleks) untuk tabel:
+    - `products`
+    - `product_images`
+    - `brands`
+    - `categories`
+    - `product_taxonomy`
+    - `company_settings`
+  - Menambahkan UI detail produk: breadcrumb, gallery, informasi produk, price card, deskripsi, dan blok compare variants (maks 3, exclude current product, prioritas taxonomy serupa).
+  - Memastikan halaman detail juga memakai `HomeHeader` dan `HomeFooter` agar konsistensi UI antar halaman terjaga.
+- Error/Warning dan Penanganan:
+  - `npm run build` sempat gagal karena token `>` pada teks anchor di halaman detail; diperbaiki menjadi `-&gt;`.
+  - `npm run lint` sempat gagal oleh rule `@next/next/no-html-link-for-pages` pada link internal `/`; diperbaiki dengan `next/link`.
+  - Build menampilkan warning data admin/homepage unavailable saat static generation; warning existing dan tidak memblokir build.
+- Hasil Validasi Final:
+  - `npm run lint`: sukses tanpa error.
+  - `npm run build`: sukses (route `/products/[slug]` terdeteksi dan terbuild).
+  - `git status --short --branch`: perubahan sesuai scope task (homepage, komponen shared, route detail produk).
+- Keputusan Teknis:
+  - Menggunakan pola query terpisah per tabel untuk detail produk agar aman terhadap generated type Supabase yang belum lengkap untuk relasi nested.
+  - Header dan footer dipisah sebagai komponen reusable untuk menghindari duplikasi struktur antara homepage dan detail page.
+- Status Hasil: Sukses
+- Next Step:
+  - Opsional: menambahkan `generateMetadata` khusus detail produk agar SEO title/description mengikuti data produk.
+
 ## [2026-05-12 16:09:15 WIB] Audit Ulang & Build Hijau: Verifikasi Stale Fix + Penyelesaian Blocker Lanjutan
 - Tanggal/Waktu WIB: 2026-05-12 16:09:15 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)
