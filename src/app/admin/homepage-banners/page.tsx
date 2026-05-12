@@ -13,7 +13,7 @@ async function getHomepageBanners() {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("homepage_banners")
-      .select("id,title,subtitle,description,image_url,cta_label,cta_href,placement,badge,price_text,sort_order,is_active")
+      .select("id,title,subtitle,description,image_url,cta_label,cta_href,placement,badge,price_text,seo_title,seo_description,seo_keywords,og_title,og_description,og_image_url,canonical_url,sort_order,is_active")
       .order("sort_order", { ascending: true });
 
     if (error) {
@@ -35,7 +35,7 @@ export default async function AdminHomepageBannersPage() {
     <AdminDashboardShell
       currentPath="/admin/homepage-banners"
       title="Homepage Banners"
-      subtitle="Kelola konten banner untuk hero, promo samping, promo tengah, dan CTA bawah."
+      subtitle="Kelola konten banner untuk hero slider, benefit image, promo tengah, dan CTA bawah."
       dataUnavailable={dataUnavailable}
     >
       <section className="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-slate-200/70 sm:p-5">

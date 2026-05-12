@@ -11,7 +11,7 @@ async function getCategories() {
 
   try {
     const supabase = await createClient();
-    const { data, error } = await supabase.from("categories").select("id,name,slug,description,sort_order,is_active").order("sort_order", { ascending: true });
+    const { data, error } = await supabase.from("categories").select("id,name,slug,description,seo_title,seo_description,seo_keywords,og_title,og_description,og_image_url,canonical_url,sort_order,is_active").order("sort_order", { ascending: true });
 
     if (error) {
       console.warn("[admin] categories read failed:", error.message);

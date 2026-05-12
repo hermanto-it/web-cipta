@@ -11,31 +11,10 @@ with check (true);
 drop policy if exists "admin can read inquiries" on public.inquiries;
 create policy "admin can read inquiries" on public.inquiries
 for select to authenticated
-using (
-  exists (
-    select 1
-    from public.admin_users au
-    where au.is_active = true
-      and (au.user_id = auth.uid() or au.email = auth.email())
-  )
-);
+using (public.is_admin_user());
 
 drop policy if exists "admin can update inquiries" on public.inquiries;
 create policy "admin can update inquiries" on public.inquiries
 for update to authenticated
-using (
-  exists (
-    select 1
-    from public.admin_users au
-    where au.is_active = true
-      and (au.user_id = auth.uid() or au.email = auth.email())
-  )
-)
-with check (
-  exists (
-    select 1
-    from public.admin_users au
-    where au.is_active = true
-      and (au.user_id = auth.uid() or au.email = auth.email())
-  )
-);
+using (public.is_admin_user())
+with check (public.is_admin_user());

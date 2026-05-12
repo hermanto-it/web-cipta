@@ -4,7 +4,17 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 
-const placements = ["hero", "side_promo", "middle_promo", "bottom_cta"] as const;
+const placements = [
+  "hero",
+  "side_promo",
+  "middle_promo",
+  "bottom_cta",
+  "benefit_free_delivery",
+  "benefit_support_247",
+  "benefit_payment",
+  "benefit_reliable",
+  "benefit_guarantee",
+] as const;
 
 type Placement = (typeof placements)[number];
 
@@ -54,6 +64,13 @@ export async function createBannerAction(formData: FormData) {
       placement,
       badge: asNullableText(formData.get("badge")),
       price_text: asNullableText(formData.get("price_text")),
+      seo_title: asNullableText(formData.get("seo_title")),
+      seo_description: asNullableText(formData.get("seo_description")),
+      seo_keywords: asNullableText(formData.get("seo_keywords")),
+      og_title: asNullableText(formData.get("og_title")),
+      og_description: asNullableText(formData.get("og_description")),
+      og_image_url: asNullableText(formData.get("og_image_url")),
+      canonical_url: asNullableText(formData.get("canonical_url")),
       sort_order: parseSortOrder(formData.get("sort_order")),
       is_active: formData.get("is_active") === "on",
     });
@@ -101,6 +118,13 @@ export async function updateBannerAction(formData: FormData) {
         placement,
         badge: asNullableText(formData.get("badge")),
         price_text: asNullableText(formData.get("price_text")),
+        seo_title: asNullableText(formData.get("seo_title")),
+        seo_description: asNullableText(formData.get("seo_description")),
+        seo_keywords: asNullableText(formData.get("seo_keywords")),
+        og_title: asNullableText(formData.get("og_title")),
+        og_description: asNullableText(formData.get("og_description")),
+        og_image_url: asNullableText(formData.get("og_image_url")),
+        canonical_url: asNullableText(formData.get("canonical_url")),
         sort_order: parseSortOrder(formData.get("sort_order")),
         is_active: formData.get("is_active") === "on",
       })

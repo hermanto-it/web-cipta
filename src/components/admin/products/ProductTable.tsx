@@ -116,7 +116,7 @@ export function ProductTable({ products, brands, categories, taxonomies, dataUna
                     {product.taxonomy_name ? <p className="text-xs text-slate-400">{product.taxonomy_name}</p> : null}
                   </td>
                   <td className="px-3 py-3 text-slate-700">
-                    <p className="font-semibold text-slate-800">{formatRupiah(product.price)}</p>
+                    <p className="font-semibold text-slate-800">{formatRupiah(product.final_price ?? product.price)}</p>
                     <p className="text-xs text-slate-500">Stock: {product.stock_quantity}</p>
                   </td>
                   <td className="px-3 py-3">

@@ -16,6 +16,7 @@ type ProductRow = {
   name: string;
   slug: string;
   price: number | null;
+  final_price: number | null;
   compare_at_price: number | null;
   badge: string | null;
   category: { name: string } | null;
@@ -25,9 +26,19 @@ type BannerRow = {
   title: string;
   subtitle: string | null;
   description: string | null;
+  image_url: string | null;
   cta_label: string | null;
   cta_href: string | null;
-  placement: "hero" | "side_promo" | "middle_promo" | "bottom_cta";
+  placement:
+    | "hero"
+    | "side_promo"
+    | "middle_promo"
+    | "bottom_cta"
+    | "benefit_free_delivery"
+    | "benefit_support_247"
+    | "benefit_payment"
+    | "benefit_reliable"
+    | "benefit_guarantee";
   badge: string | null;
   price_text: string | null;
   sort_order: number;
@@ -191,16 +202,17 @@ function formatIDR(value: number | null) {
 }
 
 function mapProductRow(row: ProductRow) {
+  const effectivePrice = row.final_price ?? row.price;
   return {
     name: row.name,
     category: row.category?.name ?? "General",
-    newPrice: formatIDR(row.price) ?? "-",
+    newPrice: formatIDR(effectivePrice) ?? "-",
     oldPrice: formatIDR(row.compare_at_price),
     save:
-      row.compare_at_price && row.price && row.compare_at_price > row.price
-        ? `Save ${Math.round(((row.compare_at_price - row.price) / row.compare_at_price) * 100)}%`
+      row.compare_at_price && effectivePrice && row.compare_at_price > effectivePrice
+        ? `Save ${Math.round(((row.compare_at_price - effectivePrice) / row.compare_at_price) * 100)}%`
         : "Promo",
-    price: formatIDR(row.price) ?? "-",
+    price: formatIDR(effectivePrice) ?? "-",
     badge: row.badge ?? "Promo",
   };
 }
@@ -214,7 +226,7 @@ export async function getFeaturedProducts() {
     const supabase = createBrowserClient();
     const { data, error } = await supabase
       .from("products")
-      .select("name,slug,price,compare_at_price,badge,category:categories(name)")
+      .select("name,slug,price,final_price,compare_at_price,badge,category:categories(name)")
       .eq("is_active", true)
       .eq("is_featured", true)
       .order("sort_order", { ascending: true })
@@ -241,7 +253,7 @@ export async function getBestSellerProducts() {
     const supabase = createBrowserClient();
     const { data, error } = await supabase
       .from("products")
-      .select("name,slug,price,compare_at_price,badge,category:categories(name)")
+      .select("name,slug,price,final_price,compare_at_price,badge,category:categories(name)")
       .eq("is_active", true)
       .eq("is_best_seller", true)
       .order("sort_order", { ascending: true })
@@ -268,7 +280,7 @@ export async function getHomepageBanners() {
     const supabase = createBrowserClient();
     const { data, error } = await supabase
       .from("homepage_banners")
-      .select("title,subtitle,description,cta_label,cta_href,placement,badge,price_text,sort_order")
+      .select("title,subtitle,description,image_url,cta_label,cta_href,placement,badge,price_text,sort_order")
       .eq("is_active", true)
       .order("sort_order", { ascending: true });
 
@@ -319,7 +331,7 @@ export async function getCompanySettings() {
     const { data, error } = await supabase
       .from("company_settings")
       .select("key,value")
-      .in("key", ["company_profile", "contact_info", "social_links", "header_settings", "footer_settings"]);
+      .in("key", ["company_profile", "contact_info", "social_links", "header_settings", "footer_settings", "seo_settings"]);
 
     if (error) {
       console.warn("[supabase] getCompanySettings failed:", error.message);

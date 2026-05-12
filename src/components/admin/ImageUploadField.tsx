@@ -10,9 +10,10 @@ type ImageUploadFieldProps = {
   defaultValue?: string | null;
   folder: string;
   maxSizeMB?: number;
+  onValueChange?: (value: string) => void;
 };
 
-export function ImageUploadField({ label, name, defaultValue, folder, maxSizeMB = 5 }: ImageUploadFieldProps) {
+export function ImageUploadField({ label, name, defaultValue, folder, maxSizeMB = 5, onValueChange }: ImageUploadFieldProps) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState(defaultValue ?? "");
@@ -51,6 +52,7 @@ export function ImageUploadField({ label, name, defaultValue, folder, maxSizeMB 
             }
 
             setImageUrl(result.publicUrl);
+            onValueChange?.(result.publicUrl);
           }}
           className="w-full text-sm"
         />
@@ -70,7 +72,10 @@ export function ImageUploadField({ label, name, defaultValue, folder, maxSizeMB 
         {imageUrl ? (
           <button
             type="button"
-            onClick={() => setImageUrl("")}
+            onClick={() => {
+              setImageUrl("");
+              onValueChange?.("");
+            }}
             className="mt-2 rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
           >
             Clear image

@@ -21,7 +21,7 @@ async function getPageData() {
       supabase
         .from("products")
         .select(
-          "id,brand_id,category_id,taxonomy_id,sku,name,slug,short_description,description,price,compare_at_price,currency,stock_quantity,is_featured,is_best_seller,is_promo,is_active,badge,sort_order,brand:brands(name),category:categories(name),taxonomy:product_taxonomy(name),images:product_images(image_url,is_primary)",
+          "id,brand_id,category_id,taxonomy_id,sku,name,slug,short_description,description,price,compare_at_price,tax_rate,tax_amount,final_price,is_tax_included,currency,stock_quantity,is_featured,is_best_seller,is_promo,is_active,badge,seo_title,seo_description,seo_keywords,og_title,og_description,og_image_url,canonical_url,sort_order,brand:brands(name),category:categories(name),taxonomy:product_taxonomy(name),images:product_images(image_url,is_primary)",
         )
         .order("sort_order", { ascending: true }),
       supabase.from("brands").select("id,name").order("sort_order", { ascending: true }),

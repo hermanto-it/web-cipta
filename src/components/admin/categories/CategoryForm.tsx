@@ -10,6 +10,13 @@ export type CategoryItem = {
   name: string;
   slug: string;
   description: string | null;
+  seo_title: string | null;
+  seo_description: string | null;
+  seo_keywords: string | null;
+  og_title: string | null;
+  og_description: string | null;
+  og_image_url: string | null;
+  canonical_url: string | null;
   sort_order: number;
   is_active: boolean;
 };
@@ -91,6 +98,37 @@ export function CategoryForm({ mode, initialData, onDone, formId, showSubmit = t
         <span className="mb-1 block font-medium">Description</span>
         <textarea name="description" rows={3} defaultValue={initialData?.description ?? ""} className={fieldClassName} />
       </label>
+
+      <div className="grid gap-3 sm:grid-cols-2">
+        <label className="text-sm">
+          <span className="mb-1 block font-medium">SEO Title</span>
+          <input name="seo_title" defaultValue={initialData?.seo_title ?? ""} className={fieldClassName} />
+        </label>
+        <label className="text-sm">
+          <span className="mb-1 block font-medium">Canonical URL</span>
+          <input name="canonical_url" defaultValue={initialData?.canonical_url ?? ""} className={fieldClassName} />
+        </label>
+        <label className="text-sm sm:col-span-2">
+          <span className="mb-1 block font-medium">SEO Description</span>
+          <textarea name="seo_description" rows={2} defaultValue={initialData?.seo_description ?? ""} className={fieldClassName} />
+        </label>
+        <label className="text-sm sm:col-span-2">
+          <span className="mb-1 block font-medium">SEO Keywords</span>
+          <input name="seo_keywords" defaultValue={initialData?.seo_keywords ?? ""} className={fieldClassName} />
+        </label>
+        <label className="text-sm">
+          <span className="mb-1 block font-medium">OG Title</span>
+          <input name="og_title" defaultValue={initialData?.og_title ?? ""} className={fieldClassName} />
+        </label>
+        <label className="text-sm">
+          <span className="mb-1 block font-medium">OG Image URL</span>
+          <input name="og_image_url" defaultValue={initialData?.og_image_url ?? ""} className={fieldClassName} />
+        </label>
+        <label className="text-sm sm:col-span-2">
+          <span className="mb-1 block font-medium">OG Description</span>
+          <textarea name="og_description" rows={2} defaultValue={initialData?.og_description ?? ""} className={fieldClassName} />
+        </label>
+      </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <label className="text-sm">

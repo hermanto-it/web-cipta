@@ -13,7 +13,7 @@ async function getBrands() {
     const supabase = await createClient();
     const { data, error } = await supabase
       .from("brands")
-      .select("id,name,slug,description,logo_url,sort_order,is_active")
+      .select("id,name,slug,description,logo_url,seo_title,seo_description,seo_keywords,og_title,og_description,og_image_url,canonical_url,sort_order,is_active")
       .order("sort_order", { ascending: true });
 
     if (error) {

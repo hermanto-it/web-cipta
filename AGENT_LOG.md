@@ -2,6 +2,1229 @@
 
 Dokumen ini menyimpan riwayat aktivitas agent. Log terbaru selalu ditambahkan di bagian paling atas.
 
+## [2026-05-12 14:32:36 WIB] Hilangkan Tint Abu-Abu pada Area Image Product Card Homepage
+- Tanggal/Waktu WIB: 2026-05-12 14:32:36 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Hilangkan background abu-abu/transparan tipis pada area image Product Card homepage, tetap bedakan placeholder jika image kosong."
+- Tujuan Task: Membuat area image card produk terlihat bersih menyatu dengan card putih saat image real tersedia.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/components/home/HomepageProductCard.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/home/HomepageProductCard.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Penyebab Tint Abu-Abu:
+  - Wrapper image product card masih memiliki kelas background soft (`bg-[#f8fafc]`) secara permanen, sehingga pada image real tetap terlihat layer abu-abu tipis.
+- Perbaikan yang Dilakukan:
+  - Menambahkan conditional styling `hasImage` di `HomepageProductCard`.
+  - Jika image tersedia (`hasImage=true`): wrapper image memakai `bg-transparent`.
+  - Jika image kosong (`hasImage=false`): wrapper tetap `bg-[#f8fafc]` + placeholder gradient agar fallback tetap terbaca.
+  - Struktur card lain (title/chips/price/CTA/status strip/layout responsive) tidak diubah.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan task tercatat; worktree tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+- Status Hasil: Sukses (tint abu-abu untuk image real dihapus)
+- Next Step:
+  - Validasi visual manual beberapa produk image terang/gelap untuk memastikan area image benar-benar bersih tanpa tint residual.
+
+## [2026-05-12 14:26:44 WIB] Optimasi Tampilan Image Product Card Homepage agar Lebih Besar dan Penuh
+- Tanggal/Waktu WIB: 2026-05-12 14:26:44 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki tampilan image Product Card homepage agar gambar besar/full/proporsional dan update helper rekomendasi image di admin ProductForm."
+- Tujuan Task: Membuat visual image product card tidak terlihat kecil di tengah card meskipun aset memiliki whitespace, tanpa mengubah layout hero/benefit/banner.
+- File Dibaca:
+  - `src/components/home/HomepageProductCard.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/home/HomepageProductCard.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Penyebab Gambar Terlihat Kecil:
+  - Wrapper image card sebelumnya memakai tinggi fixed kecil + padding internal (`p-2`) dan `object-contain`, sehingga gambar horizontal cenderung mengecil di tengah area.
+- Perbaikan UI Product Card:
+  - Wrapper image diubah ke rasio e-commerce yang lebih cocok `aspect-[3/2]`.
+  - Padding internal wrapper dihilangkan agar area efektif gambar lebih besar.
+  - `Image` diubah ke `object-cover object-center` untuk mengisi area visual card lebih penuh.
+  - Background wrapper diset soft (`#f8fafc`) dengan border halus dan radius rapi.
+  - Placeholder tetap ada bila image kosong, tanpa merusak layout card.
+- Perubahan Admin Helper Text:
+  - Menambahkan rekomendasi di section Media & SEO (`ProductForm`):
+    - Product card image: `1200x800 px`
+    - Rasio: `3:2`
+    - Format: `PNG/WebP/JPG` max `1-2MB`
+    - Anjuran objek produk memenuhi `80-90%` area gambar (hindari whitespace berlebih)
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan task tercatat; repository tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+- Status Hasil: Sukses (image card homepage tampil lebih besar/penuh)
+- Next Step:
+  - Validasi visual manual beberapa produk (rasio gambar berbeda) untuk cek tingkat crop dan memastikan hasil tetap nyaman dibaca.
+
+## [2026-05-12 14:04:17 WIB] Fix Runtime Error Reset Form saat Update Product (Admin)
+- Tanggal/Waktu WIB: 2026-05-12 14:04:17 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki runtime error `Cannot read properties of null (reading 'reset')` saat Edit/Update Product."
+- Tujuan Task: Menghilangkan error reset form setelah submit async pada mode edit/update product, sambil menjaga behavior create reset tetap bersih.
+- File Dibaca:
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/app/admin/products/page.tsx`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/products/ProductForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Penyebab Error:
+  - Pemanggilan `event.currentTarget.reset()` dilakukan setelah alur async submit, sehingga referensi event target bisa menjadi `null` pada runtime React synthetic event lifecycle.
+- Perbaikan yang Dilakukan:
+  - Menghapus ketergantungan pada native `event.currentTarget.reset()` setelah async.
+  - Menambahkan helper `resetFormState()` untuk reset state React secara eksplisit (slug/name/brand/category/taxonomy/price/SEO/description/image/tax state/manual-override state).
+  - Menambahkan `formResetKey` pada `<form key=...>` agar uncontrolled fields + input internal komponen (termasuk upload image preview/file) ikut reset bersih saat create sukses.
+  - Menambahkan state `success` untuk feedback hasil submit sukses.
+  - Submit behavior dipisah:
+    - `create`: reset state penuh + pesan sukses.
+    - `edit`: tidak reset native form, hanya tampil pesan sukses + lanjut alur existing `onDone`.
+- Dampak Behavior:
+  - Mode Create:
+    - form kembali kosong
+    - preview image/upload state ikut kosong
+    - slug/SEO/tax states kembali default
+    - pesan sukses tampil
+  - Mode Edit/Update:
+    - tidak lagi memanggil reset native
+    - tidak ada runtime error
+    - update tetap tersimpan dan list tetap revalidate dari server action existing
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan task tercatat; worktree tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+- Status Hasil: Sukses (runtime reset error teratasi)
+- Next Step:
+  - Uji manual create/edit product di UI admin untuk konfirmasi akhir alur reset preview image dan close panel edit sesuai ekspektasi.
+
+## [2026-05-12 12:51:31 WIB] Redesign Premium Homepage Product Card (Deal Of The Day)
+- Tanggal/Waktu WIB: 2026-05-12 12:51:31 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, API, Testing/QA, Documentation
+- Perintah User: "Redesign tampilan card product di homepage agar premium enterprise-style, reusable component, mapping data dari Supabase lengkap, dengan fallback logic dan CTA."
+- Tujuan Task: Mengganti card lama yang masih placeholder menjadi product card modern yang menampilkan kategori, image, nama, chip spesifikasi, ringkasan, harga, CTA, dan status strip.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/components/home/HeroSlider.tsx`
+- File Dibuat:
+  - `src/components/home/HomepageProductCard.tsx`
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+- Perubahan yang Dilakukan:
+  - Membuat komponen reusable `HomepageProductCard` dengan gaya premium enterprise:
+    - clean white card
+    - rounded modern border
+    - shadow halus
+    - image utama besar proporsional (`object-contain`)
+    - judul dominan (line-clamp)
+    - chip spesifikasi (maks 4)
+    - summary 2-3 baris
+    - harga utama + compare at price
+    - CTA `Request Quotation` dan `View Details`
+    - status strip bawah
+  - Section `Deal Of The Day` di homepage diubah dari card placeholder lama ke grid card baru responsif:
+    - desktop 3 kolom
+    - tablet 2 kolom
+    - mobile 1 kolom
+  - Query produk homepage diperluas agar menyertakan relasi sesuai kebutuhan card:
+    - `category`
+    - `taxonomy`
+    - `product_images`
+    - flags/status (`is_featured`, `is_best_seller`, `is_promo`)
+    - harga (`final_price`, `price`, `compare_at_price`)
+  - Sorting query disusun ulang sesuai prioritas:
+    - `is_featured desc`
+    - `is_best_seller desc`
+    - `is_promo desc`
+    - `sort_order asc`
+    - `created_at desc`
+- Mapping Data Product Card:
+  - Category label:
+    - prioritas `taxonomy.name`
+    - fallback `category.name`
+    - fallback `ENTERPRISE PRODUCT`
+  - Image utama:
+    - prioritas image `is_primary`
+    - fallback image pertama
+    - jika kosong tampil placeholder rapi
+  - Harga:
+    - prioritas `final_price`
+    - fallback `price`
+    - jika kosong tampil `Hubungi kami untuk penawaran`
+  - Status strip:
+    - prioritas `badge`
+    - fallback `Featured Product` / `Best Seller` / `Special Offer`
+    - fallback final default enterprise value text
+- Fallback Logic:
+  - Gambar kosong -> placeholder visual card image
+  - Category/taxonomy kosong -> `ENTERPRISE PRODUCT`
+  - Summary kosong -> kalimat fallback enterprise generated
+  - Feature chips:
+    - parse dari `short_description`
+    - fallback `description`
+    - fallback pecahan penting dari `name`
+    - maksimal 4 chip
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan task tercatat; repository tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+- Status Hasil: Sukses (homepage product card sudah redesign dengan reusable component)
+- Next Step:
+  - Validasi visual manual terhadap referensi desain di desktop/mobile untuk fine-tuning padding, line clamp, dan tone warna CTA bila diperlukan.
+
+## [2026-05-12 05:28:14 WIB] Auto Generate SEO Product + Perhitungan PPN Otomatis di Admin Products
+- Tanggal/Waktu WIB: 2026-05-12 05:28:14 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, API, Database, Configuration, Testing/QA, Documentation
+- Perintah User: "Buat fitur auto-generate SEO fields dan perhitungan PPN otomatis saat create/edit product, simpan payload tax/seo ke Supabase, update schema/types/query, lint + git status + log."
+- Tujuan Task: Mengotomasi SEO metadata product dan kalkulasi PPN 11% (harga termasuk/tidak termasuk pajak) tanpa merusak data produk existing.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/lib/supabase/types.ts`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/page.tsx`
+  - `supabase/schema.sql`
+  - pencarian kode terkait `final_price/tax_rate/seo_*` lintas proyek
+- File Dibuat: Tidak ada file baru pada task ini.
+- File Diubah:
+  - `src/components/admin/ImageUploadField.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/types.ts`
+  - `supabase/schema.sql`
+  - `AGENT_LOG.md`
+- File Dihapus:
+  - `src/components/admin/products/ProductForm.tsx` (versi lama diganti dengan versi baru dalam task yang sama)
+- Command Terminal yang Dijalankan:
+  - `npm run lint` (2x)
+  - `git status --short --branch` (2x)
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"` (2x)
+- Perubahan SEO Otomatis (Admin ProductForm):
+  - Menambahkan generator SEO berbasis field input produk: `name`, `brand`, `category`, `taxonomy`, `sku`, `slug`, `short_description`, `description`, `primary_image_url`.
+  - Aturan generator:
+    - SEO Title / OG Title: `{Product Name} | {Brand Name} | PT Cipta Solusi Techindo`
+    - SEO Description / OG Description:
+      - prioritas `short_description` (strip HTML)
+      - fallback `description` (strip HTML)
+      - fallback kalimat template enterprise IT
+      - dibatasi sekitar 160 karakter
+    - SEO Keywords: gabungan comma-separated dari product/brand/category/taxonomy/SKU + keyword tetap.
+    - Canonical URL: `{NEXT_PUBLIC_SITE_URL}/products/{slug}` (fallback domain `https://domain.com`).
+    - OG Image URL: auto dari primary image URL upload jika tersedia.
+  - Manual override per field diterapkan (state `*_Manual`): jika admin sudah ketik manual, generator tidak overwrite lagi field tersebut.
+  - Saat submit create/update, semua field SEO dipastikan diset eksplisit ke `FormData` payload.
+  - Menambahkan helper text SEO: otomatis tapi tetap editable manual.
+- Perubahan Pricing/PPN (Admin ProductForm + Actions):
+  - Menambahkan field:
+    - `tax_rate` (default 11)
+    - checkbox `is_tax_included`
+    - `tax_amount` readonly
+    - `final_price` readonly
+  - Logika perhitungan:
+    - Jika harga belum termasuk PPN: `tax_amount = price * tax_rate/100`, `final_price = price + tax_amount`
+    - Jika harga sudah termasuk PPN: `base_price = price/(1+tax_rate/100)`, `tax_amount = price - base_price`, `final_price = price`
+  - Menambahkan preview kalkulasi Rupiah: harga dasar, PPN, final price.
+  - Menambahkan helper text Pricing & Inventory sesuai requirement.
+  - Payload server action `create/update` kini menyimpan: `tax_rate`, `tax_amount`, `final_price`, `is_tax_included`.
+- Perubahan Query/Render Harga:
+  - Admin products query (`page.tsx`) menambahkan kolom tax/final price agar data edit konsisten.
+  - Tabel admin products menampilkan harga `final_price` jika ada, fallback ke `price`.
+  - Public query mapper (`src/lib/supabase/queries.ts`) memakai `final_price ?? price` untuk `newPrice/price/save` agar harga publik tetap aman saat migrasi.
+  - Homepage server query featured products (`src/app/page.tsx`) juga memakai `final_price ?? price`.
+- Perubahan Schema/Types:
+  - `supabase/schema.sql` ditambah kolom tax pada definisi tabel `products` dan `ALTER TABLE IF NOT EXISTS`:
+    - `tax_rate numeric default 11`
+    - `tax_amount numeric default 0`
+    - `final_price numeric`
+    - `is_tax_included boolean default false`
+  - Kolom SEO products sudah ada, tetap dipertahankan.
+  - `src/lib/supabase/types.ts` diperluas untuk field tax di `products` row/insert/update.
+- Error/Warning yang Terjadi:
+  - `npm run lint` pertama gagal oleh rule `react-hooks/set-state-in-effect` pada generator SEO di `ProductForm`.
+  - Solusi: mengganti pola update effect menjadi nilai SEO terhitung (`useMemo`) + resolved value berbasis manual override, sehingga tidak ada `setState` sinkron di effect.
+  - `npm run lint` kedua sukses.
+- Hasil Validasi:
+  - `npm run lint`: sukses (run final).
+  - `git status --short --branch`: perubahan task tercatat; worktree tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Status Hasil: Sukses (fitur SEO auto-generate + PPN otomatis + schema/types/query sinkron)
+- Next Step:
+  - Jalankan SQL manual alter table products untuk kolom PPN di Supabase SQL Editor environment aktif.
+  - Uji manual create/edit product (create baru, edit existing dengan SEO existing) untuk memastikan manual override tetap jalan.
+
+## [2026-05-12 04:09:19 WIB] Refinement UI Header + Tinggi Hero Banner Homepage
+- Tanggal/Waktu WIB: 2026-05-12 04:09:19 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki UI homepage header dan hero banner: hero lebih tinggi mendekati sidebar, email kembali icon, text header kanan tidak pecah baris, dan hover/focus search kembali merah."
+- Tujuan Task: Menyetel ulang proporsi hero dan kerapihan area header tanpa mengubah arsitektur data homepage.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/components/home/HeroSlider.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/components/home/HeroSlider.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+  - `npm run lint`
+  - `git status --short --branch`
+- Perubahan Hero Banner:
+  - Menambah tinggi hero desktop agar lebih mendekati tinggi sidebar brand dengan:
+    - `lg:aspect-auto`
+    - `lg:min-h-[430px]`
+    - `xl:min-h-[460px]`
+  - Menjaga image tetap `object-cover object-center` agar proporsional dan tidak blur.
+  - Overlay gelap transparan tetap dipertahankan untuk keterbacaan teks.
+- Perubahan Header:
+  - Mengembalikan tampilan Email ke icon amplop/kertas (SVG) menggantikan text email biasa.
+  - Menjaga teks Sales/Account/Cart tetap satu baris dengan `whitespace-nowrap`, `min-w-fit`, dan `shrink-0`.
+  - Menyesuaikan gap area kanan agar tetap muat (`xl:gap-6`) dan tidak memecah teks.
+  - Menahan lebar search group (`xl:max-w-2xl`) agar panel kanan tidak terlalu terdesak.
+- Perubahan Hover/Focus Search:
+  - Wrapper search dikembalikan ke state interaktif merah:
+    - `hover:border-[#e7000b]`
+    - `focus-within:border-[#e7000b]`
+    - `focus-within:ring-1 focus-within:ring-[#e7000b]`
+  - `select` kategori dan `input` search dikembalikan behavior hover/focus border merah di divider kiri/kanan.
+- Keputusan Teknis:
+  - Penyesuaian dilakukan di CSS utility class saja agar aman terhadap logic server-side homepage yang sudah stabil.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan task tercatat; repository tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+- Status Hasil: Sukses (refinement UI hero + header + search interaction)
+- Next Step:
+  - Validasi visual manual desktop/tablet di `/` untuk memastikan tinggi hero baru sudah proporsional terhadap sidebar pada berbagai lebar layar.
+
+## [2026-05-12 03:40:30 WIB] Refactor Homepage Hero Slider + Nonaktifkan Side Promo Baru di Admin
+- Tanggal/Waktu WIB: 2026-05-12 03:40:30 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, API, Database, Documentation, Testing/QA
+- Perintah User: "Ubah layout homepage dan admin homepage banners: hilangkan side promo kanan, jadikan hero slider besar dari placement hero, keep side_promo legacy di DB, update helper size, lint + git status + log."
+- Tujuan Task: Mengganti layout hero+side promo menjadi hero slider utama yang mengambil multi-banner `placement=hero`, menghilangkan render side promo dari homepage, dan membatasi admin agar tidak membuat side promo baru.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+  - `supabase/schema.sql`
+  - `src/lib/supabase/queries.ts`
+- File Dibuat:
+  - `src/components/home/HeroSlider.tsx`
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus:
+  - `src/app/page.tsx` (versi lama dihapus lalu dibuat ulang dalam task yang sama)
+- Command Terminal yang Dijalankan:
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"` (2x)
+  - `npm run lint` (2x)
+  - `git status --short --branch` (2x)
+- Perubahan Homepage:
+  - `page.tsx` di-refactor menjadi server-side async render (`export default async function Home()`), tanpa `useEffect/useState/bannerLoadState` untuk homepage utama.
+  - Data homepage diambil server-side via Supabase server client sebelum render (`brands`, `categories`, `products`, `homepage_banners`, `company_settings`).
+  - Side promo kanan dihapus total dari render homepage.
+  - Area kanan hero menjadi penuh (gabungan area hero lama + side promo) menggunakan komponen slider baru.
+  - Hero slider mengambil semua banner `placement='hero'` urut `sort_order ASC`; auto-slide 4.5 detik jika slide > 1, dengan dot indicator + tombol prev/next minimalis.
+  - Jika `hero.image_url` kosong, fallback final tetap stabil (hero image lokal `/images/banner/hero_banner.png` pada data fallback; gradient hanya dipakai slide yang memang tidak punya image).
+  - Benefit tetap di bawah hero, gambar-only, tanpa card putih tebal, ukuran sedikit diperbesar (`h-[92px] sm:h-[104px] xl:h-[116px]`).
+  - Benefit image memakai `image_url` Supabase jika ada, fallback ke `public/images/banner/*` jika kosong.
+  - Query homepage hanya menggunakan placement relevan untuk render (`hero`, `benefit_*`, `middle_promo`, `bottom_cta`); `side_promo` tidak dirender.
+- Perubahan Admin Homepage Banners:
+  - Opsi `side_promo` dihapus dari dropdown default create/update.
+  - Mode edit untuk data legacy `side_promo` tetap didukung: opsi `side_promo (legacy)` dimunculkan hanya jika data awal memang `side_promo`, sehingga data lama tetap bisa diubah.
+  - Ditambahkan catatan: "Side promo sudah tidak digunakan di homepage baru. Gunakan placement hero untuk hero slider utama."
+  - Helper ukuran banner diperbarui:
+    - Hero Slider: `1920x700 px`
+    - Alternatif Hero: `1600x600 px`
+    - Benefit: `900x320 px`
+    - Middle Promo: `1400x360 px`
+    - Bottom CTA: `1400x320 px`
+    - Format: `WebP/JPG/PNG`, max `1-2MB`
+  - Subtitle halaman admin disesuaikan agar mencerminkan arsitektur homepage baru (hero slider + benefit).
+- Perubahan Supabase/Schema:
+  - Tidak ada perubahan nilai constraint pada task ini; `side_promo` tetap dipertahankan di `homepage_banners_placement_check` agar data lama aman.
+- Error/Warning yang Terjadi:
+  - `npm run lint` pertama gagal karena:
+    - warning variabel tidak terpakai (`featuredMini`) di `src/app/page.tsx`
+    - error `react-hooks/set-state-in-effect` pada `HeroSlider`
+  - Tindakan perbaikan:
+    - menghapus variabel yang tidak dipakai
+    - menghilangkan `setState` sinkron di effect, menyesuaikan kalkulasi slide aktif
+  - `npm run lint` kedua: sukses tanpa error.
+- Hasil Validasi:
+  - `npm run lint`: sukses (run final).
+  - `git status --short --branch`: perubahan task tercatat; repository tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Status Hasil: Sukses (layout hero slider baru + admin placement policy baru)
+- Next Step:
+  - Verifikasi manual di `/` untuk memastikan auto-slide, dot, dan CTA hero sesuai konten Supabase.
+  - Verifikasi manual di `/admin/homepage-banners` untuk flow create banner hero baru dan edit banner legacy `side_promo`.
+
+## [2026-05-12 03:20:30 WIB] Perbaikan Proporsi Side Promo Homepage + Update Rekomendasi Ukuran Admin
+- Tanggal/Waktu WIB: 2026-05-12 03:20:30 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Documentation, Testing/QA
+- Perintah User: "Perbaiki tampilan side promo agar proporsional sekitar 300x202 px, tidak kepotong, gunakan image Supabase jika ada, update helper size di admin Homepage Banners, lint + git status + log."
+- Tujuan Task: Membuat side promo banner tampil utuh (non-cropped) dan proporsional mengikuti area card yang konsisten, sekaligus menyelaraskan panduan ukuran upload di admin.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+  - `npm run lint`
+  - `git status --short --branch`
+- Perbaikan yang Dilakukan:
+  - Side promo card dibatasi proporsional pada desktop dengan `lg:max-w-[300px]` agar mendekati target lebar DevTools.
+  - Wrapper image side promo diubah menjadi rasio konsisten `aspect-[300/202]`.
+  - Image side promo Supabase diubah dari `object-cover` menjadi `object-contain object-center` agar gambar tampil utuh tanpa crop.
+  - Ditambahkan padding ringan (`p-2`) dan background netral pada wrapper image untuk menjaga keterbacaan jika rasio aset berbeda.
+  - Placeholder fallback side promo tetap ada bila `image_url` kosong, namun mengikuti wrapper rasio yang sama agar layout stabil.
+  - Rekomendasi ukuran placement `side_promo` di admin form diperbarui menjadi:
+    - Display: `300x202 px`
+    - Upload disarankan: `900x606 px`
+- Keputusan Teknis:
+  - Pendekatan `object-contain` dipilih untuk memenuhi kebutuhan "jangan crop" dan mempertahankan seluruh konten banner.
+  - Rasio image dikunci di wrapper agar semua side promo konsisten meski ukuran sumber gambar bervariasi.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan task tercatat; repository tetap memiliki perubahan existing lain di luar scope yang tidak direvert.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+- Status Hasil: Sukses (proporsi side promo dan helper size admin diperbarui)
+- Next Step:
+  - Validasi manual di `/` pada desktop untuk memastikan side promo tampil mendekati area 300x202 px dan tidak terpotong.
+  - Jika diperlukan penyesuaian presisi visual, lanjutkan fine-tuning padding internal image wrapper.
+
+## [2026-05-12 02:35:03 WIB] Perbaikan Flicker Image Homepage Saat Refresh (Supabase Loading)
+- Tanggal/Waktu WIB: 2026-05-12 02:35:03 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Configuration, Testing/QA, Documentation
+- Perintah User: "Tolong perbaiki flicker/loading image di homepage ... jangan render fallback saat Supabase masih loading, tambah skeleton netral, lint + git status, update log."
+- Tujuan Task: Menghilangkan flicker ketika refresh homepage akibat fallback image dirender sebelum data Supabase siap, khususnya pada hero banner dan benefit strip.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `next.config.ts`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+  - `npm run lint`
+  - `git status --short --branch`
+- Penyebab Flicker:
+  - Benefit image sebelumnya selalu langsung render dengan ekspresi `benefitImages[item.placement] ?? item.image`, sehingga fallback lokal tampil dulu saat state awal masih kosong, lalu terganti setelah fetch Supabase selesai.
+- Perbaikan yang Dilakukan:
+  - Menambahkan derivasi state `isBannerLoading` dari `bannerLoadState` untuk kontrol render area hero dan benefit.
+  - Hero loading state diubah menjadi skeleton stabil dengan background gradient navy (tanpa fallback text/placeholder image selama loading).
+  - Benefit strip selama loading dirender sebagai skeleton netral dengan tinggi tetap (`h-[86px] sm:h-[96px] xl:h-[108px]`) untuk mencegah layout shift.
+  - Fallback lokal benefit (`/images/banner/...`) hanya dipakai setelah loading selesai (`ready`) dan hanya jika `image_url` Supabase kosong/null.
+- Keputusan Teknis:
+  - `queries.ts` dan `types.ts` tidak diubah karena struktur data/typing sudah sesuai; isu ada pada timing render di `page.tsx`, bukan pada kontrak query.
+  - `next.config.ts` tidak diubah pada task ini karena konfigurasi `remotePatterns` Supabase sudah tersedia.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: working tree tetap dirty karena perubahan existing di repository; perubahan task ini tercatat pada `src/app/page.tsx` dan `AGENT_LOG.md`.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+  - Warning konteks: terdapat banyak perubahan existing yang tidak disentuh/revert sesuai aturan workspace hygiene.
+- Status Hasil: Sukses (flicker logic diperbaiki + lint lolos)
+- Next Step:
+  - Validasi manual refresh berulang di `/` untuk memastikan benefit tidak menampilkan fallback lebih dulu dan hero loading tampil stabil.
+
+## [2026-05-12 02:17:54 WIB] Lanjutkan Next Step: Konfigurasi Next Image Supabase + Reset Upload State BannerForm
+- Tanggal/Waktu WIB: 2026-05-12 02:17:54 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Configuration, Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User:
+  - "Continue if you have next steps, or stop and ask for clarification if you are unsure how to proceed."
+  - "Continue if you have next steps, or stop and ask for clarification if you are unsure how to proceed."
+- Tujuan Task: Menyelesaikan next step yang masih pending tanpa klarifikasi tambahan, fokus pada runtime compatibility image Supabase dan reset state upload pada form create banner.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `next.config.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/ImageUploadField.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `next.config.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `Get-Date -Format "yyyy-MM-dd HH:mm:ss 'WIB'"`
+  - `npm run lint`
+  - `git status --short --branch`
+- Perbaikan yang Dilakukan:
+  - Menambahkan konfigurasi `images.remotePatterns` di `next.config.ts` untuk `https://*.supabase.co/storage/v1/object/public/**` agar `next/image` menerima URL Supabase Storage.
+  - Menambahkan state `imageFieldResetKey` di `BannerForm` dan menaikkan key setelah sukses create agar komponen `ImageUploadField` ter-remount, sehingga preview/file/image hidden value ikut reset bersih setelah `form.reset()`.
+- Keputusan Teknis:
+  - Reset state dipilih melalui mekanisme `key` remount di parent (`BannerForm`) karena paling minim risiko dan tidak mengubah API komponen upload lintas halaman.
+  - `ImageUploadField.tsx` tidak diubah karena behavior reset sudah terselesaikan dari parent.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: working tree masih dirty dari perubahan existing sebelumnya; perubahan baru tercatat pada file target task.
+- Error/Warning:
+  - Tidak ada error command pada task ini.
+  - Warning konteks: repository memiliki banyak perubahan existing yang tidak disentuh/revert sesuai aturan workspace hygiene.
+- Status Hasil: Sukses (next step dilanjutkan dan tervalidasi lint)
+- Next Step:
+  - Jalankan validasi manual di `/admin/homepage-banners` untuk memastikan create banner mengosongkan preview upload setelah submit sukses.
+  - Jalankan validasi manual di `/` untuk memastikan image Supabase pada hero/benefit tidak memicu error hostname `next/image`.
+
+## [2026-05-12 01:58:37 WIB] Fix Constraint Placement Benefit Homepage Banners + Sinkronisasi Frontend/Admin
+- Tanggal/Waktu WIB: 2026-05-12 01:58:37 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, Database, Testing/QA, Documentation
+- Perintah User: "Perbaiki error check constraint `homepage_banners_placement_check` untuk placement benefit image dan sinkronkan admin + homepage."
+- Tujuan Task: Menghilangkan error insert/update placement benefit pada tabel `homepage_banners` dan menyamakan value placement di schema, action, form, type, dan homepage renderer.
+- File Dibaca:
+  - `supabase/schema.sql`
+  - `supabase/seed.sql`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/types.ts`
+  - `src/lib/supabase/queries.ts`
+  - `AGENT_LOG.md`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `supabase/schema.sql`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/types.ts`
+  - `src/lib/supabase/queries.ts`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Error:
+  - Value placement di admin/frontend memakai placement benefit baru, tetapi constraint DB `homepage_banners_placement_check` belum memasukkan value tersebut (khususnya naming `benefit_support_247`).
+- Perbaikan yang Dilakukan:
+  - Mengganti nomenklatur placement benefit support dari `benefit_support` menjadi `benefit_support_247` agar sesuai kebutuhan user.
+  - Sinkronisasi value placement di:
+    - `BannerForm` (type + dropdown)
+    - `actions.ts` (validasi placement)
+    - `types.ts` (union type DB)
+    - `queries.ts` (union type banner)
+    - `page.tsx` (fallback mapping benefit placement)
+  - Dropdown placement admin dibuat lebih user-friendly label:
+    - `Benefit - Free Delivery`
+    - `Benefit - Support 24/7`
+    - `Benefit - Payment`
+    - `Benefit - Reliable`
+    - `Benefit - Guarantee`
+  - Menambahkan SQL pada `schema.sql` untuk drop + recreate constraint `homepage_banners_placement_check` agar DB existing bisa disinkronkan.
+  - Benefit section homepage tetap image-only, tanpa teks, memakai Supabase image_url jika ada dan fallback local image jika kosong.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu test manual create/update placement benefit di admin lalu refresh homepage.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Jalankan SQL manual constraint update di Supabase SQL Editor pada project existing.
+  - Uji admin `homepage-banners` untuk placement benefit agar insert/update tidak lagi terkena constraint violation.
+
+## [2026-05-12 01:43:56 WIB] Perbesar Benefit Image Strip dan Rapatkan Jarak Antar Item
+- Tanggal/Waktu WIB: 2026-05-12 01:43:56 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbesar tampilan benefit image strip di homepage, kurangi jarak antar image, tetap tanpa card/border/shadow."
+- Tujuan Task: Membuat benefit image lebih dominan, lebih rapat, dan tetap clean menyatu dengan background homepage.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Perubahan Ukuran Benefit Image:
+  - Grid benefit diubah menjadi lebih rapat:
+    - `grid-cols-2 md:grid-cols-3 xl:grid-cols-5`
+    - gap dipadatkan ke `gap-2.5` (~10px)
+  - Ukuran tinggi item diperbesar:
+    - mobile `h-[86px]`
+    - tablet `sm:h-[96px]`
+    - desktop besar `xl:h-[108px]`
+  - Image tetap full lebar dengan `object-contain object-center`, tanpa crop/stretch.
+  - Tetap tanpa border/shadow/background card tambahan.
+- Batasan Scope yang Dijaga:
+  - Hero banner tidak diubah.
+  - Sidebar brands tidak diubah.
+  - Side promo tidak diubah.
+  - Deal Of The Day tidak diubah selain terdorong oleh alur layout normal.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu cek `http://localhost:3000` untuk verifikasi ukuran strip dan kerapatan gap di desktop/mobile.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Uji manual refresh beberapa kali untuk memastikan ukuran baru tetap stabil tanpa overflow.
+
+## [2026-05-12 01:38:19 WIB] Pindahkan Benefit Image Strip ke Bawah Hero Grid Penuh
+- Tanggal/Waktu WIB: 2026-05-12 01:38:19 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki layout benefit image strip ... pindahkan ke bawah seluruh area hero, full width, tanpa card wrapper visual."
+- Tujuan Task: Menempatkan benefit strip setelah seluruh hero grid (sidebar + hero + side promo), dengan ukuran image lebih besar dan layout lebih seimbang.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Perubahan Layout Benefit Strip:
+  - Benefit strip dikeluarkan dari kolom kanan hero dan dipindahkan ke bawah seluruh hero grid.
+  - Struktur sekarang:
+    - Section hero grid: sidebar kiri + hero/side promo kanan.
+    - Section benefit strip: berada tepat setelah hero grid, sebelum `Deal Of The Day`.
+  - Benefit strip menjadi full width container utama homepage.
+  - Grid benefit: `lg: 5 kolom`, `md: 3 kolom`, `sm: 2 kolom`, mobile 1 kolom.
+  - Gap diperbesar menjadi `gap-4` (~16px) agar seimbang dan terbaca.
+  - Tinggi image strip diperbesar (`h-[84px] sm:h-[88px]`) agar benefit image lebih terlihat.
+  - Tidak ada wrapper visual card (tanpa border/shadow/background putih tambahan) selain container layout ringan.
+  - Image tetap `object-contain`, `display:block`, dan responsif.
+- Batasan Scope yang Dijaga:
+  - Hero banner tidak diubah.
+  - Sidebar brands tidak diubah.
+  - Side promo tidak diubah.
+  - `Deal Of The Day` tidak diubah selain terdorong posisi secara natural oleh layout baru.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu cek langsung `http://localhost:3000` untuk memastikan posisi strip sudah di bawah hero grid dan proporsi final sesuai.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Verifikasi manual desktop/tablet/mobile untuk memastikan strip benefit lebih besar, rapi, dan tidak menyebabkan layout shift besar saat refresh.
+
+## [2026-05-12 01:29:32 WIB] Hilangkan Wrapper Card pada Benefit Image Strip Homepage
+- Tanggal/Waktu WIB: 2026-05-12 01:29:32 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki tampilan benefit image strip di homepage ... hilangkan kotak/card (border, shadow, background, padding besar), tampilkan gambar saja."
+- Tujuan Task: Membuat benefit strip menyatu dengan background homepage tanpa tampilan card putih.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Perubahan Styling Benefit Strip:
+  - Menghapus wrapper card visual pada setiap benefit item:
+    - tanpa `bg-white`
+    - tanpa `border`
+    - tanpa `shadow`
+    - tanpa `rounded` besar
+    - tanpa padding card besar
+  - Benefit item sekarang fokus ke image saja dengan container layout ringan.
+  - Image tetap `object-contain`, `display:block`, ukuran responsif, dan tidak stretch/crop berlebihan.
+  - Gap grid dipadatkan (`gap-2.5`) agar strip terlihat lebih menyatu dan rapi.
+  - Tidak ada teks tambahan pada benefit strip.
+- Batasan Scope yang Dijaga:
+  - Hero banner tidak diubah.
+  - Sidebar brand tidak diubah.
+  - Side promo tidak diubah.
+  - Deal Of The Day tidak diubah.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu cek langsung `http://localhost:3000` untuk konfirmasi visual akhir.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Verifikasi manual desktop bahwa benefit strip tampil menyatu tanpa kotak putih/border/shadow.
+
+## [2026-05-12 01:24:33 WIB] Integrasi Benefit Strip Homepage ke Placement Homepage Banners
+- Tanggal/Waktu WIB: 2026-05-12 01:24:33 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, Database, UI/UX, Testing/QA, Documentation
+- Perintah User: "Lanjut perbaiki homepage benefit section dan admin Homepage Banners ... benefit hanya gambar, tambah placement benefit di admin, fallback local image, lint + git status + log."
+- Tujuan Task: Menjadikan benefit strip homepage bisa dikelola lewat `homepage_banners` berdasarkan placement baru, dengan fallback ke image lokal jika Supabase belum diisi.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `supabase/schema.sql`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Placement Baru yang Ditambahkan:
+  - `benefit_free_delivery`
+  - `benefit_support`
+  - `benefit_payment`
+  - `benefit_reliable`
+  - `benefit_guarantee`
+- Perbaikan Frontend Homepage:
+  - Benefit section sekarang hanya render image (tanpa text HTML title/subtitle).
+  - Mapping image diambil dari Supabase placement benefit jika `image_url` tersedia.
+  - Jika belum tersedia di Supabase, fallback ke local image `public/images/banner` tetap dipakai.
+  - Benefit card dibuat compact dan bersih: background putih, border tipis, rounded, shadow halus, dan image `object-contain`.
+- Perbaikan Admin Homepage Banners:
+  - Dropdown placement di form banner ditambah 5 placement benefit baru.
+  - Validasi placement di server action (`create/update`) mendukung placement benefit.
+  - Helper text diperbarui untuk rekomendasi upload benefit:
+    - `900x320 px`, format `WebP/PNG/JPG`, max `1MB`.
+  - Info ukuran placement lama tetap dipertahankan.
+- Perubahan Schema/Types:
+  - `supabase/schema.sql` check constraint `homepage_banners.placement` diperluas agar menerima placement benefit.
+  - Type union placement di `types.ts` dan `queries.ts` diperluas agar konsisten dengan placement baru.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu test manual di `/admin/homepage-banners` dan `/` sesuai checklist user.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Jalankan SQL update placement constraint di Supabase agar placement benefit bisa dipakai pada DB existing.
+  - Verifikasi manual create/update placement benefit dan cek render image-only di homepage.
+
+## [2026-05-12 00:54:06 WIB] Polish UI/UX Benefit Cards Homepage ke Gaya Minimalis Trust Strip
+- Tanggal/Waktu WIB: 2026-05-12 00:54:06 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Polish tampilan UI/UX section benefit cards di homepage agar lebih modern, clean, compact, dan serasi dengan desain homepage."
+- Tujuan Task: Mengubah benefit cards dari style banner penuh menjadi trust/service strip minimalis yang lebih ringan dan rapi.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Tampilan Sebelumnya Kurang Rapi:
+  - Benefit cards memakai image full background, sehingga visual terasa ramai/berat pada area card kecil.
+  - Hierarki konten kurang jelas karena teks dan gambar kompetitif dalam ruang sempit.
+- Perbaikan UI/UX yang Dilakukan:
+  - Mengubah card benefit jadi desain minimalis putih dengan border tipis, rounded besar, dan shadow halus.
+  - Menjadikan gambar sebagai thumbnail/icon kecil di kiri (`object-contain`), bukan full background.
+  - Menampilkan teks utama + subtitle di kanan image:
+    - `Free Delivery` -> `Area coverage nasional`
+    - `Support 24/7` -> `Tim teknis standby`
+    - `Payment` -> `Metode pembayaran fleksibel`
+    - `Reliable` -> `Produk enterprise teruji`
+    - `Guarantee` -> `Garansi resmi distributor`
+  - Menjaga style compact:
+    - tinggi card sekitar `82px`
+    - padding ringkas
+    - hover ringan `translateY(-2px)` + shadow naik.
+  - Menyempurnakan grid responsif benefit:
+    - mobile: 1 kolom
+    - tablet: 2-3 kolom
+    - desktop: 5 kolom
+    - gap tetap halus `12px`.
+  - Menyesuaikan jarak vertikal area kanan utama (`space-y-5` -> `space-y-4`) agar section terasa lebih rapat.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu cek `http://localhost:3000` untuk memastikan visual strip benefit sudah clean dan serasi.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Verifikasi manual desktop/mobile untuk memastikan card tidak terlalu padat, image tetap terbaca sebagai ikon, dan spacing antar section sudah pas.
+
+## [2026-05-12 00:49:25 WIB] Integrasi Gambar Benefit Cards Homepage dari public/images/banner
+- Tanggal/Waktu WIB: 2026-05-12 00:49:25 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki section benefit cards di homepage agar menggunakan image yang sudah ada di public/images/banner dan menghilangkan ruang kosong."
+- Tujuan Task: Membuat benefit cards lebih menarik/compact dengan image banner, mengurangi ruang kosong visual, dan tetap menjaga layout utama sidebar-hero-sidepromo.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Ruang Kosong Sebelumnya:
+  - Benefit cards hanya berisi teks pendek, sehingga tinggi card tidak termanfaatkan secara visual dan terlihat kosong di area bawah hero.
+- Perbaikan yang Dilakukan:
+  - Mengubah data `benefits` agar memuat path image banner per item:
+    - `Free Delivery` -> `/images/banner/free_delivery_1874x696px.png`
+    - `Support 24/7` -> `/images/banner/support_247_1746x690px.png`
+    - `Payment` -> `/images/banner/payment_1833x701px.png`
+    - `Reliable` -> `/images/banner/reliable_1749x700px.png`
+    - `Guarantee` -> `/images/banner/guarantee_2622x922px.png`
+  - Menggunakan komponen `next/image` (`Image`) untuk render image card yang efisien.
+  - Card benefit dibuat compact-modern:
+    - tinggi tetap `h-24` (desktop/mobile)
+    - rounded + border + shadow halus
+    - hover ringan `-translate-y-[2px]` dan peningkatan shadow
+    - overlay gradien tipis untuk kontras label
+    - label judul kecil di bawah-kiri agar tidak menimpa desain gambar secara agresif.
+  - Layout benefit tetap berada di bawah hero+sidepromo dalam kolom kanan (hasil refactor sebelumnya), jadi tidak menunggu tinggi sidebar kiri.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu cek `http://localhost:3000` untuk memastikan image benefit tampil, hover halus, dan spacing section terasa lebih rapat.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Verifikasi visual manual di desktop/mobile terkait crop image card dan keterbacaan label.
+
+## [2026-05-11 23:53:04 WIB] Stabilkan Loading Hero + Rapikan Layout Sidebar/Hero/Benefits
+- Tanggal/Waktu WIB: 2026-05-11 23:53:04 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki ulang homepage hero banner ... hilangkan flicker, rapikan spacing, refactor layout utama, update helper text admin banner."
+- Tujuan Task: Menghilangkan fallback flicker saat refresh, membuat hero 1200x620 tampil stabil/proposional, dan mencegah gap bawah hero akibat tinggi sidebar.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Masalah:
+  - Data hero/banner di-load client-side, sehingga saat refresh sempat render fallback sebelum data Supabase selesai (flicker).
+  - Struktur grid 3 kolom (`sidebar`, `hero`, `side promo`) membuat tinggi row ikut konten tertinggi (sidebar), memunculkan ruang kosong di bawah hero sebelum benefit cards.
+  - Pengaturan tinggi/min-height sebelumnya membuat framing hero kurang stabil.
+- Perbaikan yang Dilakukan:
+  - Menambahkan state loading banner: `bannerLoadState` (`loading` -> `ready`) di `src/app/page.tsx`.
+  - Saat loading, hero menampilkan skeleton netral (`bg-slate-200 animate-pulse`) dan tidak menampilkan fallback biru.
+  - Fallback gradient + placeholder `Main Banner Image` kini hanya muncul saat `ready` dan `heroBanner.imageUrl` memang kosong.
+  - Refactor layout section utama menjadi 2 kolom:
+    - kiri: `All Brands`
+    - kanan: wrapper konten utama (`space-y-5`) berisi:
+      - row 1: `Hero + Side Promo`
+      - row 2: `Benefit Cards`
+  - Dengan struktur ini, benefit cards tidak lagi menunggu tinggi sidebar.
+  - Hero image tetap dari `heroBanner.imageUrl`, dirender pakai `<img>` absolute `object-cover` dalam container rasio tetap:
+    - mobile: `aspect-[16/9]`
+    - desktop: `sm:aspect-[1200/620]`
+  - Overlay hero dibuat lebih ringan (`from-slate-950/70 via-slate-950/30 to-transparent`) agar gambar tidak terlalu gelap/blur.
+  - Mapping placement lain (`side_promo`, `middle_promo`, `bottom_cta`) tetap dipertahankan.
+  - Update helper text admin banner:
+    - Hero: `1200x620 px` atau `1920x992 px`, ratio `1.93:1`
+    - Side Promo: `600x320 px`
+    - Middle Promo: `1400x360 px`
+    - Bottom CTA: `1400x320 px`
+    - Format: `WebP/JPG/PNG`, max `1-2MB`
+    - Catatan tambahan teks hero di gambar.
+- Batasan Scope yang Dijaga:
+  - Tidak ada perubahan schema database.
+  - Tidak ada perubahan policy Supabase/RLS.
+  - Tidak ada perubahan `.env.local`.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dapat dijalankan dari CLI; perlu test manual refresh berulang di `http://localhost:3000` sesuai checklist user.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Verifikasi manual 5x refresh untuk memastikan flicker hilang, hero stabil, dan jarak benefit cards sudah rapat.
+
+## [2026-05-11 23:38:19 WIB] Penyesuaian Rasio Hero Banner + Update Rekomendasi Ukuran Banner Admin
+- Tanggal/Waktu WIB: 2026-05-11 23:38:19 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki tampilan hero banner homepage agar image_url lebih proporsional dan tidak terpotong berlebihan; update helper text ukuran banner admin."
+- Tujuan Task: Mengurangi crop berlebihan pada hero image landscape dengan rasio container lebih sesuai, serta menyelaraskan rekomendasi ukuran upload pada admin.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/app/globals.css`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Masalah:
+  - Hero image dipasang dengan `background-size: cover` pada container yang terlalu tinggi (`min-h` besar), sehingga image 1200x620 lebih banyak ter-crop dan terasa kurang proporsional.
+  - Overlay gelap sebelumnya juga cukup kuat sehingga gambar terlihat kurang tajam/terasa blur.
+- Perbaikan yang Dilakukan:
+  - Menyetel rasio hero saat ada image ke landscape yang lebih mendekati banner:
+    - mobile: `aspect-[16/9]` + `min-h-[240px]`
+    - `sm+`: `aspect-[1200/620]` + `min-h-[300px]`
+  - Menurunkan intensitas overlay gelap agar gambar lebih hidup namun teks masih terbaca.
+  - Menjaga `backgroundImage` tetap sebagai background utama (`cover`, `center center`).
+  - Fallback gradient + placeholder kecil tetap dipakai hanya jika `image_url` kosong.
+  - Mengupdate helper text ukuran pada form admin banner:
+    - Hero -> `1920x760 px`
+    - Side Promo -> `600x320 px`
+    - Middle Promo -> `1400x360 px`
+    - Bottom CTA -> `1400x320 px`
+    - Format -> `WebP/PNG/JPG, max 1-2MB`
+- Batasan Scope yang Dijaga:
+  - Tidak ada perubahan schema database.
+  - Tidak ada perubahan policy Supabase/RLS.
+  - Tidak ada perubahan `.env.local`.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu cek langsung `http://localhost:3000` untuk memastikan crop berkurang, teks terbaca, dan responsive aman.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Verifikasi manual desktop/mobile pada homepage dengan hero image 1200x620 dan bandingkan hasil framing setelah perubahan rasio.
+
+## [2026-05-11 23:09:55 WIB] Ubah Hero Homepage Menjadi Background Utama dari image_url
+- Tanggal/Waktu WIB: 2026-05-11 23:09:55 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Ubah tampilan homepage hero banner agar `image_url` dari placement hero menjadi background utama banner besar, bukan gambar kecil kanan bawah."
+- Tujuan Task: Menjadikan `hero.image_url` sebagai background penuh hero banner dengan overlay agar teks tetap terbaca, tanpa mengganggu placement lain.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/types.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Posisi Gambar Sebelumnya Kecil:
+  - Hero section sebelumnya memang merender `image_url` sebagai elemen `<img>` terpisah di kanan bawah (thumbnail-like block), bukan dijadikan background container hero utama.
+- Perbaikan yang Dilakukan:
+  - Mengubah container hero agar ketika `heroBanner.imageUrl` tersedia, URL dipakai sebagai `backgroundImage` pada hero wrapper.
+  - Menambahkan style background cover + center (`backgroundSize: cover`, `backgroundPosition: center`).
+  - Menambahkan overlay gelap navy transparan (`absolute inset-0`) untuk menjaga keterbacaan teks.
+  - Menjaga konten teks hero (title, subtitle, description, price, CTA) tetap di sisi kiri.
+  - Menghilangkan kotak kecil `Main Banner Image` saat `image_url` tersedia; fallback kotak tetap tampil hanya jika `image_url` kosong.
+  - Menambahkan tinggi minimum hero saat pakai image agar responsif dan proporsional (`min-h` untuk mobile sampai desktop).
+  - Mapping placement lain (`side_promo`, `middle_promo`, `bottom_cta`) tidak diubah.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI; perlu verifikasi manual di `/admin/homepage-banners` dan `/` sesuai checklist user.
+- Status Hasil: Sukses (implementasi + lint)
+- Next Step:
+  - Uji manual hero dengan `image_url` terisi untuk memastikan hero background penuh tampil dan teks tetap terbaca di desktop/mobile.
+
+## [2026-05-11 22:54:20 WIB] Fix Runtime TypeError Reset Form di Admin Homepage Banners
+- Tanggal/Waktu WIB: 2026-05-11 22:54:20 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, UI/UX, Testing/QA, Documentation
+- Perintah User: "Perbaiki Runtime TypeError di /admin/homepage-banners saat klik Update setelah upload image ... lint + git status + log."
+- Tujuan Task: Menghilangkan error `Cannot read properties of null (reading 'reset')` pada submit form banner (mode edit/update) dan menjaga alur submit tetap aman.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/app/admin/homepage-banners/page.tsx`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Bug:
+  - Handler submit menggunakan `event.currentTarget.reset()` setelah proses async (`await` action), sehingga referensi event bisa tidak valid/null pada saat dipakai.
+- Perbaikan yang Dilakukan:
+  - Menyimpan referensi form sebelum async: `const form = event.currentTarget; const formData = new FormData(form);`.
+  - Menghapus akses `event.currentTarget` setelah `await`.
+  - Reset form hanya untuk mode `create` (`form.reset()`), tidak reset penuh untuk mode `edit`.
+  - Menambah state sukses (`success`) untuk feedback setelah create/update berhasil.
+  - `onDone?.()` tetap dipanggil aman tanpa memicu runtime error.
+- Verifikasi Alur `image_url`:
+  - `ImageUploadField` tetap mengirim `image_url` via hidden input.
+  - Mode edit tanpa upload baru tetap membawa nilai lama dari state field.
+  - Tombol clear image tetap mengosongkan nilai sehingga backend menyimpan `null` melalui `asNullableText`.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dapat dijalankan dari CLI; perlu uji manual sesuai checklist user pada `/admin/homepage-banners` dan homepage `/`.
+- Status Hasil: Sukses (perbaikan kode + lint)
+- Next Step:
+  - Verifikasi manual update banner hero setelah upload image agar tidak muncul TypeError dan banner tampil di homepage.
+
+## [2026-05-11 22:47:53 WIB] Perbaikan Render Gambar Homepage Banner dari Supabase Storage
+- Tanggal/Waktu WIB: 2026-05-11 22:47:53 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, API, UI/UX, Testing/QA, Documentation
+- Perintah User: "Audit dan perbaiki agar gambar homepage banner dari Supabase Storage tampil di frontend homepage ... lint + git status + log."
+- Tujuan Task: Memastikan `homepage_banners.image_url` benar-benar dikonsumsi frontend dan menggantikan placeholder jika data tersedia.
+- File Dibaca:
+  - `AGENT_LOG.md`
+  - `src/app/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/lib/supabase/types.ts`
+  - `supabase/schema.sql`
+- File Dibuat: Tidak ada perubahan file dibuat.
+- File Diubah:
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Penyebab Utama Banner Belum Tampil:
+  - Di `src/app/page.tsx`, ada `return` dini saat `brandRows.length === 0` yang menghentikan proses mapping banner Supabase, sehingga state banner tidak pernah ter-update dan UI tetap fallback placeholder.
+- Perubahan yang Dilakukan:
+  - Menghapus pola `return` dini agar proses banner tetap jalan meskipun data brand kosong.
+  - Menambahkan mapping banner `bottom_cta` dari Supabase ke section CTA bawah.
+  - Menjaga render image dengan fallback: jika `image_url` ada maka tampilkan `<img>`, jika kosong tetap placeholder.
+  - Menyambungkan `cta_href` dari data Supabase untuk hero/middle/bottom CTA dengan fallback aman ke `/inquiry`.
+  - Menambahkan debug khusus development saja:
+    - `console.log` jumlah banner yang diambil.
+    - `console.log` status `hero image_url` ada/tidak.
+- Verifikasi Konsistensi Upload -> DB:
+  - Form admin banner memakai `ImageUploadField` dengan field `name="image_url"`.
+  - Action create/update banner menyimpan nilai ke kolom `homepage_banners.image_url`.
+  - Query frontend `getHomepageBanners` sudah mengambil `image_url` dan urut `sort_order` ascending.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: perubahan tercatat sesuai scope, tanpa commit/push.
+- Validasi Manual Browser:
+  - Belum dijalankan dari CLI. Perlu verifikasi manual sesuai checklist user di `/admin/homepage-banners` dan `/`.
+- Status Hasil: Sukses (perbaikan kode + lint)
+- Next Step:
+  - Lakukan uji manual: upload/edit hero & side promo, lalu refresh homepage untuk memastikan gambar tampil menggantikan placeholder.
+
+## [2026-05-11 22:10:19 WIB] Audit + Perbaikan Schema, CRUD Admin, SEO, dan Integrasi Homepage Supabase
+- Tanggal/Waktu WIB: 2026-05-11 22:10:19 WIB
+- Agent/Model: openai/gpt-5.3-codex (OpenCode)
+- Kategori Perubahan: Frontend, Backend, API, Database, Security, UI/UX, Testing/QA, Documentation
+- Perintah User: "Audit dan lengkapi database + admin CRUD untuk homepage_banners, brands, categories, products, product_images, company_settings, inquiries; lengkapi SEO fields; validasi lint + git status; catat AGENT_LOG; jangan deploy/commit/push."
+- Tujuan Task: Menutup gap schema Supabase, kelengkapan TypeScript type, form/action CRUD admin, dan konsumsi data homepage dari Supabase dengan fallback aman.
+- File Dibaca:
+  - `AGENTS.md`
+  - `AGENT_LOG.md`
+  - `supabase/schema.sql`
+  - `supabase/storage-policies.sql`
+  - `supabase/inquiries-policies.sql`
+  - `src/lib/supabase/types.ts`
+  - `src/lib/supabase/client.ts`
+  - `src/lib/supabase/server.ts`
+  - `src/lib/supabase/queries.ts`
+  - `src/lib/supabase/storage.ts`
+  - `src/app/page.tsx`
+  - `src/app/admin/page.tsx`
+  - `src/app/admin/layout.tsx`
+  - `src/app/admin/login/page.tsx`
+  - `src/app/admin/forgot-password/page.tsx`
+  - `src/app/admin/reset-password/page.tsx`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/app/admin/brands/page.tsx`
+  - `src/app/admin/brands/actions.ts`
+  - `src/app/admin/categories/page.tsx`
+  - `src/app/admin/categories/actions.ts`
+  - `src/app/admin/products/page.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/company-settings/page.tsx`
+  - `src/app/admin/inquiries/page.tsx`
+  - `src/app/admin/inquiries/actions.ts`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/components/admin/homepage-banners/BannerTable.tsx`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/components/admin/brands/BrandTable.tsx`
+  - `src/components/admin/categories/CategoryForm.tsx`
+  - `src/components/admin/categories/CategoryTable.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/components/admin/products/ProductTable.tsx`
+  - `src/components/admin/ImageUploadField.tsx`
+- File Dibuat:
+  - `src/app/admin/company-settings/actions.ts`
+  - `src/app/admin/product-images/actions.ts`
+- File Diubah:
+  - `supabase/schema.sql`
+  - `supabase/inquiries-policies.sql`
+  - `src/lib/supabase/types.ts`
+  - `src/app/admin/homepage-banners/actions.ts`
+  - `src/app/admin/homepage-banners/page.tsx`
+  - `src/components/admin/homepage-banners/BannerForm.tsx`
+  - `src/app/admin/categories/actions.ts`
+  - `src/app/admin/categories/page.tsx`
+  - `src/components/admin/categories/CategoryForm.tsx`
+  - `src/app/admin/brands/actions.ts`
+  - `src/app/admin/brands/page.tsx`
+  - `src/components/admin/brands/BrandForm.tsx`
+  - `src/app/admin/products/actions.ts`
+  - `src/app/admin/products/page.tsx`
+  - `src/components/admin/products/ProductForm.tsx`
+  - `src/app/admin/product-images/page.tsx`
+  - `src/app/admin/company-settings/page.tsx`
+  - `src/lib/supabase/queries.ts`
+  - `src/app/page.tsx`
+  - `AGENT_LOG.md`
+- File Dihapus: Tidak ada perubahan file dihapus.
+- Command Terminal yang Dijalankan:
+  - `npm run lint`
+  - `git status --short --branch`
+  - PowerShell timezone check untuk timestamp WIB
+- Temuan Audit Utama:
+  - RLS menyalakan tabel, tetapi belum ada policy write admin generik untuk banyak tabel CRUD (brands/categories/products/product_images/homepage_banners/company_settings).
+  - `types.ts` sebelumnya masih generic (`Record<string, unknown>`), belum merepresentasikan schema tabel utama.
+  - SEO field di form product sudah ada di UI, tetapi belum dipersist ke DB action dan belum ada kolom schema.
+  - `company_settings` masih read-only dan belum ada action update admin.
+  - `product-images` belum CRUD penuh (baru read).
+  - Homepage sudah konsumsi Supabase untuk banyak data, namun belum memakai `image_url` banner saat tersedia.
+- Perubahan yang Dilakukan:
+  - Menambahkan kolom SEO standar (`seo_title`, `seo_description`, `seo_keywords`, `og_title`, `og_description`, `og_image_url`, `canonical_url`) ke tabel `homepage_banners`, `categories`, `products`, dan `brands` (safe recommendation).
+  - Menambahkan function `public.is_admin_user()` dan policy admin `for all`/read-update yang aman untuk tabel CRUD admin tanpa menonaktifkan RLS.
+  - Memperluas whitelist public read `company_settings` agar mendukung key `seo_settings`.
+  - Menyelaraskan `supabase/inquiries-policies.sql` agar pakai `public.is_admin_user()`.
+  - Mengganti `src/lib/supabase/types.ts` menjadi typed schema untuk tabel inti dan field SEO.
+  - Menyambungkan field SEO ke action + form + select admin untuk `homepage_banners`, `categories`, `products`, dan `brands`.
+  - Menambah `company-settings` action update via upsert ke key: `company_profile`, `contact_info`, `footer_settings`, `seo_settings`.
+  - Menambah CRUD server actions `product_images` (create/update/delete) dan wiring form di halaman admin.
+  - Mengubah homepage agar memakai `image_url` banner Supabase (hero/side/middle) jika data tersedia, fallback placeholder tetap aman.
+- Catatan Security/Arsitektur:
+  - Tidak ada penggunaan `service_role` di frontend.
+  - Tidak ada perubahan `.env.local`.
+  - RLS tetap aktif; akses admin write dibatasi policy berbasis `admin_users`.
+- Hasil Validasi:
+  - `npm run lint`: sukses, tanpa error.
+  - `git status --short --branch`: ada perubahan file sesuai scope audit/perbaikan + file existing `package-lock.json` sudah modified sebelumnya.
+- Status Hasil: Sukses (audit + implementasi + validasi lint)
+- Next Step:
+  - Jalankan SQL manual terbaru di Supabase SQL Editor agar kolom SEO dan policy admin sinkron dengan kode.
+  - Verifikasi manual CRUD di semua route admin terkait dan upload image ke bucket `ecommerce-assets` pada user authenticated admin.
+
 ## [2026-05-11 13:12:18 WIB] Tambah Helper Text Rekomendasi Ukuran Gambar Homepage Banners
 - Tanggal/Waktu WIB: 2026-05-11 13:12:18 WIB
 - Agent/Model: openai/gpt-5.3-codex (OpenCode)

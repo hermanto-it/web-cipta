@@ -19,6 +19,13 @@ create table if not exists public.brands (
   slug text not null unique,
   description text,
   logo_url text,
+  seo_title text,
+  seo_description text,
+  seo_keywords text,
+  og_title text,
+  og_description text,
+  og_image_url text,
+  canonical_url text,
   sort_order integer not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
@@ -30,6 +37,13 @@ create table if not exists public.categories (
   name text not null,
   slug text not null unique,
   description text,
+  seo_title text,
+  seo_description text,
+  seo_keywords text,
+  og_title text,
+  og_description text,
+  og_image_url text,
+  canonical_url text,
   sort_order integer not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
@@ -72,6 +86,10 @@ create table if not exists public.products (
   description text,
   price numeric(14,2),
   compare_at_price numeric(14,2),
+  tax_rate numeric default 11,
+  tax_amount numeric default 0,
+  final_price numeric,
+  is_tax_included boolean not null default false,
   currency text not null default 'IDR',
   stock_quantity integer not null default 0,
   is_featured boolean not null default false,
@@ -79,6 +97,13 @@ create table if not exists public.products (
   is_promo boolean not null default false,
   is_active boolean not null default true,
   badge text,
+  seo_title text,
+  seo_description text,
+  seo_keywords text,
+  og_title text,
+  og_description text,
+  og_image_url text,
+  canonical_url text,
   sort_order integer not null default 0,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -102,9 +127,28 @@ create table if not exists public.homepage_banners (
   image_url text,
   cta_label text,
   cta_href text,
-  placement text not null check (placement in ('hero', 'side_promo', 'middle_promo', 'bottom_cta')),
+  placement text not null check (
+    placement in (
+      'hero',
+      'side_promo',
+      'middle_promo',
+      'bottom_cta',
+      'benefit_free_delivery',
+      'benefit_support_247',
+      'benefit_payment',
+      'benefit_reliable',
+      'benefit_guarantee'
+    )
+  ),
   badge text,
   price_text text,
+  seo_title text,
+  seo_description text,
+  seo_keywords text,
+  og_title text,
+  og_description text,
+  og_image_url text,
+  canonical_url text,
   sort_order integer not null default 0,
   is_active boolean not null default true,
   created_at timestamptz not null default now(),
@@ -130,6 +174,42 @@ create table if not exists public.company_settings (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.brands add column if not exists seo_title text;
+alter table public.brands add column if not exists seo_description text;
+alter table public.brands add column if not exists seo_keywords text;
+alter table public.brands add column if not exists og_title text;
+alter table public.brands add column if not exists og_description text;
+alter table public.brands add column if not exists og_image_url text;
+alter table public.brands add column if not exists canonical_url text;
+
+alter table public.categories add column if not exists seo_title text;
+alter table public.categories add column if not exists seo_description text;
+alter table public.categories add column if not exists seo_keywords text;
+alter table public.categories add column if not exists og_title text;
+alter table public.categories add column if not exists og_description text;
+alter table public.categories add column if not exists og_image_url text;
+alter table public.categories add column if not exists canonical_url text;
+
+alter table public.products add column if not exists seo_title text;
+alter table public.products add column if not exists seo_description text;
+alter table public.products add column if not exists seo_keywords text;
+alter table public.products add column if not exists og_title text;
+alter table public.products add column if not exists og_description text;
+alter table public.products add column if not exists og_image_url text;
+alter table public.products add column if not exists canonical_url text;
+alter table public.products add column if not exists tax_rate numeric default 11;
+alter table public.products add column if not exists tax_amount numeric default 0;
+alter table public.products add column if not exists final_price numeric;
+alter table public.products add column if not exists is_tax_included boolean default false;
+
+alter table public.homepage_banners add column if not exists seo_title text;
+alter table public.homepage_banners add column if not exists seo_description text;
+alter table public.homepage_banners add column if not exists seo_keywords text;
+alter table public.homepage_banners add column if not exists og_title text;
+alter table public.homepage_banners add column if not exists og_description text;
+alter table public.homepage_banners add column if not exists og_image_url text;
+alter table public.homepage_banners add column if not exists canonical_url text;
 
 create table if not exists public.inquiries (
   id uuid primary key default gen_random_uuid(),
@@ -199,6 +279,40 @@ drop trigger if exists trg_admin_users_updated_at on public.admin_users;
 create trigger trg_admin_users_updated_at before update on public.admin_users
 for each row execute function public.set_updated_at();
 
+alter table public.homepage_banners
+drop constraint if exists homepage_banners_placement_check;
+
+alter table public.homepage_banners
+add constraint homepage_banners_placement_check
+check (
+  placement in (
+    'hero',
+    'side_promo',
+    'middle_promo',
+    'bottom_cta',
+    'benefit_free_delivery',
+    'benefit_support_247',
+    'benefit_payment',
+    'benefit_reliable',
+    'benefit_guarantee'
+  )
+);
+
+create or replace function public.is_admin_user()
+returns boolean
+language sql
+stable
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1
+    from public.admin_users au
+    where au.is_active = true
+      and (au.user_id = auth.uid() or au.email = auth.email())
+  );
+$$;
+
 alter table public.brands enable row level security;
 alter table public.categories enable row level security;
 alter table public.product_taxonomy enable row level security;
@@ -253,7 +367,7 @@ using (is_active = true);
 drop policy if exists "public can read allowed company settings" on public.company_settings;
 create policy "public can read allowed company settings" on public.company_settings
 for select to anon, authenticated
-using (key in ('company_profile', 'contact_info', 'social_links', 'header_settings', 'footer_settings'));
+using (key in ('company_profile', 'contact_info', 'social_links', 'header_settings', 'footer_settings', 'seo_settings'));
 
 drop policy if exists "public can insert inquiries" on public.inquiries;
 create policy "public can insert inquiries" on public.inquiries
@@ -261,3 +375,50 @@ for insert to anon, authenticated
 with check (true);
 
 -- No public update/delete policies are created by design.
+
+drop policy if exists "admin full access brands" on public.brands;
+create policy "admin full access brands" on public.brands
+for all to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
+
+drop policy if exists "admin full access categories" on public.categories;
+create policy "admin full access categories" on public.categories
+for all to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
+
+drop policy if exists "admin full access products" on public.products;
+create policy "admin full access products" on public.products
+for all to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
+
+drop policy if exists "admin full access product images" on public.product_images;
+create policy "admin full access product images" on public.product_images
+for all to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
+
+drop policy if exists "admin full access homepage banners" on public.homepage_banners;
+create policy "admin full access homepage banners" on public.homepage_banners
+for all to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
+
+drop policy if exists "admin full access company settings" on public.company_settings;
+create policy "admin full access company settings" on public.company_settings
+for all to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
+
+drop policy if exists "admin read inquiries" on public.inquiries;
+create policy "admin read inquiries" on public.inquiries
+for select to authenticated
+using (public.is_admin_user());
+
+drop policy if exists "admin update inquiries" on public.inquiries;
+create policy "admin update inquiries" on public.inquiries
+for update to authenticated
+using (public.is_admin_user())
+with check (public.is_admin_user());
